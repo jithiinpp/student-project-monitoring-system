@@ -1,0 +1,96 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        {% block title %}
+            SPMS
+        {% endblock %}
+    </title>
+
+
+    <!-- Main CSS -->
+    <link
+        rel="stylesheet"
+        href="{% static 'css/style.css' %}"
+    >
+
+
+    <!-- Page-specific CSS -->
+    {% block extra_css %}
+    {% endblock %}
+
+</head>
+
+
+<body>
+
+
+    <!-- ============================= -->
+    <!-- Django Messages -->
+    <!-- ============================= -->
+
+    {% if messages %}
+
+        <div class="messages-container">
+
+            {% for message in messages %}
+
+                <div class="message {{ message.tags }}">
+
+                    {{ message }}
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% endif %}
+
+
+
+    <!-- ============================= -->
+    <!-- Sidebar -->
+    <!-- ============================= -->
+
+    {% block sidebar %}
+    {% endblock %}
+
+
+
+    <!-- ============================= -->
+    <!-- Main Content -->
+    <!-- ============================= -->
+
+    <main class="main-content">
+
+        {% block content %}
+        {% endblock %}
+
+    </main>
+
+
+
+    <!-- ============================= -->
+    <!-- JavaScript -->
+    <!-- ============================= -->
+
+    {% block extra_js %}
+    {% endblock %}
+
+
+</body>
+
+</html>

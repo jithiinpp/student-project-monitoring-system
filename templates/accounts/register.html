@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title %}
+SPMS | Student Registration
+{% endblock %}
+
+{% block extra_css %}
+
+<link
+    rel="stylesheet"
+    href="{% static 'css/auth.css' %}"
+>
+
+{% endblock %}
+
+{% block content %}
+
+<div class="auth-page">
+
+    <div class="register-card">
+
+        <div class="auth-logo">
+            SPMS
+        </div>
+
+        <h1>
+            Student Registration
+        </h1>
+
+        <p class="auth-subtitle">
+            Create your SPMS student account
+        </p>
+
+        {% if messages %}
+            <div class="auth-messages">
+
+                {% for message in messages %}
+
+                    <div class="message {{ message.tags }}">
+                        {{ message }}
+                    </div>
+
+                {% endfor %}
+
+            </div>
+        {% endif %}
+
+        <form
+            method="POST"
+            class="auth-form"
+        >
+
+            {% csrf_token %}
+
+            {% for field in form %}
+
+                <div class="form-group">
+
+                    <label for="{{ field.id_for_label }}">
+                        {{ field.label }}
+                    </label>
+
+                    {{ field }}
+
+                    {% if field.help_text %}
+
+                        <small class="help-text">
+                            {{ field.help_text }}
+                        </small>
+
+                    {% endif %}
+
+                    {% if field.errors %}
+
+                        <div class="field-error">
+
+                            {% for error in field.errors %}
+
+                                <p>
+                                    {{ error }}
+                                </p>
+
+                            {% endfor %}
+
+                        </div>
+
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+            <button
+                type="submit"
+                class="auth-button"
+            >
+                Create Student Account
+            </button>
+
+        </form>
+
+        <div class="auth-footer">
+
+            <p>
+                Already have an account?
+            </p>
+
+            <a href="{% url 'accounts:login' %}">
+                Login
+            </a>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

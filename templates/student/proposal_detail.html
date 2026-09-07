@@ -1,0 +1,825 @@
+{% extends "base.html" %}
+
+{% block title %}
+Proposal Details | SPMS
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+/* =========================================================
+   SPMS PROPOSAL DETAILS PAGE
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #f4f7fb;
+    font-family: Arial, Helvetica, sans-serif;
+    color: #1e293b;
+}
+
+
+/* =========================================================
+   MAIN LAYOUT
+   ========================================================= */
+
+.spms-layout {
+    display: flex;
+    min-height: 100vh;
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.spms-sidebar {
+    width: 260px;
+    min-height: 100vh;
+    background: #0f172a;
+    color: white;
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    z-index: 1000;
+    box-shadow: 4px 0 20px rgba(15, 23, 42, 0.08);
+}
+
+
+/* Brand */
+
+.sidebar-brand {
+    height: 90px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+
+.brand-logo {
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
+    background: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.sidebar-brand h2 {
+    margin: 0;
+    font-size: 20px;
+}
+
+.sidebar-brand span {
+    display: block;
+    margin-top: 3px;
+    font-size: 12px;
+    color: #94a3b8;
+}
+
+
+/* Navigation */
+
+.sidebar-nav {
+    padding: 25px 15px;
+    flex: 1;
+}
+
+.sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 13px 15px;
+    margin-bottom: 7px;
+    color: #cbd5e1;
+    text-decoration: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    transition: 0.2s ease;
+}
+
+.sidebar-link:hover {
+    background: #1e293b;
+    color: white;
+}
+
+.sidebar-link.active {
+    background: #2563eb;
+    color: white;
+    box-shadow: 0 5px 15px rgba(37,99,235,0.25);
+}
+
+.sidebar-link span:first-child {
+    width: 22px;
+    text-align: center;
+    font-size: 17px;
+}
+
+
+/* Sidebar bottom */
+
+.sidebar-bottom {
+    padding: 15px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+}
+
+.student-mini-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+}
+
+.profile-avatar {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #2563eb;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.profile-info {
+    min-width: 0;
+}
+
+.profile-info strong {
+    display: block;
+    color: white;
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profile-info span {
+    display: block;
+    color: #94a3b8;
+    font-size: 11px;
+    margin-top: 3px;
+}
+
+.sidebar-logout {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 11px 12px;
+    color: #fca5a5;
+    text-decoration: none;
+    border-radius: 9px;
+    font-size: 13px;
+    transition: 0.2s ease;
+}
+
+.sidebar-logout:hover {
+    background: rgba(239,68,68,0.12);
+    color: #fecaca;
+}
+
+
+/* =========================================================
+   MAIN
+   ========================================================= */
+
+.spms-main {
+    margin-left: 260px;
+    width: calc(100% - 260px);
+    min-height: 100vh;
+    padding: 30px 35px;
+}
+
+
+/* =========================================================
+   TOP BAR
+   ========================================================= */
+
+.topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 28px;
+}
+
+.topbar h1 {
+    margin: 0;
+    font-size: 28px;
+    color: #0f172a;
+}
+
+.topbar p {
+    margin: 7px 0 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   DETAIL CARD
+   ========================================================= */
+
+.detail-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 30px;
+    box-shadow: 0 8px 25px rgba(15,23,42,0.05);
+}
+
+
+/* =========================================================
+   DETAIL HEADER
+   ========================================================= */
+
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    padding-bottom: 25px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.proposal-number {
+    display: inline-block;
+    color: #2563eb;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+
+.detail-header h2 {
+    margin: 0;
+    font-size: 25px;
+    color: #0f172a;
+    line-height: 1.35;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 13px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+
+/* Default */
+
+.status-submitted {
+    background: #dbeafe;
+    color: #1d4ed8;
+}
+
+.status-under_review {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-expert_recommended {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-coordinator_approved {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-rejected {
+    background: #fee2e2;
+    color: #b91c1c;
+}
+
+.status-returned {
+    background: #ffedd5;
+    color: #c2410c;
+}
+
+
+/* =========================================================
+   DETAIL SECTIONS
+   ========================================================= */
+
+.detail-section {
+    padding: 22px 0;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.detail-section:last-child {
+    border-bottom: none;
+}
+
+.detail-section h3 {
+    margin: 0 0 9px;
+    color: #0f172a;
+    font-size: 14px;
+}
+
+.detail-section p {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+    line-height: 1.7;
+    white-space: pre-line;
+}
+
+
+/* =========================================================
+   DETAIL GRID
+   ========================================================= */
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+}
+
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+.form-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding-top: 25px;
+}
+
+.primary-button,
+.secondary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 10px 17px;
+    border-radius: 9px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    transition: 0.2s ease;
+}
+
+.primary-button {
+    background: #2563eb;
+    color: white;
+    border: 1px solid #2563eb;
+}
+
+.primary-button:hover {
+    background: #1d4ed8;
+    color: white;
+    transform: translateY(-1px);
+}
+
+.secondary-button {
+    background: #ffffff;
+    color: #475569;
+    border: 1px solid #cbd5e1;
+}
+
+.secondary-button:hover {
+    background: #f8fafc;
+    color: #0f172a;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .spms-sidebar {
+        width: 220px;
+    }
+
+    .spms-main {
+        margin-left: 220px;
+        width: calc(100% - 220px);
+        padding: 22px;
+    }
+
+    .detail-grid {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+
+    .detail-header {
+        flex-direction: column;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .spms-sidebar {
+        width: 70px;
+    }
+
+    .sidebar-brand {
+        justify-content: center;
+        padding: 15px 8px;
+    }
+
+    .sidebar-brand > div:last-child,
+    .sidebar-link span:last-child,
+    .student-mini-profile .profile-info,
+    .sidebar-logout {
+        display: none;
+    }
+
+    .sidebar-nav {
+        padding: 20px 8px;
+    }
+
+    .sidebar-link {
+        justify-content: center;
+        padding: 13px 8px;
+    }
+
+    .sidebar-link span:first-child {
+        font-size: 19px;
+    }
+
+    .sidebar-bottom {
+        padding: 8px;
+    }
+
+    .student-mini-profile {
+        justify-content: center;
+        background: transparent;
+    }
+
+    .spms-main {
+        margin-left: 70px;
+        width: calc(100% - 70px);
+        padding: 18px;
+    }
+
+    .topbar h1 {
+        font-size: 22px;
+    }
+
+    .detail-card {
+        padding: 20px;
+        border-radius: 14px;
+    }
+
+    .detail-header h2 {
+        font-size: 20px;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .primary-button,
+    .secondary-button {
+        width: 100%;
+    }
+
+}
+
+</style>
+
+
+<div class="spms-layout">
+
+
+    <!-- =====================================================
+         SIDEBAR
+         ===================================================== -->
+
+    <aside class="spms-sidebar">
+
+
+        <div class="sidebar-brand">
+
+            <div class="brand-logo">
+                S
+            </div>
+
+            <div>
+
+                <h2>
+                    SPMS
+                </h2>
+
+                <span>
+                    Student Portal
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <nav class="sidebar-nav">
+
+
+            <a href="{% url 'accounts:student_dashboard' %}"
+               class="sidebar-link">
+
+                <span>🏠</span>
+                <span>Dashboard</span>
+
+            </a>
+
+
+            <a href="{% url 'accounts:student_proposals' %}"
+               class="sidebar-link active">
+
+                <span>📁</span>
+                <span>My Proposals</span>
+
+            </a>
+
+
+            <a href="{% url 'accounts:add_proposal' %}"
+               class="sidebar-link">
+
+                <span>➕</span>
+                <span>Submit Proposal</span>
+
+            </a>
+
+
+            <a href="{% url 'accounts:student_proposals' %}"
+               class="sidebar-link">
+
+                <span>📊</span>
+                <span>Project Status</span>
+
+            </a>
+
+
+        </nav>
+
+
+        <div class="sidebar-bottom">
+
+
+            <div class="student-mini-profile">
+
+
+                <div class="profile-avatar">
+
+                    {{ request.user.first_name|first|default:request.user.username|first|upper }}
+
+                </div>
+
+
+                <div class="profile-info">
+
+                    <strong>
+                        {{ request.user.get_full_name|default:request.user.username }}
+                    </strong>
+
+                    <span>
+                        Student
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+            <a href="{% url 'accounts:logout' %}"
+               class="sidebar-logout">
+
+                <span>🚪</span>
+                Logout
+
+            </a>
+
+
+        </div>
+
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN CONTENT
+         ===================================================== -->
+
+    <main class="spms-main">
+
+
+        <!-- TOP BAR -->
+
+        <header class="topbar">
+
+            <div>
+
+                <h1>
+                    Proposal Details
+                </h1>
+
+                <p>
+                    Review your submitted project proposal.
+                </p>
+
+            </div>
+
+        </header>
+
+
+        <!-- =================================================
+             PROPOSAL DETAIL CARD
+             ================================================= -->
+
+        <div class="detail-card">
+
+
+            <!-- HEADER -->
+
+            <div class="detail-header">
+
+
+                <div>
+
+                    <span class="proposal-number">
+                        Project Proposal
+                    </span>
+
+
+                    <h2>
+                        {{ proposal.title }}
+                    </h2>
+
+                </div>
+
+
+                <span class="status-badge status-{{ proposal.status|lower }}">
+
+                    {{ proposal.get_status_display }}
+
+                </span>
+
+
+            </div>
+
+
+            <!-- ABSTRACT -->
+
+            <div class="detail-section">
+
+                <h3>
+                    Abstract
+                </h3>
+
+                <p>
+                    {{ proposal.abstract }}
+                </p>
+
+            </div>
+
+
+            <!-- DOMAIN + TECHNOLOGIES -->
+
+            <div class="detail-grid">
+
+
+                <div class="detail-section">
+
+                    <h3>
+                        Domain
+                    </h3>
+
+                    <p>
+                        {{ proposal.domain }}
+                    </p>
+
+                </div>
+
+
+                <div class="detail-section">
+
+                    <h3>
+                        Technologies
+                    </h3>
+
+                    <p>
+                        {{ proposal.technologies }}
+                    </p>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- DESCRIPTION -->
+
+            <div class="detail-section">
+
+                <h3>
+                    Project Description
+                </h3>
+
+                <p>
+                    {{ proposal.description }}
+                </p>
+
+            </div>
+
+
+            <!-- SUBMITTED DATE -->
+
+            <div class="detail-section">
+
+                <h3>
+                    Submitted Date
+                </h3>
+
+                <p>
+                    {{ proposal.submitted_at|date:"d M Y, h:i A" }}
+                </p>
+
+            </div>
+
+
+            <!-- DOCUMENT -->
+
+            {% if proposal.proposal_document %}
+
+                <div class="detail-section">
+
+                    <h3>
+                        Proposal Document
+                    </h3>
+
+
+                    <a href="{{ proposal.proposal_document.url }}"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="primary-button">
+
+                        📄 View Proposal PDF
+
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+
+            <!-- BACK BUTTON -->
+
+            <div class="form-actions">
+
+                <a href="{% url 'accounts:student_proposals' %}"
+                   class="secondary-button">
+
+                    ← Back to Proposals
+
+                </a>
+
+            </div>
+
+
+        </div>
+
+
+    </main>
+
+</div>
+
+{% endblock %}
