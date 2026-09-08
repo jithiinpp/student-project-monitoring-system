@@ -20,11 +20,31 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('accounts.urls')),
+
+    path("admin/", admin.site.urls),
+
     path(
-    "coordinator/",
-    include("coordinator.urls")
+        "",
+        include("accounts.urls")
+    ),
+
+    path(
+        "projects/",
+        include("projects.urls")
+    ),
+
+    path(
+        "experts/",
+        include("experts.urls")
+    ),
+
+    path(
+        "coordinator/",
+        include("coordinator.urls")
+    ),
+    path(
+    "guides/",
+    include("guides.urls")
 ),
 ]
 

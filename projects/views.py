@@ -17,7 +17,7 @@ def student_proposals(request):
 
     proposals = ProjectProposal.objects.filter(
         student=request.user
-    )
+    ).order_by("-created_at")
 
     proposal_count = proposals.count()
 
@@ -34,25 +34,29 @@ def student_proposals(request):
 @login_required
 def add_proposal(request):
 
+    # Only students can submit proposals
     if request.user.is_superuser:
         return redirect("coordinator_dashboard")
 
     if request.user.role != "STUDENT":
         return redirect("dashboard")
 
+    # Count student's existing proposals
     proposal_count = ProjectProposal.objects.filter(
         student=request.user
     ).count()
 
+    # Maximum 3 proposals
     if proposal_count >= 3:
-
         messages.error(
             request,
             "You have already submitted the maximum of 3 proposals."
         )
-
         return redirect("student_proposals")
 
+    # -------------------------
+    # SUBMIT PROPOSAL
+    # -------------------------
     if request.method == "POST":
 
         form = ProjectProposalForm(
@@ -62,14 +66,17 @@ def add_proposal(request):
 
         if form.is_valid():
 
-            proposal = form.save(
-                commit=False
-            )
+            # Don't save yet because student
+            # must be attached to the proposal
+            proposal = form.save(commit=False)
 
+            # Assign logged-in student
             proposal.student = request.user
 
+            # Initial status
             proposal.status = "SUBMITTED"
 
+            # Save proposal
             proposal.save()
 
             messages.success(
@@ -77,12 +84,11 @@ def add_proposal(request):
                 "Your project proposal has been submitted successfully."
             )
 
-            return redirect(
-                "student_proposals"
-            )
+            # Go to proposal list
+            return redirect("student_proposals")
 
     else:
-
+        # Display empty form
         form = ProjectProposalForm()
 
     return render(

@@ -1,0 +1,416 @@
+{% extends "base.html" %}
+
+{% block title %}
+Staff Management | SPMS
+{% endblock %}
+
+
+{% block extra_css %}
+
+<style>
+
+.staff-list-container {
+
+    max-width: 1200px;
+
+    margin: 40px auto;
+
+    padding: 0 20px;
+}
+
+
+.page-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 25px;
+}
+
+
+.page-header h1 {
+
+    margin: 0 0 6px;
+
+    color: #0f172a;
+}
+
+
+.page-header p {
+
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+
+.add-button {
+
+    background: #2563eb;
+
+    color: white;
+
+    padding: 11px 18px;
+
+    text-decoration: none;
+
+    border-radius: 8px;
+
+    font-weight: 600;
+
+    font-size: 14px;
+}
+
+
+.table-card {
+
+    background: white;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 15px;
+
+    overflow-x: auto;
+
+    box-shadow:
+        0 5px 20px rgba(15, 23, 42, 0.05);
+}
+
+
+.staff-table {
+
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+
+.staff-table th {
+
+    background: #f8fafc;
+
+    padding: 15px;
+
+    text-align: left;
+
+    font-size: 13px;
+
+    color: #475569;
+
+    border-bottom: 1px solid #e2e8f0;
+}
+
+
+.staff-table td {
+
+    padding: 16px 15px;
+
+    border-bottom: 1px solid #e2e8f0;
+
+    font-size: 14px;
+
+    color: #334155;
+}
+
+
+.staff-table tr:last-child td {
+
+    border-bottom: none;
+}
+
+
+.role-badge {
+
+    display: inline-block;
+
+    padding: 6px 10px;
+
+    border-radius: 20px;
+
+    background: #eff6ff;
+
+    color: #1d4ed8;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+
+.action-button {
+
+    display: inline-block;
+
+    padding: 7px 11px;
+
+    border-radius: 6px;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+.view-button {
+
+    background: #eff6ff;
+
+    color: #2563eb;
+}
+
+
+.delete-button {
+
+    background: #fef2f2;
+
+    color: #dc2626;
+
+    border: none;
+
+    cursor: pointer;
+}
+
+
+.empty-box {
+
+    text-align: center;
+
+    padding: 50px 20px;
+
+    color: #64748b;
+}
+
+
+@media (max-width: 700px) {
+
+    .page-header {
+
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 15px;
+    }
+
+    .add-button {
+
+        width: 100%;
+
+        text-align: center;
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="staff-list-container">
+
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+        <div>
+
+            <h1>
+                Staff Management
+            </h1>
+
+            <p>
+                Manage Domain Experts, Guides and Panel Members.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{% url 'coordinator:add_staff' %}"
+            class="add-button"
+        >
+            ➕ Add Staff
+        </a>
+
+    </div>
+
+
+    <!-- TABLE -->
+
+    <div class="table-card">
+
+        {% if staff %}
+
+        <table class="staff-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Name
+                    </th>
+
+                    <th>
+                        Username
+                    </th>
+
+                    <th>
+                        Staff Type
+                    </th>
+
+                    <th>
+                        Email
+                    </th>
+
+                    <th>
+                        Phone
+                    </th>
+
+                    <th>
+                        Actions
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for member in staff %}
+
+                <tr>
+
+                    <td>
+
+                        {{ member.get_full_name|default:member.username }}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ member.username }}
+
+                    </td>
+
+
+                    <td>
+
+                        {% if member.role == "EXPERT" %}
+
+                            <span class="role-badge">
+                                👨‍🏫 Domain Expert
+                            </span>
+
+                        {% elif member.role == "GUIDE" %}
+
+                            <span class="role-badge">
+                                👨‍🏫 Guide
+                            </span>
+
+                        {% elif member.role == "PANEL" %}
+
+                            <span class="role-badge">
+                                👥 Panel Member
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ member.email|default:"-" }}
+
+                    </td>
+
+
+                    <td>
+
+                        {{ member.phone|default:"-" }}
+
+                    </td>
+
+
+                    <td>
+
+                        <a
+                            href="{% url 'coordinator:staff_detail' member.id %}"
+                            class="action-button view-button"
+                        >
+                            View
+                        </a>
+
+
+                        <form
+                            method="POST"
+                            action="{% url 'coordinator:delete_staff' member.id %}"
+                            style="display:inline;"
+                        >
+
+                            {% csrf_token %}
+
+                            <button
+                                type="submit"
+                                class="action-button delete-button"
+                                onclick="return confirm('Are you sure you want to delete this staff account?');"
+                            >
+                                Delete
+                            </button>
+
+                        </form>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+
+        {% else %}
+
+        <div class="empty-box">
+
+            <h3>
+                No Staff Members
+            </h3>
+
+            <p>
+                No Domain Experts, Guides or Panel Members
+                have been added yet.
+            </p>
+
+            <a
+                href="{% url 'coordinator:add_staff' %}"
+                class="add-button"
+            >
+                ➕ Add First Staff Member
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+</div>
+
+{% endblock %}

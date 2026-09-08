@@ -1,0 +1,603 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+Expert Dashboard | SPMS
+{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f4f7fb;
+    color: #1e293b;
+}
+
+.expert-container {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 35px 40px 50px;
+}
+
+/* HEADER */
+
+.expert-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    background: #ffffff;
+
+    padding: 25px 30px;
+
+    border-radius: 16px;
+
+    margin-bottom: 30px;
+
+    border: 1px solid #e2e8f0;
+
+    box-shadow: 0 4px 15px rgba(15, 23, 42, 0.05);
+}
+
+.expert-header h1 {
+    margin: 0 0 7px;
+
+    font-size: 28px;
+
+    font-weight: 700;
+
+    color: #0f172a;
+}
+
+.expert-header p {
+    margin: 0;
+
+    font-size: 14px;
+
+    color: #64748b;
+}
+
+/* LOGOUT */
+
+.logout-button {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 11px 20px;
+
+    background: #ef4444;
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    border-radius: 8px;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    transition: 0.25s ease;
+}
+
+.logout-button:hover {
+    background: #dc2626;
+
+    transform: translateY(-1px);
+}
+
+/* STATS */
+
+.stats-grid {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 20px;
+
+    margin-bottom: 30px;
+}
+
+.stat-card {
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    background: #ffffff;
+
+    padding: 22px;
+
+    border-radius: 14px;
+
+    border: 1px solid #e2e8f0;
+
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+
+    transition: 0.25s ease;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+}
+
+.stat-icon {
+    width: 50px;
+    height: 50px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    background: #eff6ff;
+
+    border-radius: 12px;
+
+    font-size: 24px;
+
+    flex-shrink: 0;
+}
+
+.stat-card p {
+    margin: 0 0 5px;
+
+    font-size: 13px;
+
+    color: #64748b;
+
+    font-weight: 500;
+}
+
+.stat-card h2 {
+    margin: 0;
+
+    font-size: 25px;
+
+    color: #0f172a;
+
+    font-weight: 700;
+}
+
+/* SECTION */
+
+.section-card {
+    background: #ffffff;
+
+    padding: 28px;
+
+    border-radius: 16px;
+
+    border: 1px solid #e2e8f0;
+
+    margin-bottom: 30px;
+
+    box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
+}
+
+.section-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 25px;
+}
+
+.section-header h2 {
+    margin: 0;
+
+    font-size: 21px;
+
+    color: #0f172a;
+
+    font-weight: 700;
+}
+
+/* BUTTON */
+
+.primary-button {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px 17px;
+
+    background: #2563eb;
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    transition: 0.25s ease;
+}
+
+.primary-button:hover {
+    background: #1d4ed8;
+
+    transform: translateY(-1px);
+}
+
+/* PROPOSAL TABLE */
+
+.table-container {
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+.proposal-table {
+    width: 100%;
+
+    border-collapse: collapse;
+}
+
+.proposal-table th {
+    text-align: left;
+
+    padding: 14px;
+
+    background: #f8fafc;
+
+    color: #475569;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.proposal-table td {
+    padding: 15px 14px;
+
+    border-bottom: 1px solid #e2e8f0;
+
+    font-size: 13px;
+
+    color: #475569;
+}
+
+.proposal-table tr:hover {
+    background: #f8fafc;
+}
+
+/* STATUS */
+
+.status-badge {
+    display: inline-block;
+
+    padding: 6px 10px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+
+    font-weight: 700;
+
+    background: #eff6ff;
+
+    color: #2563eb;
+}
+
+.empty-message {
+    text-align: center;
+
+    padding: 35px;
+
+    color: #64748b;
+
+    font-size: 14px;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 768px) {
+
+    .expert-container {
+        padding: 20px;
+    }
+
+    .expert-header {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 20px;
+    }
+
+    .logout-button {
+        width: 100%;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .section-card {
+        padding: 20px;
+    }
+
+}
+
+@media (max-width: 500px) {
+
+    .expert-container {
+        padding: 15px;
+    }
+
+    .expert-header h1 {
+        font-size: 23px;
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="expert-container">
+
+    <!-- HEADER -->
+
+    <div class="expert-header">
+
+        <div>
+
+            <h1>
+                Domain Expert Dashboard
+            </h1>
+
+            <p>
+                Welcome, {{ request.user.get_full_name|default:request.user.username }}
+            </p>
+
+        </div>
+
+        <a
+            href="{% url 'accounts:logout' %}"
+            class="logout-button"
+        >
+            Logout
+        </a>
+
+    </div>
+
+
+    <!-- STATISTICS -->
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+
+            <span class="stat-icon">
+                📁
+            </span>
+
+            <div>
+
+                <p>
+                    Assigned Proposals
+                </p>
+
+                <h2>
+                    {{ assigned_count|default:0 }}
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-icon">
+                ⏳
+            </span>
+
+            <div>
+
+                <p>
+                    Pending Review
+                </p>
+
+                <h2>
+                    {{ pending_count|default:0 }}
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-icon">
+                ✅
+            </span>
+
+            <div>
+
+                <p>
+                    Approved
+                </p>
+
+                <h2>
+                    {{ approved_count|default:0 }}
+                </h2>
+
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <span class="stat-icon">
+                🔄
+            </span>
+
+            <div>
+
+                <p>
+                    Changes Requested
+                </p>
+
+                <h2>
+                    {{ changes_count|default:0 }}
+                </h2>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ASSIGNED PROJECTS -->
+
+    <div class="section-card">
+
+        <div class="section-header">
+
+            <h2>
+                Assigned Project Proposals
+            </h2>
+
+        </div>
+
+
+        {% if proposals %}
+
+        <div class="table-container">
+
+            <table class="proposal-table">
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Student
+                        </th>
+
+                        <th>
+                            Project Title
+                        </th>
+
+                        <th>
+                            Domain
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Action
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for proposal in proposals %}
+
+                    <tr>
+
+                        <td>
+                            {{ proposal.student.username }}
+                        </td>
+
+                        <td>
+                            {{ proposal.title }}
+                        </td>
+
+                        <td>
+                            {{ proposal.domain|default:"-" }}
+                        </td>
+
+                        <td>
+
+                            <span class="status-badge">
+
+                                {{ proposal.status }}
+
+                            </span>
+
+                        </td>
+
+                        <td>
+
+                            <a
+                                href="{% url 'experts:proposal_detail' proposal.id %}"
+                                class="primary-button"
+                            >
+                                Review
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-message">
+
+            <p>
+                No project proposals have been assigned to you yet.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+
+</div>
+
+{% endblock %}

@@ -6,6 +6,10 @@ from django.shortcuts import get_object_or_404, redirect, render
 from .forms import StudentRegistrationForm
 from .models import User
 
+# ProjectProposal is in projects app
+from projects.forms import ProjectProposalForm
+from projects.models import ProjectProposal
+
 
 # ============================================================
 # LOGIN
@@ -68,8 +72,9 @@ def register_view(request):
 
             user = form.save()
 
-            # Every user registering through this form is a student
+            # All users registering through this form are students
             user.role = "STUDENT"
+
             user.save(update_fields=["role"])
 
             messages.success(
@@ -118,7 +123,7 @@ def dashboard_view(request):
 
     user = request.user
 
-    # Superuser → Coordinator dashboard
+    # Superuser → Coordinator
     if user.is_superuser:
         return redirect("accounts:coordinator_dashboard")
 
@@ -167,9 +172,23 @@ def student_dashboard(request):
     if request.user.role != "STUDENT":
         return redirect("accounts:dashboard")
 
+    proposals = (
+        ProjectProposal.objects
+        .filter(student=request.user)
+        .order_by("-id")
+    )
+
+    proposal_count = proposals.count()
+
+    context = {
+        "proposals": proposals,
+        "proposal_count": proposal_count,
+    }
+
     return render(
         request,
-        "student/dashboard.html"
+        "student/dashboard.html",
+        context
     )
 
 
@@ -188,13 +207,17 @@ def student_proposals(request):
     if request.user.role != "STUDENT":
         return redirect("accounts:dashboard")
 
-    # IMPORTANT:
-    # This temporarily works even if the Proposal model
-    # has not been created yet.
+    proposals = (
+        ProjectProposal.objects
+        .filter(student=request.user)
+        .order_by("-id")
+    )
+
+    proposal_count = proposals.count()
 
     context = {
-        "proposals": [],
-        "proposal_count": 0,
+        "proposals": proposals,
+        "proposal_count": proposal_count,
     }
 
     return render(
@@ -205,43 +228,99 @@ def student_proposals(request):
 
 
 # ============================================================
-# ADD PROPOSAL
+# ADD PROJECT PROPOSAL
 # ============================================================
 
 @login_required
 def add_proposal(request):
 
-    # Superuser → Coordinator
-    if request.user.is_superuser:
-        return redirect("accounts:coordinator_dashboard")
-
-    # Only students
+    # Only students can submit proposals
     if request.user.role != "STUDENT":
         return redirect("accounts:dashboard")
 
-    # Temporary proposal count
-    proposal_count = 0
+    # Count student's proposals
+    proposal_count = (
+        ProjectProposal.objects
+        .filter(student=request.user)
+        .count()
+    )
 
+    # Maximum 3 proposals
     if proposal_count >= 3:
 
-        messages.warning(
+        messages.error(
             request,
             "You have already submitted the maximum of 3 proposals."
         )
 
-        return redirect("accounts:student_proposals")
+        return redirect(
+            "accounts:student_proposals"
+        )
+
+    # ========================================================
+    # POST
+    # ========================================================
+
+    if request.method == "POST":
+
+        form = ProjectProposalForm(
+            request.POST,
+            request.FILES
+        )
+
+        if form.is_valid():
+
+            proposal = form.save(commit=False)
+
+            # Automatically assign current student
+            proposal.student = request.user
+
+            # Initial status
+            proposal.status = "SUBMITTED"
+
+            proposal.save()
+
+            messages.success(
+                request,
+                "Project proposal submitted successfully."
+            )
+
+            return redirect(
+                "accounts:student_proposals"
+            )
+
+        else:
+
+            messages.error(
+                request,
+                "Please correct the errors in the form."
+            )
+
+            print("====================================")
+            print("PROPOSAL FORM ERRORS:")
+            print(form.errors)
+            print("====================================")
+
+    # ========================================================
+    # GET
+    # ========================================================
+
+    else:
+
+        form = ProjectProposalForm()
 
     return render(
         request,
-        "student/add_proposal.html",
+        "student/proposal_form.html",
         {
+            "form": form,
             "proposal_count": proposal_count,
         }
     )
 
 
 # ============================================================
-# PROPOSAL DETAIL
+# STUDENT PROPOSAL DETAIL
 # ============================================================
 
 @login_required
@@ -255,30 +334,8 @@ def proposal_detail(request, proposal_id):
     if request.user.role != "STUDENT":
         return redirect("accounts:dashboard")
 
-    # --------------------------------------------------------
-    # IMPORTANT
-    # --------------------------------------------------------
-    # This requires a Proposal model in your projects app.
-    #
-    # If you have not created Proposal model yet, do not
-    # visit this page until the project/proposal app is ready.
-    # --------------------------------------------------------
-
-    try:
-
-        from projects.models import Proposal
-
-    except ImportError:
-
-        messages.error(
-            request,
-            "Proposal system is not configured yet."
-        )
-
-        return redirect("accounts:student_proposals")
-
     proposal = get_object_or_404(
-        Proposal,
+        ProjectProposal,
         id=proposal_id,
         student=request.user
     )
@@ -299,19 +356,49 @@ def proposal_detail(request, proposal_id):
 @login_required
 def coordinator_dashboard(request):
 
-    # Superuser is allowed
+    # Superuser allowed
     if not request.user.is_superuser:
 
         if request.user.role != "COORDINATOR":
             return redirect("accounts:dashboard")
 
-    students = User.objects.filter(
-        role="STUDENT"
-    ).order_by("-date_joined")
+    # Students
+    students = (
+        User.objects
+        .filter(role="STUDENT")
+        .order_by("-date_joined")
+    )
+
+    # All project proposals
+    proposals = (
+        ProjectProposal.objects
+        .select_related("student", "domain_expert")
+        .order_by("-submitted_at")
+    )
 
     context = {
         "students": students,
         "student_count": students.count(),
+
+        "proposals": proposals,
+        "proposal_count": proposals.count(),
+
+        # Proposal status counts
+        "submitted_count": proposals.filter(
+            status="SUBMITTED"
+        ).count(),
+
+        "expert_assigned_count": proposals.filter(
+            status="EXPERT_ASSIGNED"
+        ).count(),
+
+        "expert_approved_count": proposals.filter(
+            status="EXPERT_APPROVED"
+        ).count(),
+
+        "approved_count": proposals.filter(
+            status="COORDINATOR_APPROVED"
+        ).count(),
     }
 
     return render(
@@ -334,9 +421,23 @@ def expert_dashboard(request):
     if request.user.role != "EXPERT":
         return redirect("accounts:dashboard")
 
+    # Proposals assigned to this expert
+    proposals = (
+        ProjectProposal.objects
+        .filter(domain_expert=request.user)
+        .select_related("student")
+        .order_by("-submitted_at")
+    )
+
+    context = {
+        "proposals": proposals,
+        "proposal_count": proposals.count(),
+    }
+
     return render(
         request,
-        "expert/dashboard.html"
+        "expert/dashboard.html",
+        context
     )
 
 

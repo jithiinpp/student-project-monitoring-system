@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>Guide Dashboard</h1>
+
+<div class="dashboard-cards">
+
+    <div>
+        <h3>Assigned Projects</h3>
+        <strong>{{ project_count }}</strong>
+    </div>
+
+    <div>
+        <h3>Active Projects</h3>
+        <strong>{{ active_count }}</strong>
+    </div>
+
+    <div>
+        <h3>New Assignments</h3>
+        <strong>{{ assigned_count }}</strong>
+    </div>
+
+    <div>
+        <h3>Completed</h3>
+        <strong>{{ completed_count }}</strong>
+    </div>
+
+</div>
+
+
+<h2>My Students / Projects</h2>
+
+<table>
+
+    <thead>
+
+        <tr>
+            <th>Student</th>
+            <th>Project</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {% for project in projects %}
+
+        <tr>
+
+            <td>
+                {{ project.student.get_full_name|default:project.student.username }}
+            </td>
+
+            <td>
+                {{ project.title }}
+            </td>
+
+            <td>
+                {{ project.get_status_display }}
+            </td>
+
+            <td>
+
+                <a href="{% url 'guides:project_detail' project.id %}">
+                    View Project
+                </a>
+
+            </td>
+
+        </tr>
+
+        {% empty %}
+
+        <tr>
+            <td colspan="4">
+                No projects assigned yet.
+            </td>
+        </tr>
+
+        {% endfor %}
+
+    </tbody>
+
+</table>
+
+{% endblock %}

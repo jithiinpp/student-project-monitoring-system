@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.core.exceptions import ValidationError
 from django.db import models
 
 
@@ -9,9 +8,10 @@ class ProjectProposal(models.Model):
         ("SUBMITTED", "Submitted"),
         ("EXPERT_ASSIGNED", "Expert Assigned"),
         ("EXPERT_APPROVED", "Expert Approved"),
-        ("CHANGES_REQUESTED", "Changes Requested"),
         ("COORDINATOR_APPROVED", "Coordinator Approved"),
-        ("REJECTED", "Rejected"),
+        ("GUIDE_ASSIGNED", "Guide Assigned"),
+        ("IN_PROGRESS", "In Progress"),
+        ("COMPLETED", "Completed"),
     ]
 
     student = models.ForeignKey(
@@ -22,20 +22,25 @@ class ProjectProposal(models.Model):
     )
 
     title = models.CharField(
-        max_length=200
+        max_length=255
     )
 
-    abstract = models.TextField()
+    abstract = models.TextField(
+        blank=True
+    )
 
     domain = models.CharField(
-        max_length=100
+        max_length=255,
+        blank=True
     )
 
-    technologies = models.CharField(
-        max_length=500
+    technologies = models.TextField(
+        blank=True
     )
 
-    description = models.TextField()
+    description = models.TextField(
+        blank=True
+    )
 
     proposal_document = models.FileField(
         upload_to="proposals/",
@@ -56,36 +61,28 @@ class ProjectProposal(models.Model):
     updated_at = models.DateTimeField(
         auto_now=True
     )
+
     domain_expert = models.ForeignKey(
-    settings.AUTH_USER_MODEL,
-    on_delete=models.SET_NULL,
-    related_name="assigned_proposals",
-    blank=True,
-    null=True,
-    limit_choices_to={"role": "EXPERT"},
-)
-    def clean(self):
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="expert_proposals",
+        limit_choices_to={"role": "EXPERT"},
+    )
 
-        if self.student_id:
+    # -----------------------------------------------------
+    # GUIDE
+    # -----------------------------------------------------
 
-            existing_count = ProjectProposal.objects.filter(
-                student=self.student
-            ).exclude(
-                pk=self.pk
-            ).count()
-
-            if existing_count >= 3:
-
-                raise ValidationError(
-                    "A student can submit a maximum of 3 proposals."
-                )
+    guide = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="guided_proposals",
+        limit_choices_to={"role": "GUIDE"},
+    )
 
     def __str__(self):
-
-        return f"{self.title} - {self.student.username}"
-
-    class Meta:
-
-        ordering = [
-            "-submitted_at"
-        ]
+        return self.title

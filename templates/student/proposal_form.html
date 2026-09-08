@@ -1,895 +1,602 @@
 {% extends "base.html" %}
 
-{% block title %}
-Submit Proposal | SPMS
-{% endblock %}
+{% block title %}Submit Proposal | SPMS{% endblock %}
 
 {% block content %}
 
 <style>
-
-/* =========================================================
-   SPMS - SUBMIT PROPOSAL PAGE
-   ========================================================= */
-
-* {
-    box-sizing: border-box;
-}
-
-body {
-    margin: 0;
-    background: #f4f7fb;
-    font-family: Arial, Helvetica, sans-serif;
-    color: #1e293b;
-}
-
-
-/* =========================================================
-   LAYOUT
-   ========================================================= */
-
-.spms-layout {
-    display: flex;
-    min-height: 100vh;
-}
-
-
-/* =========================================================
-   SIDEBAR
-   ========================================================= */
-
-.spms-sidebar {
-    width: 260px;
-    min-height: 100vh;
-    background: #0f172a;
-    color: #ffffff;
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    display: flex;
-    flex-direction: column;
-    z-index: 1000;
-    box-shadow: 4px 0 20px rgba(15, 23, 42, 0.08);
-}
-
-
-/* Brand */
-
-.sidebar-brand {
-    height: 90px;
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-}
-
-.brand-logo {
-    width: 45px;
-    height: 45px;
-    border-radius: 12px;
-    background: #2563eb;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    font-weight: 700;
-}
-
-.sidebar-brand h2 {
-    margin: 0;
-    font-size: 20px;
-}
-
-.sidebar-brand span {
-    display: block;
-    margin-top: 3px;
-    font-size: 12px;
-    color: #94a3b8;
-}
-
-
-/* Navigation */
-
-.sidebar-nav {
-    padding: 25px 15px;
-    flex: 1;
-}
-
-.sidebar-link {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-    padding: 13px 15px;
-    margin-bottom: 7px;
-    color: #cbd5e1;
-    text-decoration: none;
-    border-radius: 10px;
-    font-size: 14px;
-    font-weight: 500;
-    transition: 0.2s ease;
-}
-
-.sidebar-link:hover {
-    background: #1e293b;
-    color: #ffffff;
-}
-
-.sidebar-link.active {
-    background: #2563eb;
-    color: #ffffff;
-    box-shadow: 0 5px 15px rgba(37,99,235,0.25);
-}
-
-.sidebar-link span:first-child {
-    width: 22px;
-    text-align: center;
-    font-size: 17px;
-}
-
-
-/* Sidebar bottom */
-
-.sidebar-bottom {
-    padding: 15px;
-    border-top: 1px solid rgba(255,255,255,0.08);
-}
-
-.student-mini-profile {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 10px;
-    margin-bottom: 10px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 10px;
-}
-
-.profile-avatar {
-    width: 38px;
-    height: 38px;
-    flex-shrink: 0;
-    border-radius: 50%;
-    background: #2563eb;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #ffffff;
-    font-size: 15px;
-    font-weight: 700;
-}
-
-.profile-info {
-    min-width: 0;
-}
-
-.profile-info strong {
-    display: block;
-    color: #ffffff;
-    font-size: 13px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-.profile-info span {
-    display: block;
-    color: #94a3b8;
-    font-size: 11px;
-    margin-top: 3px;
-}
-
-.sidebar-logout {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 100%;
-    padding: 11px 12px;
-    color: #fca5a5;
-    text-decoration: none;
-    border-radius: 9px;
-    font-size: 13px;
-    transition: 0.2s ease;
-}
-
-.sidebar-logout:hover {
-    background: rgba(239,68,68,0.12);
-    color: #fecaca;
-}
-
-
-/* =========================================================
-   MAIN
-   ========================================================= */
-
-.spms-main {
-    margin-left: 260px;
-    width: calc(100% - 260px);
-    min-height: 100vh;
-    padding: 30px 35px;
-}
-
-
-/* =========================================================
-   TOP BAR
-   ========================================================= */
-
-.topbar {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 28px;
-}
-
-.topbar h1 {
-    margin: 0;
-    font-size: 28px;
-    color: #0f172a;
-}
-
-.topbar p {
-    margin: 7px 0 0;
-    color: #64748b;
-    font-size: 14px;
-}
-
-
-/* =========================================================
-   FORM CONTAINER
-   ========================================================= */
-
-.form-container {
-    width: 100%;
-    max-width: 1000px;
-    margin: 0 auto;
-}
-
-
-/* =========================================================
-   FORM CARD
-   ========================================================= */
-
-.form-card {
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 18px;
-    overflow: hidden;
-    box-shadow: 0 8px 25px rgba(15,23,42,0.05);
-}
-
-
-/* =========================================================
-   FORM HEADER
-   ========================================================= */
-
-.form-card-header {
-    padding: 28px 30px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 20px;
-    border-bottom: 1px solid #e2e8f0;
-    background: #ffffff;
-}
-
-.form-card-header h2 {
-    margin: 0;
-    color: #0f172a;
-    font-size: 21px;
-}
-
-.form-card-header p {
-    margin: 7px 0 0;
-    color: #64748b;
-    font-size: 13px;
-    line-height: 1.5;
-}
-
-.form-progress {
-    min-width: 70px;
-    height: 38px;
-    padding: 0 12px;
-    border-radius: 20px;
-    background: #eff6ff;
-    color: #2563eb;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    font-weight: 700;
-}
-
-
-/* =========================================================
-   FORM
-   ========================================================= */
-
-.proposal-form {
-    padding: 30px;
-}
-
-.form-group {
-    margin-bottom: 22px;
-}
-
-.form-group label {
-    display: block;
-    margin-bottom: 8px;
-    color: #334155;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.form-group input,
-.form-group textarea,
-.form-group select {
-    width: 100%;
-    padding: 12px 14px;
-    border: 1px solid #cbd5e1;
-    border-radius: 9px;
-    background: #ffffff;
-    color: #0f172a;
-    font-family: inherit;
-    font-size: 13px;
-    outline: none;
-    transition: 0.2s ease;
-}
-
-.form-group input {
-    min-height: 44px;
-}
-
-.form-group textarea {
-    min-height: 130px;
-    resize: vertical;
-    line-height: 1.6;
-}
-
-.form-group input[type="file"] {
-    padding: 10px;
-    cursor: pointer;
-    background: #f8fafc;
-}
-
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37,99,235,0.10);
-}
-
-.form-group small {
-    display: block;
-    margin-top: 7px;
-    color: #64748b;
-    font-size: 11px;
-}
-
-
-/* =========================================================
-   TWO COLUMN FORM
-   ========================================================= */
-
-.form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-}
-
-
-/* =========================================================
-   ERRORS
-   ========================================================= */
-
-.form-error {
-    padding: 12px 15px;
-    margin-bottom: 20px;
-    border: 1px solid #fecaca;
-    border-radius: 9px;
-    background: #fef2f2;
-    color: #b91c1c;
-    font-size: 13px;
-}
-
-.errorlist {
-    margin: 7px 0 0;
-    padding: 0;
-    list-style: none;
-    color: #dc2626;
-    font-size: 11px;
-}
-
-
-/* =========================================================
-   FORM ACTIONS
-   ========================================================= */
-
-.form-actions {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 12px;
-    padding-top: 10px;
-    border-top: 1px solid #e2e8f0;
-    margin-top: 10px;
-}
-
-
-/* Buttons */
-
-.primary-button,
-.secondary-button {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 43px;
-    padding: 10px 18px;
-    border-radius: 9px;
-    text-decoration: none;
-    font-family: inherit;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: 0.2s ease;
-}
-
-.primary-button {
-    border: 1px solid #2563eb;
-    background: #2563eb;
-    color: #ffffff;
-}
-
-.primary-button:hover {
-    background: #1d4ed8;
-    border-color: #1d4ed8;
-    transform: translateY(-1px);
-}
-
-.secondary-button {
-    border: 1px solid #cbd5e1;
-    background: #ffffff;
-    color: #475569;
-}
-
-.secondary-button:hover {
-    background: #f8fafc;
-    color: #0f172a;
-}
-
-
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
-
-@media (max-width: 900px) {
-
-    .spms-sidebar {
-        width: 220px;
+    * {
+        box-sizing: border-box;
     }
 
-    .spms-main {
-        margin-left: 220px;
-        width: calc(100% - 220px);
-        padding: 22px;
+    .proposal-page {
+        min-height: 100vh;
+        background: #f5f7fb;
+        padding: 30px;
     }
 
-    .form-row {
-        grid-template-columns: 1fr;
-        gap: 0;
+    .proposal-container {
+        max-width: 1100px;
+        margin: 0 auto;
     }
 
-}
-
-
-@media (max-width: 600px) {
-
-    .spms-sidebar {
-        width: 70px;
+    /* Header */
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 25px;
+        gap: 20px;
     }
 
-    .sidebar-brand {
-        justify-content: center;
-        padding: 15px 8px;
+    .page-header h1 {
+        margin: 0;
+        font-size: 30px;
+        color: #1f2937;
     }
 
-    .sidebar-brand > div:last-child,
-    .sidebar-link span:last-child,
-    .student-mini-profile .profile-info,
-    .sidebar-logout {
-        display: none;
+    .page-header p {
+        margin: 7px 0 0;
+        color: #6b7280;
+        font-size: 15px;
     }
 
-    .sidebar-nav {
-        padding: 20px 8px;
+    .back-btn {
+        text-decoration: none;
+        padding: 11px 18px;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #374151;
+        border: 1px solid #d1d5db;
+        font-size: 14px;
+        font-weight: 600;
+        transition: 0.2s;
     }
 
-    .sidebar-link {
-        justify-content: center;
-        padding: 13px 8px;
+    .back-btn:hover {
+        background: #f3f4f6;
     }
 
-    .sidebar-link span:first-child {
-        font-size: 19px;
+    /* Proposal limit */
+    .proposal-limit {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 18px 22px;
+        margin-bottom: 22px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
     }
 
-    .sidebar-bottom {
-        padding: 8px;
+    .limit-title {
+        font-weight: 700;
+        color: #374151;
+        margin-bottom: 5px;
     }
 
-    .student-mini-profile {
-        justify-content: center;
-        background: transparent;
+    .limit-text {
+        color: #6b7280;
+        font-size: 14px;
     }
 
-    .spms-main {
-        margin-left: 70px;
-        width: calc(100% - 70px);
-        padding: 18px;
+    .limit-count {
+        font-size: 18px;
+        font-weight: 700;
+        color: #2563eb;
+        white-space: nowrap;
     }
 
-    .topbar h1 {
-        font-size: 22px;
+    /* Form card */
+    .form-card {
+        background: #ffffff;
+        border-radius: 14px;
+        border: 1px solid #e5e7eb;
+        padding: 30px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
     }
 
-    .form-card-header {
-        padding: 22px;
-        align-items: flex-start;
+    .form-section {
+        margin-bottom: 30px;
+    }
+
+    .form-section:last-child {
+        margin-bottom: 0;
+    }
+
+    .section-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1f2937;
+        margin: 0 0 18px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .form-group {
+        display: flex;
         flex-direction: column;
     }
 
-    .proposal-form {
-        padding: 22px;
+    .form-group.full {
+        grid-column: 1 / -1;
     }
 
-    .form-actions {
-        flex-direction: column-reverse;
-        align-items: stretch;
+    .form-group label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 8px;
     }
 
-    .primary-button,
-    .secondary-button {
+    .required {
+        color: #dc2626;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
         width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #d1d5db;
+        border-radius: 8px;
+        font-size: 14px;
+        font-family: inherit;
+        color: #1f2937;
+        background: #ffffff;
+        outline: none;
+        transition: 0.2s;
     }
 
-}
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
 
+    .form-group textarea {
+        min-height: 130px;
+        resize: vertical;
+    }
+
+    .form-help {
+        margin-top: 6px;
+        font-size: 12px;
+        color: #6b7280;
+        line-height: 1.5;
+    }
+
+    /* File upload */
+    .file-box {
+        border: 2px dashed #d1d5db;
+        border-radius: 10px;
+        padding: 25px;
+        text-align: center;
+        background: #fafafa;
+        transition: 0.2s;
+    }
+
+    .file-box:hover {
+        border-color: #2563eb;
+        background: #f8fbff;
+    }
+
+    .file-box input {
+        border: none;
+        padding: 0;
+        box-shadow: none;
+        background: transparent;
+    }
+
+    .file-title {
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 6px;
+    }
+
+    .file-description {
+        color: #6b7280;
+        font-size: 13px;
+        margin-bottom: 15px;
+    }
+
+    /* Errors */
+    .error-box {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #b91c1c;
+        border-radius: 8px;
+        padding: 12px 15px;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+
+    .field-error {
+        color: #dc2626;
+        font-size: 12px;
+        margin-top: 5px;
+    }
+
+    /* Buttons */
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        padding-top: 25px;
+        border-top: 1px solid #e5e7eb;
+    }
+
+    .btn {
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        padding: 12px 22px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        transition: 0.2s;
+    }
+
+    .btn-cancel {
+        background: #f3f4f6;
+        color: #374151;
+        border: 1px solid #d1d5db;
+    }
+
+    .btn-cancel:hover {
+        background: #e5e7eb;
+    }
+
+    .btn-submit {
+        background: #2563eb;
+        color: white;
+    }
+
+    .btn-submit:hover {
+        background: #1d4ed8;
+    }
+
+    /* Notice */
+    .submission-notice {
+        margin-top: 20px;
+        padding: 15px 18px;
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 9px;
+        color: #1e40af;
+        font-size: 13px;
+        line-height: 1.6;
+    }
+
+    /* Responsive */
+    @media (max-width: 700px) {
+
+        .proposal-page {
+            padding: 18px;
+        }
+
+        .page-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .proposal-limit {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .form-card {
+            padding: 20px;
+        }
+
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .form-group.full {
+            grid-column: auto;
+        }
+
+        .form-actions {
+            flex-direction: column;
+        }
+
+        .btn {
+            width: 100%;
+            text-align: center;
+        }
+    }
 </style>
 
 
-<div class="spms-layout">
+<div class="proposal-page">
 
+    <div class="proposal-container">
 
-    <!-- =====================================================
-         SIDEBAR
-         ===================================================== -->
-
-    <aside class="spms-sidebar">
-
-
-        <div class="sidebar-brand">
-
-            <div class="brand-logo">
-                S
-            </div>
+        <!-- PAGE HEADER -->
+        <div class="page-header">
 
             <div>
-
-                <h2>
-                    SPMS
-                </h2>
-
-                <span>
-                    Student Portal
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <nav class="sidebar-nav">
-
-
-            <a href="{% url 'accounts:student_dashboard' %}"
-               class="sidebar-link">
-
-                <span>🏠</span>
-                <span>Dashboard</span>
-
-            </a>
-
-
-            <a href="{% url 'accounts:student_proposals' %}"
-               class="sidebar-link">
-
-                <span>📁</span>
-                <span>My Proposals</span>
-
-            </a>
-
-
-            <a href="{% url 'accounts:add_proposal' %}"
-               class="sidebar-link active">
-
-                <span>➕</span>
-                <span>Submit Proposal</span>
-
-            </a>
-
-
-            <a href="{% url 'accounts:student_proposals' %}"
-               class="sidebar-link">
-
-                <span>📊</span>
-                <span>Project Status</span>
-
-            </a>
-
-
-        </nav>
-
-
-        <div class="sidebar-bottom">
-
-
-            <div class="student-mini-profile">
-
-
-                <div class="profile-avatar">
-
-                    {{ request.user.first_name|first|default:request.user.username|first|upper }}
-
-                </div>
-
-
-                <div class="profile-info">
-
-                    <strong>
-                        {{ request.user.get_full_name|default:request.user.username }}
-                    </strong>
-
-                    <span>
-                        Student
-                    </span>
-
-                </div>
-
-
-            </div>
-
-
-            <a href="{% url 'accounts:logout' %}"
-               class="sidebar-logout">
-
-                <span>🚪</span>
-                Logout
-
-            </a>
-
-
-        </div>
-
-
-    </aside>
-
-
-    <!-- =====================================================
-         MAIN CONTENT
-         ===================================================== -->
-
-    <main class="spms-main">
-
-
-        <!-- TOP BAR -->
-
-        <header class="topbar">
-
-            <div>
-
-                <h1>
-                    Submit Project Proposal
-                </h1>
-
+                <h1>Submit Project Proposal</h1>
                 <p>
-                    Proposal {{ proposal_count|add:"1" }} of 3
+                    Submit your project idea for Domain Expert review.
                 </p>
-
             </div>
 
-        </header>
+            <a href="{% url 'accounts:student_proposals' %}"
+               class="back-btn">
+                ← Back to Proposals
+            </a>
+
+        </div>
 
 
-        <!-- =================================================
-             FORM
-             ================================================= -->
+        <!-- PROPOSAL COUNT -->
+        <div class="proposal-limit">
 
-        <div class="form-container">
+            <div>
+                <div class="limit-title">
+                    Proposal Submission
+                </div>
 
+                <div class="limit-text">
+                    Each student can submit a maximum of 3 project proposals.
+                </div>
+            </div>
 
-            <div class="form-card">
+            <div class="limit-count">
+                {{ proposal_count|default:"0" }} / 3
+            </div>
 
-
-                <!-- FORM HEADER -->
-
-                <div class="form-card-header">
-
-                    <div>
-
-                        <h2>
-                            Project Proposal
-                        </h2>
-
-                        <p>
-                            Provide complete information about your proposed project.
-                        </p>
-
-                    </div>
+        </div>
 
 
-                    <div class="form-progress">
+        <!-- FORM CARD -->
+        <div class="form-card">
 
-                        {{ proposal_count|default:"0" }} / 3
+            <!-- NON FIELD ERRORS -->
+            {% if form.non_field_errors %}
 
-                    </div>
+                <div class="error-box">
+
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
 
                 </div>
 
-
-                <!-- FORM -->
-
-                <form method="POST"
-                      enctype="multipart/form-data"
-                      class="proposal-form">
-
-                    {% csrf_token %}
+            {% endif %}
 
 
-                    <!-- GENERAL FORM ERRORS -->
+            <form method="POST"
+                  enctype="multipart/form-data">
 
-                    {% if form.non_field_errors %}
+                {% csrf_token %}
 
-                        <div class="form-error">
 
-                            {{ form.non_field_errors }}
+                <!-- BASIC INFORMATION -->
+                <div class="form-section">
+
+                    <h2 class="section-title">
+                        Project Information
+                    </h2>
+
+
+                    <div class="form-grid">
+
+                        <!-- TITLE -->
+                        <div class="form-group full">
+
+                            <label for="{{ form.title.id_for_label }}">
+                                Project Title
+                                <span class="required">*</span>
+                            </label>
+
+                            {{ form.title }}
+
+                            {% if form.title.errors %}
+                                {% for error in form.title.errors %}
+                                    <div class="field-error">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+
+                            <div class="form-help">
+                                Enter a clear and meaningful title for your project.
+                            </div>
 
                         </div>
 
-                    {% endif %}
 
-
-                    <!-- PROJECT TITLE -->
-
-                    <div class="form-group">
-
-                        <label for="{{ form.title.id_for_label }}">
-                            Project Title
-                        </label>
-
-                        {{ form.title }}
-
-                        {{ form.title.errors }}
-
-                    </div>
-
-
-                    <!-- ABSTRACT -->
-
-                    <div class="form-group">
-
-                        <label for="{{ form.abstract.id_for_label }}">
-                            Abstract
-                        </label>
-
-                        {{ form.abstract }}
-
-                        {{ form.abstract.errors }}
-
-                    </div>
-
-
-                    <!-- DOMAIN + TECHNOLOGIES -->
-
-                    <div class="form-row">
-
-
+                        <!-- DOMAIN -->
                         <div class="form-group">
 
                             <label for="{{ form.domain.id_for_label }}">
-                                Domain
+                                Project Domain
+                                <span class="required">*</span>
                             </label>
 
                             {{ form.domain }}
 
-                            {{ form.domain.errors }}
+                            {% if form.domain.errors %}
+                                {% for error in form.domain.errors %}
+                                    <div class="field-error">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
 
                         </div>
 
 
+                        <!-- TECHNOLOGIES -->
                         <div class="form-group">
 
                             <label for="{{ form.technologies.id_for_label }}">
                                 Technologies
+                                <span class="required">*</span>
                             </label>
 
                             {{ form.technologies }}
 
-                            {{ form.technologies.errors }}
+                            {% if form.technologies.errors %}
+                                {% for error in form.technologies.errors %}
+                                    <div class="field-error">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+
+                            <div class="form-help">
+                                Example: Python, Django, PostgreSQL, HTML, CSS.
+                            </div>
 
                         </div>
 
 
+                        <!-- ABSTRACT -->
+                        <div class="form-group full">
+
+                            <label for="{{ form.abstract.id_for_label }}">
+                                Project Abstract
+                                <span class="required">*</span>
+                            </label>
+
+                            {{ form.abstract }}
+
+                            {% if form.abstract.errors %}
+                                {% for error in form.abstract.errors %}
+                                    <div class="field-error">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+
+                            <div class="form-help">
+                                Provide a short summary explaining the project,
+                                its purpose and expected outcome.
+                            </div>
+
+                        </div>
+
+
+                        <!-- DESCRIPTION -->
+                        <div class="form-group full">
+
+                            <label for="{{ form.description.id_for_label }}">
+                                Project Description
+                                <span class="required">*</span>
+                            </label>
+
+                            {{ form.description }}
+
+                            {% if form.description.errors %}
+                                {% for error in form.description.errors %}
+                                    <div class="field-error">
+                                        {{ error }}
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+
+                            <div class="form-help">
+                                Explain the problem, proposed solution,
+                                objectives and major features of the project.
+                            </div>
+
+                        </div>
+
                     </div>
 
-
-                    <!-- DESCRIPTION -->
-
-                    <div class="form-group">
-
-                        <label for="{{ form.description.id_for_label }}">
-                            Project Description
-                        </label>
-
-                        {{ form.description }}
-
-                        {{ form.description.errors }}
-
-                    </div>
+                </div>
 
 
-                    <!-- DOCUMENT -->
+                <!-- DOCUMENT -->
+                <div class="form-section">
+
+                    <h2 class="section-title">
+                        Proposal Document
+                    </h2>
+
 
                     <div class="form-group">
 
                         <label for="{{ form.proposal_document.id_for_label }}">
-                            Proposal Document
+                            Upload Proposal PDF
+                            <span class="required">*</span>
                         </label>
 
-                        {{ form.proposal_document }}
 
-                        <small>
-                            PDF only. Maximum file size: 10 MB.
-                        </small>
+                        <div class="file-box">
 
-                        {{ form.proposal_document.errors }}
+                            <div class="file-title">
+                                Upload your project proposal
+                            </div>
 
-                    </div>
+                            <div class="file-description">
+                                Only PDF files are accepted.
+                                Maximum file size: 10 MB.
+                            </div>
 
+                            {{ form.proposal_document }}
 
-                    <!-- BUTTONS -->
-
-                    <div class="form-actions">
-
-
-                        <a href="{% url 'accounts:student_proposals' %}"
-                           class="secondary-button">
-
-                            Cancel
-
-                        </a>
+                        </div>
 
 
-                        <button type="submit"
-                                class="primary-button">
-
-                            Submit Proposal
-
-                        </button>
-
+                        {% if form.proposal_document.errors %}
+                            {% for error in form.proposal_document.errors %}
+                                <div class="field-error">
+                                    {{ error }}
+                                </div>
+                            {% endfor %}
+                        {% endif %}
 
                     </div>
 
+                </div>
 
-                </form>
+
+                <!-- NOTICE -->
+                <div class="submission-notice">
+
+                    <strong>Before submitting:</strong>
+
+                    Please make sure that all project information is correct.
+                    After submission, your proposal will be sent to the
+                    Domain Expert for review. You can submit a maximum of
+                    3 proposals.
+
+                </div>
 
 
-            </div>
+                <!-- ACTIONS -->
+                <div class="form-actions">
 
+                    <a href="{% url 'accounts:student_proposals' %}"
+                       class="btn btn-cancel">
+                        Cancel
+                    </a>
+
+                    <button type="submit"
+                            class="btn btn-submit">
+                        Submit Proposal
+                    </button>
+
+                </div>
+
+            </form>
 
         </div>
 
-
-    </main>
+    </div>
 
 </div>
 
