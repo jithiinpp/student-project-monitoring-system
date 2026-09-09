@@ -7,9 +7,10 @@ Student Dashboard | SPMS
 {% block content %}
 
 <style>
+
 /* =========================================================
    SPMS STUDENT DASHBOARD
-   ========================================================= */
+========================================================= */
 
 * {
     box-sizing: border-box;
@@ -25,53 +26,67 @@ body {
 
 /* =========================================================
    MAIN LAYOUT
-   ========================================================= */
+========================================================= */
 
 .spms-layout {
     display: flex;
-    min-height: calc(100vh - 0px);
+    min-height: 100vh;
 }
 
 
 /* =========================================================
    SIDEBAR
-   ========================================================= */
+========================================================= */
 
 .spms-sidebar {
     width: 260px;
     min-height: 100vh;
+
     background: #0f172a;
     color: #ffffff;
+
     position: fixed;
     left: 0;
     top: 0;
     bottom: 0;
+
     display: flex;
     flex-direction: column;
+
     z-index: 1000;
+
     box-shadow: 4px 0 20px rgba(15, 23, 42, 0.08);
 }
 
 
-/* Brand */
+/* =========================================================
+   SIDEBAR BRAND
+========================================================= */
 
 .sidebar-brand {
     height: 90px;
     padding: 20px;
+
     display: flex;
     align-items: center;
+
     gap: 12px;
+
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .brand-logo {
     width: 45px;
     height: 45px;
+
     border-radius: 12px;
+
     background: #2563eb;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     font-size: 22px;
     font-weight: 700;
 }
@@ -83,13 +98,17 @@ body {
 
 .sidebar-brand span {
     display: block;
+
     margin-top: 3px;
+
     font-size: 12px;
     color: #94a3b8;
 }
 
 
-/* Navigation */
+/* =========================================================
+   SIDEBAR NAVIGATION
+========================================================= */
 
 .sidebar-nav {
     padding: 25px 15px;
@@ -99,14 +118,22 @@ body {
 .sidebar-link {
     display: flex;
     align-items: center;
+
     gap: 13px;
+
     padding: 13px 15px;
+
     margin-bottom: 7px;
+
     color: #cbd5e1;
+
     text-decoration: none;
+
     border-radius: 10px;
+
     font-size: 14px;
     font-weight: 500;
+
     transition: 0.2s ease;
 }
 
@@ -118,43 +145,60 @@ body {
 .sidebar-link.active {
     background: #2563eb;
     color: #ffffff;
+
     box-shadow: 0 5px 15px rgba(37, 99, 235, 0.25);
 }
 
 .sidebar-link span:first-child {
     width: 22px;
+
     text-align: center;
+
     font-size: 17px;
 }
 
 
-/* Sidebar bottom */
+/* =========================================================
+   SIDEBAR BOTTOM
+========================================================= */
 
 .sidebar-bottom {
     padding: 15px;
+
     border-top: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .student-mini-profile {
     display: flex;
     align-items: center;
+
     gap: 10px;
+
     padding: 10px;
+
     margin-bottom: 10px;
+
     background: rgba(255, 255, 255, 0.05);
+
     border-radius: 10px;
 }
 
 .profile-avatar {
     width: 38px;
     height: 38px;
+
     flex-shrink: 0;
+
     border-radius: 50%;
+
     background: #2563eb;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     color: white;
+
     font-size: 15px;
     font-weight: 700;
 }
@@ -165,224 +209,319 @@ body {
 
 .profile-info strong {
     display: block;
+
     color: #ffffff;
+
     font-size: 13px;
+
     white-space: nowrap;
+
     overflow: hidden;
+
     text-overflow: ellipsis;
 }
 
 .profile-info span {
     display: block;
+
     color: #94a3b8;
+
     font-size: 11px;
+
     margin-top: 3px;
 }
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
 
 .sidebar-logout {
     display: flex;
     align-items: center;
+
     gap: 10px;
+
     width: 100%;
+
     padding: 11px 12px;
+
     color: #fca5a5;
+
     text-decoration: none;
+
     border-radius: 9px;
+
     font-size: 13px;
+
     transition: 0.2s ease;
 }
 
 .sidebar-logout:hover {
     background: rgba(239, 68, 68, 0.12);
+
     color: #fecaca;
 }
 
 
 /* =========================================================
    MAIN CONTENT
-   ========================================================= */
+========================================================= */
 
 .spms-main {
     margin-left: 260px;
+
     width: calc(100% - 260px);
+
     min-height: 100vh;
+
     padding: 30px 35px;
 }
 
 
 /* =========================================================
    TOP BAR
-   ========================================================= */
+========================================================= */
 
 .topbar {
     display: flex;
     align-items: center;
+
     justify-content: space-between;
+
     margin-bottom: 28px;
 }
 
 .topbar h1 {
     margin: 0;
+
     font-size: 28px;
+
     color: #0f172a;
 }
 
 .topbar p {
     margin: 7px 0 0;
+
     color: #64748b;
+
     font-size: 14px;
 }
 
 .topbar-user {
     display: flex;
     align-items: center;
+
     gap: 10px;
 }
 
 .topbar-user strong {
     display: block;
+
     font-size: 13px;
+
     color: #0f172a;
 }
 
 .topbar-user span {
     display: block;
+
     margin-top: 3px;
+
     font-size: 11px;
+
     color: #64748b;
 }
 
 .topbar-avatar {
     width: 42px;
     height: 42px;
+
     border-radius: 50%;
+
     background: #2563eb;
+
     color: white;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     font-weight: 700;
 }
 
 
 /* =========================================================
    WELCOME CARD
-   ========================================================= */
+========================================================= */
 
 .welcome-card {
     min-height: 180px;
+
     padding: 30px;
+
     margin-bottom: 28px;
+
     border-radius: 18px;
-    background: linear-gradient(135deg, #1d4ed8, #2563eb);
+
+    background: linear-gradient(
+        135deg,
+        #1d4ed8,
+        #2563eb
+    );
+
     color: white;
+
     display: flex;
     align-items: center;
+
     justify-content: space-between;
+
     overflow: hidden;
+
     position: relative;
-    box-shadow: 0 12px 30px rgba(37, 99, 235, 0.20);
+
+    box-shadow:
+        0 12px 30px rgba(37, 99, 235, 0.20);
 }
 
 .welcome-card::after {
     content: "";
+
     width: 220px;
     height: 220px;
+
     position: absolute;
+
     right: -70px;
     top: -80px;
+
     border-radius: 50%;
+
     background: rgba(255, 255, 255, 0.08);
 }
 
 .welcome-label {
     font-size: 11px;
+
     letter-spacing: 1.2px;
+
     font-weight: 700;
+
     opacity: 0.85;
 }
 
 .welcome-card h2 {
     margin: 10px 0;
+
     font-size: 27px;
 }
 
 .welcome-card p {
     max-width: 650px;
+
     margin: 0;
+
     line-height: 1.6;
+
     font-size: 14px;
+
     opacity: 0.9;
 }
 
 .welcome-icon {
     width: 85px;
     height: 85px;
+
     border-radius: 20px;
+
     background: rgba(255, 255, 255, 0.13);
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     font-size: 42px;
+
     position: relative;
+
     z-index: 2;
 }
 
 
 /* =========================================================
    STATISTICS
-   ========================================================= */
+========================================================= */
 
 .stats-grid {
     display: grid;
+
     grid-template-columns: repeat(4, 1fr);
+
     gap: 18px;
+
     margin-bottom: 35px;
 }
 
 .stat-card {
     background: #ffffff;
+
     border: 1px solid #e2e8f0;
+
     border-radius: 14px;
+
     padding: 20px;
+
     display: flex;
     align-items: center;
+
     gap: 15px;
+
     transition: 0.2s ease;
 }
 
 .stat-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+
+    box-shadow:
+        0 10px 25px rgba(15, 23, 42, 0.08);
 }
 
 .stat-icon {
     width: 48px;
     height: 48px;
+
     border-radius: 12px;
+
     background: #eff6ff;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     font-size: 22px;
 }
 
 .stat-card span {
     display: block;
+
     color: #64748b;
+
     font-size: 12px;
 }
 
 .stat-card h2 {
     margin: 5px 0 0;
+
     color: #0f172a;
+
     font-size: 25px;
 }
 
 
 /* =========================================================
    SECTIONS
-   ========================================================= */
+========================================================= */
 
 .dashboard-section {
     margin-bottom: 35px;
@@ -391,157 +530,328 @@ body {
 .section-heading {
     display: flex;
     align-items: center;
+
     justify-content: space-between;
+
     margin-bottom: 15px;
 }
 
 .section-heading h2 {
     margin: 0;
+
     font-size: 20px;
+
     color: #0f172a;
 }
 
 .section-heading p {
     margin: 5px 0 0;
+
     color: #64748b;
+
     font-size: 13px;
 }
 
 
 /* =========================================================
    QUICK ACTIONS
-   ========================================================= */
+========================================================= */
 
 .action-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+
+    grid-template-columns: repeat(4, 1fr);
+
     gap: 18px;
 }
 
 .action-card {
     min-height: 145px;
+
     padding: 22px;
+
     background: #ffffff;
+
     border: 1px solid #e2e8f0;
+
     border-radius: 14px;
+
     display: flex;
     align-items: center;
+
     gap: 15px;
+
     text-decoration: none;
+
     color: inherit;
+
     position: relative;
+
     transition: 0.2s ease;
 }
 
 .action-card:hover {
     transform: translateY(-4px);
+
     border-color: #93c5fd;
-    box-shadow: 0 12px 25px rgba(15, 23, 42, 0.08);
+
+    box-shadow:
+        0 12px 25px rgba(15, 23, 42, 0.08);
 }
 
 .action-icon {
     width: 50px;
     height: 50px;
+
     flex-shrink: 0;
+
     border-radius: 12px;
+
     background: #eff6ff;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     font-size: 22px;
 }
 
 .action-card h3 {
     margin: 0 0 6px;
+
     font-size: 15px;
+
     color: #0f172a;
 }
 
 .action-card p {
     margin: 0;
+
     color: #64748b;
+
     font-size: 12px;
+
     line-height: 1.5;
 }
 
 .action-arrow {
     position: absolute;
+
     right: 18px;
     bottom: 18px;
+
     color: #2563eb;
+
     font-size: 20px;
 }
 
 
 /* =========================================================
+   WEEKLY PROGRESS CARD
+========================================================= */
+
+.progress-card {
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 16px;
+
+    padding: 25px;
+
+    box-shadow:
+        0 5px 20px rgba(15, 23, 42, 0.03);
+}
+
+.progress-content {
+    display: flex;
+
+    align-items: center;
+
+    gap: 20px;
+}
+
+.progress-icon {
+    width: 60px;
+    height: 60px;
+
+    flex-shrink: 0;
+
+    border-radius: 15px;
+
+    background: #eff6ff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 28px;
+}
+
+.progress-info {
+    flex: 1;
+}
+
+.progress-info h3 {
+    margin: 0 0 7px;
+
+    font-size: 17px;
+
+    color: #0f172a;
+}
+
+.progress-info p {
+    margin: 0;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    line-height: 1.6;
+}
+
+.progress-buttons {
+    display: flex;
+
+    gap: 10px;
+
+    flex-shrink: 0;
+}
+
+.progress-btn {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 11px 18px;
+
+    border-radius: 9px;
+
+    text-decoration: none;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    transition: 0.2s ease;
+}
+
+.progress-btn-primary {
+    background: #2563eb;
+
+    color: white;
+}
+
+.progress-btn-primary:hover {
+    background: #1d4ed8;
+
+    color: white;
+}
+
+.progress-btn-secondary {
+    background: #eff6ff;
+
+    color: #2563eb;
+}
+
+.progress-btn-secondary:hover {
+    background: #dbeafe;
+
+    color: #1d4ed8;
+}
+
+
+/* =========================================================
    PROJECT WORKFLOW
-   ========================================================= */
+========================================================= */
 
 .workflow-card {
     background: #ffffff;
+
     border: 1px solid #e2e8f0;
+
     border-radius: 16px;
+
     padding: 25px;
 }
 
 .workflow-step {
     display: flex;
+
     align-items: flex-start;
+
     gap: 15px;
 }
 
 .workflow-number {
     width: 40px;
     height: 40px;
+
     flex-shrink: 0;
+
     border-radius: 50%;
+
     background: #e2e8f0;
+
     color: #475569;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     font-size: 14px;
+
     font-weight: 700;
 }
 
 .workflow-step.active .workflow-number {
     background: #2563eb;
+
     color: white;
 }
 
 .workflow-step h3 {
     margin: 2px 0 5px;
+
     font-size: 14px;
+
     color: #0f172a;
 }
 
 .workflow-step p {
     margin: 0;
+
     color: #64748b;
+
     font-size: 12px;
+
     line-height: 1.5;
 }
 
 .workflow-line {
     width: 2px;
+
     height: 28px;
+
     margin: 5px 0 5px 19px;
+
     background: #e2e8f0;
 }
 
 
 /* =========================================================
    RESPONSIVE
-   ========================================================= */
+========================================================= */
 
-@media (max-width: 1100px) {
+@media (max-width: 1200px) {
 
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 
     .action-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
@@ -554,7 +864,9 @@ body {
 
     .spms-main {
         margin-left: 220px;
+
         width: calc(100% - 220px);
+
         padding: 22px;
     }
 
@@ -577,6 +889,24 @@ body {
     .stats-grid {
         grid-template-columns: 1fr;
     }
+
+    .action-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .progress-content {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+    .progress-buttons {
+        width: 100%;
+    }
+
+    .progress-btn {
+        flex: 1;
+    }
 }
 
 
@@ -588,6 +918,7 @@ body {
 
     .sidebar-brand {
         justify-content: center;
+
         padding: 15px 8px;
     }
 
@@ -604,6 +935,7 @@ body {
 
     .sidebar-link {
         justify-content: center;
+
         padding: 13px 8px;
     }
 
@@ -617,12 +949,15 @@ body {
 
     .student-mini-profile {
         justify-content: center;
+
         background: transparent;
     }
 
     .spms-main {
         margin-left: 70px;
+
         width: calc(100% - 70px);
+
         padding: 18px;
     }
 
@@ -632,6 +967,7 @@ body {
 
     .welcome-card {
         min-height: auto;
+
         padding: 22px;
     }
 
@@ -642,66 +978,171 @@ body {
     .workflow-card {
         padding: 18px;
     }
+
+    .progress-card {
+        padding: 18px;
+    }
+
+    .progress-buttons {
+        flex-direction: column;
+    }
+
 }
+
+
+/* =========================================================
+   MOBILE PROGRESS
+========================================================= */
+
+@media (max-width: 420px) {
+
+    .progress-icon {
+        width: 50px;
+        height: 50px;
+
+        font-size: 23px;
+    }
+
+    .progress-info h3 {
+        font-size: 15px;
+    }
+
+    .progress-info p {
+        font-size: 12px;
+    }
+
+}
+
 </style>
 
 
 <div class="spms-layout">
 
-    <!-- SIDEBAR -->
+
+    <!-- =====================================================
+         SIDEBAR
+    ====================================================== -->
+
     <aside class="spms-sidebar">
 
+
+        <!-- BRAND -->
+
         <div class="sidebar-brand">
-            <div class="brand-logo">S</div>
+
+            <div class="brand-logo">
+                S
+            </div>
 
             <div>
-                <h2>SPMS</h2>
-                <span>Student Portal</span>
+
+                <h2>
+                    SPMS
+                </h2>
+
+                <span>
+                    Student Portal
+                </span>
+
             </div>
+
         </div>
 
 
+        <!-- NAVIGATION -->
+
         <nav class="sidebar-nav">
+
+
+            <!-- DASHBOARD -->
 
             <a href="{% url 'accounts:student_dashboard' %}"
                class="sidebar-link active">
 
-                <span>🏠</span>
-                <span>Dashboard</span>
+                <span>
+                    🏠
+                </span>
+
+                <span>
+                    Dashboard
+                </span>
 
             </a>
 
+
+            <!-- MY PROPOSALS -->
 
             <a href="{% url 'accounts:student_proposals' %}"
                class="sidebar-link">
 
-                <span>📁</span>
-                <span>My Proposals</span>
+                <span>
+                    📁
+                </span>
+
+                <span>
+                    My Proposals
+                </span>
 
             </a>
 
+
+            <!-- SUBMIT PROPOSAL -->
 
             <a href="{% url 'accounts:add_proposal' %}"
                class="sidebar-link">
 
-                <span>➕</span>
-                <span>Submit Proposal</span>
+                <span>
+                    ➕
+                </span>
+
+                <span>
+                    Submit Proposal
+                </span>
 
             </a>
 
+
+            <!-- PROJECT STATUS -->
 
             <a href="{% url 'accounts:student_proposals' %}"
                class="sidebar-link">
 
-                <span>📊</span>
-                <span>Project Status</span>
+                <span>
+                    📊
+                </span>
+
+                <span>
+                    Project Status
+                </span>
 
             </a>
+
+
+            <!-- WEEKLY PROGRESS -->
+
+            <a href="{% url 'accounts:student_progress' %}"
+               class="sidebar-link">
+
+                <span>
+                    📝
+                </span>
+
+                <span>
+                    Weekly Progress
+                </span>
+
+            </a>
+
 
         </nav>
 
 
+        <!-- SIDEBAR BOTTOM -->
+
         <div class="sidebar-bottom">
+
+
+            <!-- STUDENT PROFILE -->
 
             <div class="student-mini-profile">
 
@@ -715,35 +1156,53 @@ body {
                 <div class="profile-info">
 
                     <strong>
+
                         {{ request.user.get_full_name|default:request.user.username }}
+
                     </strong>
 
-                    <span>Student</span>
+                    <span>
+                        Student
+                    </span>
 
                 </div>
 
             </div>
 
 
+            <!-- LOGOUT -->
+
             <a href="{% url 'accounts:logout' %}"
                class="sidebar-logout">
 
-                <span>🚪</span>
+                <span>
+                    🚪
+                </span>
+
                 Logout
 
             </a>
+
 
         </div>
 
     </aside>
 
 
-    <!-- MAIN CONTENT -->
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
+
     <main class="spms-main">
 
 
-        <!-- TOP BAR -->
+        <!-- =================================================
+             TOP BAR
+        ================================================== -->
+
         <header class="topbar">
+
 
             <div>
 
@@ -752,16 +1211,20 @@ body {
                 </h1>
 
                 <p>
+
                     Welcome back,
+
                     <strong>
                         {{ request.user.get_full_name|default:request.user.username }}
                     </strong>
+
                 </p>
 
             </div>
 
 
             <div class="topbar-user">
+
 
                 <div class="topbar-avatar">
 
@@ -773,7 +1236,9 @@ body {
                 <div>
 
                     <strong>
+
                         {{ request.user.get_full_name|default:request.user.username }}
+
                     </strong>
 
                     <span>
@@ -782,42 +1247,68 @@ body {
 
                 </div>
 
+
             </div>
+
 
         </header>
 
 
-        <!-- WELCOME CARD -->
+
+        <!-- =================================================
+             WELCOME CARD
+        ================================================== -->
+
         <section class="welcome-card">
+
 
             <div>
 
                 <span class="welcome-label">
+
                     STUDENT PROJECT MONITORING SYSTEM
+
                 </span>
 
+
                 <h2>
+
                     Manage your project journey
+
                 </h2>
 
+
                 <p>
+
                     Submit your project proposals, monitor expert review,
-                    and track coordinator approval from one place.
+                    track coordinator approval and upload your weekly
+                    project progress from one place.
+
                 </p>
+
 
             </div>
 
 
             <div class="welcome-icon">
+
                 🎓
+
             </div>
+
 
         </section>
 
 
-        <!-- STAT CARDS -->
+
+        <!-- =================================================
+             STATISTICS
+        ================================================== -->
+
         <section class="stats-grid">
 
+
+            <!-- TOTAL PROPOSALS -->
 
             <div class="stat-card">
 
@@ -840,6 +1331,8 @@ body {
             </div>
 
 
+            <!-- UNDER REVIEW -->
+
             <div class="stat-card">
 
                 <div class="stat-icon">
@@ -861,6 +1354,8 @@ body {
             </div>
 
 
+            <!-- APPROVED -->
+
             <div class="stat-card">
 
                 <div class="stat-icon">
@@ -881,6 +1376,8 @@ body {
 
             </div>
 
+
+            <!-- PROPOSAL LIMIT -->
 
             <div class="stat-card">
 
@@ -906,7 +1403,11 @@ body {
         </section>
 
 
-        <!-- QUICK ACTIONS -->
+
+        <!-- =================================================
+             QUICK ACTIONS
+        ================================================== -->
+
         <section class="dashboard-section">
 
 
@@ -919,7 +1420,7 @@ body {
                     </h2>
 
                     <p>
-                        Manage your project proposals
+                        Manage your project activities
                     </p>
 
                 </div>
@@ -929,6 +1430,8 @@ body {
 
             <div class="action-grid">
 
+
+                <!-- MY PROPOSALS -->
 
                 <a href="{% url 'accounts:student_proposals' %}"
                    class="action-card">
@@ -956,6 +1459,9 @@ body {
                 </a>
 
 
+
+                <!-- SUBMIT PROPOSAL -->
+
                 <a href="{% url 'accounts:add_proposal' %}"
                    class="action-card">
 
@@ -981,6 +1487,9 @@ body {
 
                 </a>
 
+
+
+                <!-- PROJECT STATUS -->
 
                 <a href="{% url 'accounts:student_proposals' %}"
                    class="action-card">
@@ -1008,12 +1517,150 @@ body {
                 </a>
 
 
+
+                <!-- WEEKLY PROGRESS -->
+
+                <a href="{% url 'accounts:student_progress' %}"
+                   class="action-card">
+
+                    <div class="action-icon">
+                        📝
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Weekly Progress
+                        </h3>
+
+                        <p>
+                            Upload your weekly project work and documents.
+                        </p>
+
+                    </div>
+
+                    <span class="action-arrow">
+                        →
+                    </span>
+
+                </a>
+
+
             </div>
 
         </section>
 
 
-        <!-- PROJECT WORKFLOW -->
+
+        <!-- =================================================
+             WEEKLY PROJECT PROGRESS
+        ================================================== -->
+
+        <section class="dashboard-section">
+
+
+            <div class="section-heading">
+
+                <div>
+
+                    <h2>
+                        Weekly Project Progress
+                    </h2>
+
+                    <p>
+                        Submit and monitor your weekly project work
+                    </p>
+
+                </div>
+
+
+                <a href="{% url 'accounts:student_progress' %}"
+                   class="progress-btn progress-btn-primary">
+
+                    View Progress
+
+                </a>
+
+            </div>
+
+
+
+            <div class="progress-card">
+
+
+                <div class="progress-content">
+
+
+                    <!-- ICON -->
+
+                    <div class="progress-icon">
+
+                        📝
+
+                    </div>
+
+
+
+                    <!-- INFORMATION -->
+
+                    <div class="progress-info">
+
+                        <h3>
+
+                            Upload your weekly progress
+
+                        </h3>
+
+
+                        <p>
+
+                            Submit your completed work, description and
+                            supporting document for your Guide to review.
+
+                        </p>
+
+                    </div>
+
+
+
+                    <!-- BUTTONS -->
+
+                    <div class="progress-buttons">
+
+
+                        <a href="{% url 'accounts:student_progress' %}"
+                           class="progress-btn progress-btn-secondary">
+
+                            View History
+
+                        </a>
+
+
+                        <a href="{% url 'accounts:add_progress' %}"
+                           class="progress-btn progress-btn-primary">
+
+                            + Upload Progress
+
+                        </a>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </div>
+
+
+        </section>
+
+
+
+        <!-- =================================================
+             PROJECT WORKFLOW
+        ================================================== -->
+
         <section class="dashboard-section">
 
 
@@ -1026,7 +1673,7 @@ body {
                     </h2>
 
                     <p>
-                        Follow your project approval process
+                        Follow your project approval and development process
                     </p>
 
                 </div>
@@ -1034,8 +1681,11 @@ body {
             </div>
 
 
+
             <div class="workflow-card">
 
+
+                <!-- STEP 1 -->
 
                 <div class="workflow-step active">
 
@@ -1050,7 +1700,7 @@ body {
                         </h3>
 
                         <p>
-                            Student submits up to 3 proposals.
+                            Student submits up to 3 project proposals.
                         </p>
 
                     </div>
@@ -1060,6 +1710,9 @@ body {
 
                 <div class="workflow-line"></div>
 
+
+
+                <!-- STEP 2 -->
 
                 <div class="workflow-step">
 
@@ -1070,11 +1723,12 @@ body {
                     <div>
 
                         <h3>
-                            Expert Review
+                            Domain Expert Review
                         </h3>
 
                         <p>
-                            Domain Expert reviews and recommends a proposal.
+                            Domain Expert reviews the proposals and
+                            recommends one project.
                         </p>
 
                     </div>
@@ -1084,6 +1738,9 @@ body {
 
                 <div class="workflow-line"></div>
 
+
+
+                <!-- STEP 3 -->
 
                 <div class="workflow-step">
 
@@ -1098,7 +1755,8 @@ body {
                         </h3>
 
                         <p>
-                            Coordinator gives final project approval.
+                            Coordinator gives final approval for the
+                            selected project.
                         </p>
 
                     </div>
@@ -1109,6 +1767,9 @@ body {
                 <div class="workflow-line"></div>
 
 
+
+                <!-- STEP 4 -->
+
                 <div class="workflow-step">
 
                     <div class="workflow-number">
@@ -1118,11 +1779,68 @@ body {
                     <div>
 
                         <h3>
-                            Project Development
+                            Guide Assignment
                         </h3>
 
                         <p>
-                            Approved project proceeds to guide assignment.
+                            Coordinator assigns a Guide to the approved
+                            project.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="workflow-line"></div>
+
+
+
+                <!-- STEP 5 -->
+
+                <div class="workflow-step">
+
+                    <div class="workflow-number">
+                        5
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Weekly Progress
+                        </h3>
+
+                        <p>
+                            Student uploads weekly progress and supporting
+                            documents for Guide review.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="workflow-line"></div>
+
+
+
+                <!-- STEP 6 -->
+
+                <div class="workflow-step">
+
+                    <div class="workflow-number">
+                        6
+                    </div>
+
+                    <div>
+
+                        <h3>
+                            Project Completion
+                        </h3>
+
+                        <p>
+                            Student completes the project and submits the
+                            final project work for evaluation.
                         </p>
 
                     </div>
@@ -1132,11 +1850,13 @@ body {
 
             </div>
 
+
         </section>
 
 
     </main>
 
 </div>
+
 
 {% endblock %}

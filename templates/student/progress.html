@@ -1,0 +1,384 @@
+{% extends "base.html" %}
+
+{% block title %}
+Weekly Progress | SPMS
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+.progress-page {
+    padding: 30px;
+    background: #f4f7fb;
+    min-height: 100vh;
+}
+
+.progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.progress-header h1 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 28px;
+}
+
+.progress-header p {
+    margin: 7px 0 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.add-progress-btn {
+    background: #2563eb;
+    color: white;
+    padding: 12px 18px;
+    border-radius: 9px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.add-progress-btn:hover {
+    background: #1d4ed8;
+}
+
+
+/* PROJECT CARD */
+
+.project-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 25px;
+}
+
+.project-card h2 {
+    margin: 0 0 8px;
+    color: #0f172a;
+    font-size: 21px;
+}
+
+.project-card p {
+    margin: 5px 0;
+    color: #64748b;
+    font-size: 13px;
+}
+
+
+/* PROGRESS LIST */
+
+.progress-list {
+    margin-top: 25px;
+}
+
+.progress-item {
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 15px;
+    background: #f8fafc;
+}
+
+.progress-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.week-badge {
+    background: #2563eb;
+    color: white;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.status-badge {
+    padding: 6px 12px;
+    border-radius: 20px;
+    background: #fef3c7;
+    color: #92400e;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.progress-item h3 {
+    margin: 10px 0;
+    color: #0f172a;
+    font-size: 17px;
+}
+
+.progress-description {
+    color: #475569;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.progress-document {
+    margin-top: 15px;
+}
+
+.progress-document a {
+    color: #2563eb;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.feedback-box {
+    margin-top: 15px;
+    padding: 15px;
+    background: #eff6ff;
+    border-left: 4px solid #2563eb;
+    border-radius: 7px;
+}
+
+.feedback-box strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #1e3a8a;
+}
+
+.feedback-box p {
+    margin: 0;
+    color: #475569;
+    font-size: 13px;
+}
+
+.empty-box {
+    background: white;
+    border: 1px dashed #cbd5e1;
+    border-radius: 14px;
+    padding: 50px 25px;
+    text-align: center;
+}
+
+.empty-box .icon {
+    font-size: 45px;
+}
+
+.empty-box h3 {
+    margin: 15px 0 8px;
+    color: #0f172a;
+}
+
+.empty-box p {
+    color: #64748b;
+    font-size: 14px;
+}
+
+@media (max-width: 768px) {
+
+    .progress-page {
+        padding: 20px;
+    }
+
+    .progress-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+}
+
+</style>
+
+
+<div class="progress-page">
+
+    <!-- HEADER -->
+
+    <div class="progress-header">
+
+        <div>
+
+            <h1>
+                Weekly Project Progress
+            </h1>
+
+            <p>
+                Submit and monitor your weekly project development.
+            </p>
+
+        </div>
+
+
+        {% if project %}
+
+            <a href="{% url 'accounts:add_progress' %}"
+               class="add-progress-btn">
+
+                + Upload Weekly Progress
+
+            </a>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- PROJECT -->
+
+    {% if project %}
+
+        <div class="project-card">
+
+            <h2>
+                {{ project.title }}
+            </h2>
+
+            <p>
+                <strong>Domain:</strong>
+                {{ project.domain }}
+            </p>
+
+            <p>
+                <strong>Technologies:</strong>
+                {{ project.technologies }}
+            </p>
+
+            <p>
+                <strong>Status:</strong>
+                {{ project.get_status_display }}
+            </p>
+
+        </div>
+
+
+        <!-- PROGRESS REPORTS -->
+
+        <div class="progress-list">
+
+            {% if progress_reports %}
+
+                {% for progress in progress_reports %}
+
+                    <div class="progress-item">
+
+                        <div class="progress-top">
+
+                            <span class="week-badge">
+                                Week {{ progress.week_number }}
+                            </span>
+
+                            <span class="status-badge">
+                                {{ progress.get_status_display }}
+                            </span>
+
+                        </div>
+
+
+                        <h3>
+                            {{ progress.title }}
+                        </h3>
+
+
+                        <div class="progress-description">
+
+                            {{ progress.description|linebreaks }}
+
+                        </div>
+
+
+                        {% if progress.document %}
+
+                            <div class="progress-document">
+
+                                📎
+
+                                <a href="{{ progress.document.url }}"
+                                   target="_blank">
+
+                                    View Uploaded Document
+
+                                </a>
+
+                            </div>
+
+                        {% endif %}
+
+
+                        {% if progress.guide_feedback %}
+
+                            <div class="feedback-box">
+
+                                <strong>
+                                    👨‍🏫 Guide Feedback
+                                </strong>
+
+                                <p>
+                                    {{ progress.guide_feedback }}
+                                </p>
+
+                            </div>
+
+                        {% endif %}
+
+                    </div>
+
+                {% endfor %}
+
+            {% else %}
+
+                <div class="empty-box">
+
+                    <div class="icon">
+                        📝
+                    </div>
+
+                    <h3>
+                        No Weekly Progress Yet
+                    </h3>
+
+                    <p>
+                        Start documenting your project development
+                        by uploading your first weekly progress report.
+                    </p>
+
+                    <br>
+
+                    <a href="{% url 'accounts:add_progress' %}"
+                       class="add-progress-btn">
+
+                        Upload Week 1 Progress
+
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-box">
+
+            <div class="icon">
+                🎓
+            </div>
+
+            <h3>
+                Project Not Ready
+            </h3>
+
+            <p>
+                Weekly progress submission will become available
+                after your project is approved and a guide is assigned.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

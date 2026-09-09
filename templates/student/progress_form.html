@@ -1,0 +1,298 @@
+{% extends "base.html" %}
+
+{% block title %}
+Upload Weekly Progress | SPMS
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+.progress-form-page {
+    padding: 30px;
+    background: #f4f7fb;
+    min-height: 100vh;
+}
+
+.form-container {
+    max-width: 850px;
+    margin: 0 auto;
+}
+
+.form-header {
+    margin-bottom: 25px;
+}
+
+.form-header h1 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 28px;
+}
+
+.form-header p {
+    margin-top: 7px;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.form-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 30px;
+}
+
+.project-info {
+    background: #eff6ff;
+    border-left: 4px solid #2563eb;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+.project-info strong {
+    color: #1e3a8a;
+}
+
+.project-info p {
+    margin: 5px 0 0;
+    color: #475569;
+    font-size: 14px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: 600;
+    color: #334155;
+    font-size: 14px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 13px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+.form-help {
+    margin-top: 6px;
+    color: #64748b;
+    font-size: 12px;
+}
+
+.errorlist {
+    margin: 5px 0;
+    padding: 0;
+    list-style: none;
+    color: #dc2626;
+    font-size: 12px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.btn-submit {
+    border: none;
+    background: #2563eb;
+    color: white;
+    padding: 12px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.btn-submit:hover {
+    background: #1d4ed8;
+}
+
+.btn-cancel {
+    background: #f1f5f9;
+    color: #475569;
+    padding: 12px 22px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.btn-cancel:hover {
+    background: #e2e8f0;
+}
+
+</style>
+
+
+<div class="progress-form-page">
+
+    <div class="form-container">
+
+        <div class="form-header">
+
+            <h1>
+                Upload Weekly Progress
+            </h1>
+
+            <p>
+                Document the work completed during this week.
+            </p>
+
+        </div>
+
+
+        <div class="form-card">
+
+
+            <!-- PROJECT INFORMATION -->
+
+            <div class="project-info">
+
+                <strong>
+                    Current Project
+                </strong>
+
+                <p>
+                    {{ project.title }}
+                </p>
+
+            </div>
+
+
+            <!-- FORM -->
+
+            <form method="POST"
+                  enctype="multipart/form-data">
+
+                {% csrf_token %}
+
+
+                <!-- WEEK -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.week_number.id_for_label }}">
+                        Week Number
+                    </label>
+
+                    {{ form.week_number }}
+
+                    {% if form.week_number.errors %}
+                        {{ form.week_number.errors }}
+                    {% endif %}
+
+                    <div class="form-help">
+                        Example: Week 1, Week 2, Week 3...
+                    </div>
+
+                </div>
+
+
+                <!-- TITLE -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.title.id_for_label }}">
+                        Progress Title
+                    </label>
+
+                    {{ form.title }}
+
+                    {% if form.title.errors %}
+                        {{ form.title.errors }}
+                    {% endif %}
+
+                    <div class="form-help">
+                        Give a short title for this week's work.
+                    </div>
+
+                </div>
+
+
+                <!-- DESCRIPTION -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.description.id_for_label }}">
+                        Work Completed
+                    </label>
+
+                    {{ form.description }}
+
+                    {% if form.description.errors %}
+                        {{ form.description.errors }}
+                    {% endif %}
+
+                    <div class="form-help">
+                        Explain what you completed this week,
+                        problems faced, and what you plan to do next.
+                    </div>
+
+                </div>
+
+
+                <!-- DOCUMENT -->
+
+                <div class="form-group">
+
+                    <label for="{{ form.document.id_for_label }}">
+                        Supporting Document
+                    </label>
+
+                    {{ form.document }}
+
+                    {% if form.document.errors %}
+                        {{ form.document.errors }}
+                    {% endif %}
+
+                    <div class="form-help">
+                        Optional: PDF, DOC or DOCX.
+                    </div>
+
+                </div>
+
+
+                <!-- BUTTONS -->
+
+                <div class="form-actions">
+
+                    <button type="submit"
+                            class="btn-submit">
+
+                        📤 Submit Progress
+
+                    </button>
+
+
+                    <a href="{% url 'accounts:student_progress' %}"
+                       class="btn-cancel">
+
+                        Cancel
+
+                    </a>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

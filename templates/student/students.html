@@ -1,0 +1,375 @@
+{% extends "base.html" %}
+
+{% block title %}
+Guide Students | SPMS
+{% endblock %}
+
+{% block content %}
+
+<style>
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .guide-page {
+        min-height: 100vh;
+        background: #f4f7fb;
+        padding: 30px;
+    }
+
+    .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 30px;
+    }
+
+    .page-header h1 {
+        margin: 0;
+        color: #0f172a;
+        font-size: 28px;
+    }
+
+    .page-header p {
+        margin-top: 7px;
+        color: #64748b;
+        font-size: 14px;
+    }
+
+    .back-btn {
+        display: inline-block;
+        padding: 11px 18px;
+        background: #0f172a;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 14px;
+    }
+
+    .back-btn:hover {
+        background: #1e293b;
+    }
+
+    .students-card {
+        background: white;
+        border-radius: 14px;
+        border: 1px solid #e2e8f0;
+        overflow: hidden;
+    }
+
+    .card-header {
+        padding: 20px 25px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    .card-header h2 {
+        margin: 0;
+        font-size: 19px;
+        color: #0f172a;
+    }
+
+    .table-container {
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        background: #f8fafc;
+        color: #475569;
+        text-align: left;
+        padding: 15px;
+        font-size: 13px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+
+    td {
+        padding: 15px;
+        border-bottom: 1px solid #e2e8f0;
+        color: #334155;
+        font-size: 14px;
+    }
+
+    tr:hover {
+        background: #f8fafc;
+    }
+
+    .student-name {
+        font-weight: 600;
+        color: #0f172a;
+    }
+
+    .roll-number {
+        color: #64748b;
+    }
+
+    .status {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .status-submitted {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .status-approved {
+        background: #dcfce7;
+        color: #166534;
+    }
+
+    .status-progress {
+        background: #dbeafe;
+        color: #1d4ed8;
+    }
+
+    .status-default {
+        background: #e2e8f0;
+        color: #475569;
+    }
+
+    .empty-box {
+        padding: 60px 20px;
+        text-align: center;
+    }
+
+    .empty-icon {
+        font-size: 45px;
+        margin-bottom: 15px;
+    }
+
+    .empty-box h3 {
+        margin: 0 0 8px;
+        color: #0f172a;
+    }
+
+    .empty-box p {
+        margin: 0;
+        color: #64748b;
+    }
+
+    @media (max-width: 700px) {
+
+        .guide-page {
+            padding: 18px;
+        }
+
+        .page-header {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .page-header h1 {
+            font-size: 23px;
+        }
+    }
+
+</style>
+
+
+<div class="guide-page">
+
+    <!-- HEADER -->
+
+    <div class="page-header">
+
+        <div>
+            <h1>My Students</h1>
+
+            <p>
+                View students and projects assigned to you.
+            </p>
+        </div>
+
+        <a
+            href="{% url 'accounts:guide_dashboard' %}"
+            class="back-btn"
+        >
+            ← Back to Dashboard
+        </a>
+
+    </div>
+
+
+    <!-- STUDENTS -->
+
+    <div class="students-card">
+
+        <div class="card-header">
+
+            <h2>
+                Assigned Students
+            </h2>
+
+        </div>
+
+
+        {% if assigned_projects %}
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>#</th>
+
+                        <th>Student</th>
+
+                        <th>Username</th>
+
+                        <th>Roll Number</th>
+
+                        <th>Project</th>
+
+                        <th>Status</th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for project in assigned_projects %}
+
+                    <tr>
+
+                        <td>
+                            {{ forloop.counter }}
+                        </td>
+
+
+                        <td>
+
+                            <div class="student-name">
+
+                                {% if project.student.get_full_name %}
+                                    {{ project.student.get_full_name }}
+                                {% else %}
+                                    {{ project.student.username }}
+                                {% endif %}
+
+                            </div>
+
+                        </td>
+
+
+                        <td>
+
+                            {{ project.student.username }}
+
+                        </td>
+
+
+                        <td>
+
+                            <span class="roll-number">
+
+                                {{ project.student.roll_number|default:"Not provided" }}
+
+                            </span>
+
+                        </td>
+
+
+                        <td>
+
+                            {{ project.title }}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if project.status == "SUBMITTED" %}
+
+                                <span class="status status-submitted">
+                                    Submitted
+                                </span>
+
+                            {% elif project.status == "EXPERT_APPROVED" %}
+
+                                <span class="status status-approved">
+                                    Expert Approved
+                                </span>
+
+                            {% elif project.status == "COORDINATOR_APPROVED" %}
+
+                                <span class="status status-approved">
+                                    Coordinator Approved
+                                </span>
+
+                            {% elif project.status == "GUIDE_ASSIGNED" %}
+
+                                <span class="status status-progress">
+                                    Guide Assigned
+                                </span>
+
+                            {% elif project.status == "IN_PROGRESS" %}
+
+                                <span class="status status-progress">
+                                    In Progress
+                                </span>
+
+                            {% elif project.status == "COMPLETED" %}
+
+                                <span class="status status-approved">
+                                    Completed
+                                </span>
+
+                            {% else %}
+
+                                <span class="status status-default">
+                                    {{ project.status }}
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-box">
+
+            <div class="empty-icon">
+                👨‍🎓
+            </div>
+
+            <h3>
+                No Students Assigned
+            </h3>
+
+            <p>
+                You don't have any students assigned to you yet.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}
