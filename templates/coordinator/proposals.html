@@ -1,109 +1,298 @@
 {% extends "base.html" %}
 
-{% block title %}
-Project Proposals | Coordinator
-{% endblock %}
+{% block title %}Project Proposals{% endblock %}
 
 {% block content %}
 
-<div style="
-    max-width:1200px;
-    margin:40px auto;
-    padding:20px;
-">
+<style>
+    .page {
+        padding: 30px;
+    }
 
-    <h1>
-        Project Proposals
-    </h1>
+    .page-header {
+        margin-bottom: 20px;
+    }
 
-    <p>
-        View submitted projects, assign Domain Experts,
-        and provide final approval.
-    </p>
+    .page-header h2 {
+        margin: 0;
+        font-size: 24px;
+        color: #222;
+    }
+
+    .page-header p {
+        margin-top: 5px;
+        color: #777;
+        font-size: 14px;
+    }
+
+    .table-box {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        background: #f5f6f8;
+        padding: 13px;
+        text-align: left;
+        font-size: 13px;
+        color: #555;
+        border-bottom: 1px solid #ddd;
+    }
+
+    td {
+        padding: 13px;
+        font-size: 13px;
+        color: #333;
+        border-bottom: 1px solid #eee;
+    }
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    .status {
+        padding: 5px 9px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .submitted {
+        background: #e8f1ff;
+        color: #2563eb;
+    }
+
+    .expert {
+        background: #fff4d6;
+        color: #946200;
+    }
+
+    .changes {
+        background: #ffe5e5;
+        color: #c62828;
+    }
+
+    .approved {
+        background: #e4f7e9;
+        color: #16803c;
+    }
+
+    .coordinator {
+        background: #eee8ff;
+        color: #6842c2;
+    }
+
+    .guide {
+        background: #e4f5f7;
+        color: #087f8c;
+    }
+
+    .rejected {
+        background: #ffe5e5;
+        color: #c62828;
+    }
+
+    .progress {
+        background: #e8f7ef;
+        color: #18794e;
+    }
+
+    .completed {
+        background: #dff5df;
+        color: #267326;
+    }
+
+    .view-btn {
+        color: #2563eb;
+        text-decoration: none;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .view-btn:hover {
+        text-decoration: underline;
+    }
+
+    .empty {
+        padding: 40px;
+        text-align: center;
+        color: #777;
+    }
+</style>
 
 
-    {% if proposals %}
+<div class="page">
 
-    <div style="
-        display:grid;
-        grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-        gap:20px;
-        margin-top:30px;
-    ">
-
-        {% for proposal in proposals %}
-
-        <div style="
-            background:white;
-            border:1px solid #e5e7eb;
-            border-radius:12px;
-            padding:22px;
-        ">
-
-            <h2>
-                {{ proposal.title }}
-            </h2>
-
-            <p>
-                <strong>Student:</strong>
-                {{ proposal.student.get_full_name|default:proposal.student.username }}
-            </p>
-
-            <p>
-                <strong>Domain:</strong>
-                {{ proposal.domain }}
-            </p>
-
-            <p>
-                <strong>Status:</strong>
-                {{ proposal.status }}
-            </p>
-
-            <p>
-
-                <strong>Expert:</strong>
-
-                {% if proposal.domain_expert %}
-
-                    {{ proposal.domain_expert.get_full_name|default:proposal.domain_expert.username }}
-
-                {% else %}
-
-                    Not Assigned
-
-                {% endif %}
-
-            </p>
-
-
-            <a
-                href="{% url 'coordinator:proposal_detail' proposal.id %}"
-                style="
-                    display:inline-block;
-                    padding:10px 16px;
-                    background:#2563eb;
-                    color:white;
-                    text-decoration:none;
-                    border-radius:7px;
-                    margin-top:10px;
-                "
-            >
-                View Proposal
-            </a>
-
-        </div>
-
-        {% endfor %}
-
+    <div class="page-header">
+        <h2>Project Proposals</h2>
+        <p>View and manage student project proposals.</p>
     </div>
 
-    {% else %}
 
-    <p style="margin-top:30px;">
-        No project proposals have been submitted yet.
-    </p>
+    <div class="table-box">
 
-    {% endif %}
+        {% if proposals %}
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Student</th>
+                    <th>Project</th>
+                    <th>Expert</th>
+                    <th>Guide</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for proposal in proposals %}
+
+                <tr>
+
+                    <td>
+                        {{ forloop.counter }}
+                    </td>
+
+                    <td>
+                        {{ proposal.student.get_full_name|default:proposal.student.username }}
+                    </td>
+
+                    <td>
+                        <strong>{{ proposal.title }}</strong>
+                        <br>
+                        <small>
+                            {{ proposal.domain|default:"No domain" }}
+                        </small>
+                    </td>
+
+                    <td>
+                        {% if proposal.domain_expert %}
+                            {{ proposal.domain_expert.get_full_name|default:proposal.domain_expert.username }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if proposal.guide %}
+                            {{ proposal.guide.get_full_name|default:proposal.guide.username }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+
+
+                    <!-- STATUS -->
+
+                    <td>
+
+                        {% if proposal.status == "SUBMITTED" %}
+
+                            <span class="status submitted">
+                                Submitted
+                            </span>
+
+                        {% elif proposal.status == "EXPERT_ASSIGNED" %}
+
+                            <span class="status expert">
+                                Expert Assigned
+                            </span>
+
+                        {% elif proposal.status == "CHANGES_REQUESTED" %}
+
+                            <span class="status changes">
+                                Changes Requested
+                            </span>
+
+                        {% elif proposal.status == "EXPERT_APPROVED" %}
+
+                            <span class="status approved">
+                                Expert Approved
+                            </span>
+
+                        {% elif proposal.status == "COORDINATOR_APPROVED" %}
+
+                            <span class="status coordinator">
+                                Coordinator Approved
+                            </span>
+
+                        {% elif proposal.status == "GUIDE_ASSIGNED" %}
+
+                            <span class="status guide">
+                                Guide Assigned
+                            </span>
+
+                        {% elif proposal.status == "GUIDE_REJECTED" %}
+
+                            <span class="status rejected">
+                                Guide Rejected
+                            </span>
+
+                        {% elif proposal.status == "IN_PROGRESS" %}
+
+                            <span class="status progress">
+                                In Progress
+                            </span>
+
+                        {% elif proposal.status == "COMPLETED" %}
+
+                            <span class="status completed">
+                                Completed
+                            </span>
+
+                        {% else %}
+
+                            <span class="status submitted">
+                                {{ proposal.get_status_display }}
+                            </span>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <!-- ACTION -->
+
+                    <td>
+
+                        <a
+                            href="{% url 'coordinator:proposal_detail' proposal.id %}"
+                            class="view-btn"
+                        >
+                            View
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% else %}
+
+            <div class="empty">
+                No project proposals found.
+            </div>
+
+        {% endif %}
+
+    </div>
 
 </div>
 

@@ -1,99 +1,31 @@
 {% extends "base.html" %}
 
-{% block title %}My Project Proposals | Expert{% endblock %}
+{% block title %}My Proposals | Expert{% endblock %}
 
-{% block content %}
+{% block extra_css %}
 
 <style>
-    .page-container {
-        max-width: 1100px;
-        margin: 40px auto;
-        padding: 0 20px;
+
+    .proposals-page {
+        padding: 30px;
+        max-width: 1400px;
+        margin: auto;
     }
 
     .page-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
         margin-bottom: 25px;
     }
 
     .page-header h1 {
         margin: 0;
         color: #1f2937;
-        font-size: 30px;
     }
 
     .page-header p {
         color: #6b7280;
-        margin-top: 8px;
-    }
-
-    .card {
-        background: white;
-        border: 1px solid #e5e7eb;
-        border-radius: 12px;
-        padding: 25px;
-        margin-bottom: 20px;
-        box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-    }
-
-    .proposal {
-        border: 1px solid #e5e7eb;
-        border-radius: 10px;
-        padding: 20px;
-        margin-bottom: 15px;
-    }
-
-    .proposal:last-child {
-        margin-bottom: 0;
-    }
-
-    .proposal h2 {
-        margin: 0 0 10px;
-        color: #111827;
-        font-size: 21px;
-    }
-
-    .proposal-info {
-        display: grid;
-        grid-template-columns: 150px 1fr;
-        gap: 8px;
-        margin: 10px 0;
-    }
-
-    .label {
-        font-weight: 600;
-        color: #4b5563;
-    }
-
-    .value {
-        color: #1f2937;
-    }
-
-    .status {
-        display: inline-block;
-        padding: 6px 12px;
-        border-radius: 20px;
-        font-size: 13px;
-        font-weight: 600;
-    }
-
-    .assigned {
-        background: #fff7ed;
-        color: #c2410c;
-    }
-
-    .changes {
-        background: #fef2f2;
-        color: #dc2626;
-    }
-
-    .approved {
-        background: #ecfdf5;
-        color: #047857;
-    }
-
-    .final {
-        background: #eff6ff;
-        color: #1d4ed8;
     }
 
     .btn {
@@ -101,173 +33,251 @@
         padding: 10px 16px;
         border-radius: 7px;
         text-decoration: none;
+        border: none;
+        cursor: pointer;
         font-weight: 600;
         font-size: 14px;
-        margin-top: 12px;
     }
 
-    .btn-view {
-        background: #2563eb;
+    .btn-primary {
+        background: #1d72f3;
         color: white;
     }
 
-    .btn-view:hover {
-        background: #1d4ed8;
+    .btn-dark {
+        background: #12161f;
+        color: white;
     }
 
-    .btn-back {
-        background: #6b7280;
-        color: white;
+    .table-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+        overflow-x: auto;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th {
+        background: #f4f6f9;
+        color: #374151;
+        text-align: left;
+        padding: 14px;
+        font-size: 14px;
+    }
+
+    td {
+        padding: 14px;
+        border-bottom: 1px solid #e5e7eb;
+        color: #4b5563;
+        font-size: 14px;
+    }
+
+    tr:hover {
+        background: #f9fafb;
+    }
+
+    .status {
+        display: inline-block;
+        padding: 6px 10px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .status-assigned {
+        background: #fff7ed;
+        color: #c2410c;
+    }
+
+    .status-approved {
+        background: #ecfdf5;
+        color: #15803d;
+    }
+
+    .status-changes {
+        background: #fef2f2;
+        color: #dc2626;
+    }
+
+    .status-other {
+        background: #eff6ff;
+        color: #1d4ed8;
     }
 
     .empty {
         text-align: center;
-        padding: 40px 20px;
+        padding: 50px;
         color: #6b7280;
     }
 
-    @media (max-width: 700px) {
-        .proposal-info {
-            grid-template-columns: 1fr;
-            gap: 3px;
-            margin-bottom: 12px;
-        }
+    .back-button {
+        margin-top: 20px;
     }
+
 </style>
 
+{% endblock %}
 
-<div class="page-container">
+
+{% block content %}
+
+<div class="proposals-page">
 
     <div class="page-header">
 
-        <h1>My Project Proposals</h1>
+        <div>
+            <h1>Assigned Proposals</h1>
 
-        <p>
-            View and review the project proposals assigned to you.
-        </p>
+            <p>
+                Total proposals assigned to you:
+                <strong>{{ total_proposals }}</strong>
+            </p>
+        </div>
+
+        <a
+            href="{% url 'experts:dashboard' %}"
+            class="btn btn-dark"
+        >
+            ← Back to Dashboard
+        </a>
 
     </div>
 
 
-    <div class="card">
+    <div class="table-card">
 
         {% if proposals %}
 
-            {% for proposal in proposals %}
+        <table>
 
-                <div class="proposal">
+            <thead>
 
-                    <h2>
+                <tr>
+
+                    <th>#</th>
+
+                    <th>Student</th>
+
+                    <th>Project Title</th>
+
+                    <th>Domain</th>
+
+                    <th>Technologies</th>
+
+                    <th>Status</th>
+
+                    <th>Action</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for proposal in proposals %}
+
+                <tr>
+
+                    <td>
+                        {{ forloop.counter }}
+                    </td>
+
+
+                    <td>
+
+                        <strong>
+                            {{ proposal.student.get_full_name|default:proposal.student.username }}
+                        </strong>
+
+                        <br>
+
+                        <small>
+                            {{ proposal.student.username }}
+                        </small>
+
+                    </td>
+
+
+                    <td>
                         {{ proposal.title }}
-                    </h2>
+                    </td>
 
 
-                    <div class="proposal-info">
-
-                        <div class="label">
-                            Student
-                        </div>
-
-                        <div class="value">
-
-                            {% if proposal.student.get_full_name %}
-                                {{ proposal.student.get_full_name }}
-                            {% else %}
-                                {{ proposal.student.username }}
-                            {% endif %}
-
-                        </div>
+                    <td>
+                        {{ proposal.domain|default:"-" }}
+                    </td>
 
 
-                        <div class="label">
-                            Domain
-                        </div>
-
-                        <div class="value">
-                            {{ proposal.domain }}
-                        </div>
+                    <td>
+                        {{ proposal.technologies|default:"-" }}
+                    </td>
 
 
-                        <div class="label">
-                            Technologies
-                        </div>
+                    <td>
 
-                        <div class="value">
-                            {{ proposal.technologies }}
-                        </div>
+                        {% if proposal.status == "EXPERT_ASSIGNED" %}
 
+                            <span class="status status-assigned">
+                                Expert Assigned
+                            </span>
 
-                        <div class="label">
-                            Submitted
-                        </div>
+                        {% elif proposal.status == "EXPERT_APPROVED" %}
 
-                        <div class="value">
-                            {{ proposal.submitted_at|date:"d M Y, h:i A" }}
-                        </div>
+                            <span class="status status-approved">
+                                Expert Approved
+                            </span>
 
+                        {% elif proposal.status == "CHANGES_REQUESTED" %}
 
-                        <div class="label">
-                            Status
-                        </div>
+                            <span class="status status-changes">
+                                Changes Requested
+                            </span>
 
-                        <div class="value">
+                        {% else %}
 
-                            {% if proposal.status == "EXPERT_ASSIGNED" %}
+                            <span class="status status-other">
+                                {{ proposal.get_status_display }}
+                            </span>
 
-                                <span class="status assigned">
-                                    Expert Assigned
-                                </span>
+                        {% endif %}
 
-                            {% elif proposal.status == "CHANGES_REQUESTED" %}
-
-                                <span class="status changes">
-                                    Changes Requested
-                                </span>
-
-                            {% elif proposal.status == "EXPERT_APPROVED" %}
-
-                                <span class="status approved">
-                                    Expert Approved
-                                </span>
-
-                            {% elif proposal.status == "COORDINATOR_APPROVED" %}
-
-                                <span class="status final">
-                                    Final Approved
-                                </span>
-
-                            {% else %}
-
-                                <span class="status assigned">
-                                    {{ proposal.status }}
-                                </span>
-
-                            {% endif %}
-
-                        </div>
-
-                    </div>
+                    </td>
 
 
-                    <a
-                        href="{% url 'experts:proposal_detail' proposal.id %}"
-                        class="btn btn-view"
-                    >
-                        View Proposal →
-                    </a>
+                    <td>
 
-                </div>
+                        <a
+                            href="{% url 'experts:proposal_detail' proposal.id %}"
+                            class="btn btn-primary"
+                        >
+                            View / Review
+                        </a>
 
-            {% endfor %}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
 
         {% else %}
 
             <div class="empty">
 
-                <h3>No proposals assigned</h3>
+                <h3>No Proposals Assigned</h3>
 
                 <p>
-                    The Coordinator has not assigned any project proposals to you yet.
+                    The Coordinator has not assigned any project
+                    proposals to you yet.
                 </p>
 
             </div>
@@ -277,12 +287,16 @@
     </div>
 
 
-    <a
-        href="{% url 'experts:dashboard' %}"
-        class="btn btn-back"
-    >
-        ← Back to Dashboard
-    </a>
+    <div class="back-button">
+
+        <a
+            href="{% url 'experts:dashboard' %}"
+            class="btn btn-dark"
+        >
+            ← Back to Dashboard
+        </a>
+
+    </div>
 
 </div>
 

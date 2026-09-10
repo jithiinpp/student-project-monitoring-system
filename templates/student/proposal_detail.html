@@ -801,9 +801,35 @@ body {
             {% endif %}
 
 
+            {% if proposal.status == "CHANGES_REQUESTED" %}
+
+                <div class="detail-section">
+
+                    <h3>
+                        Expert Feedback
+                    </h3>
+
+                    <p>
+                        {{ proposal.expert_comments|default:"No feedback provided." }}
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+
             <!-- BACK BUTTON -->
 
             <div class="form-actions">
+
+                {% if proposal.status == "CHANGES_REQUESTED" %}
+                    <a href="{% url 'accounts:edit_proposal' proposal.id %}"
+                       class="primary-button">
+
+                        ✏️ Edit and Resubmit
+
+                    </a>
+                {% endif %}
 
                 <a href="{% url 'accounts:student_proposals' %}"
                    class="secondary-button">

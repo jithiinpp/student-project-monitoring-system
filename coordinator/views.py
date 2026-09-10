@@ -1,9 +1,18 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import get_object_or_404, redirect, render
+from django.shortcuts import (
+    get_object_or_404,
+    redirect,
+    render,
+)
+from django.utils import timezone
 
 from accounts.models import User
-from projects.models import ProjectProposal
+
+from projects.models import (
+    ProjectProposal,
+    ProposalChangeRequest,
+)
 
 
 # =========================================================
@@ -15,7 +24,7 @@ def coordinator_required(view_func):
     @login_required
     def wrapper(request, *args, **kwargs):
 
-        # Superuser can access Coordinator
+        # Superuser = Coordinator
         if request.user.is_superuser:
             return view_func(request, *args, **kwargs)
 
@@ -41,7 +50,8 @@ def coordinator_required(view_func):
 def dashboard(request):
 
     students = User.objects.filter(
-        role="STUDENT"
+        role="STUDENT",
+        is_superuser=False
     )
 
     experts = User.objects.filter(
@@ -58,44 +68,117 @@ def dashboard(request):
 
     proposals = ProjectProposal.objects.all()
 
+    # -----------------------------------------------------
+    # CHANGE REQUEST COUNT
+    # -----------------------------------------------------
+
+    changes_requested_count = proposals.filter(
+        status="CHANGES_REQUESTED"
+    ).count()
+
+    # -----------------------------------------------------
+    # GUIDE REJECTION COUNT
+    # -----------------------------------------------------
+
+    guide_rejected_count = proposals.filter(
+        status="GUIDE_REJECTED"
+    ).count()
+
     context = {
-        "student_count": students.count(),
 
-        "expert_count": experts.count(),
+        # -------------------------------------------------
+        # COUNTS
+        # -------------------------------------------------
 
-        "guide_count": guides.count(),
+        "student_count":
+            students.count(),
 
-        "panel_count": panels.count(),
+        "expert_count":
+            experts.count(),
 
-        "proposal_count": proposals.count(),
+        "guide_count":
+            guides.count(),
 
-        "submitted_count": proposals.filter(
-            status="SUBMITTED"
-        ).count(),
+        "panel_count":
+            panels.count(),
 
-        "expert_assigned_count": proposals.filter(
-            status="EXPERT_ASSIGNED"
-        ).count(),
+        "proposal_count":
+            proposals.count(),
 
-        "expert_approved_count": proposals.filter(
-            status="EXPERT_APPROVED"
-        ).count(),
+        # -------------------------------------------------
+        # PROPOSAL STATUS
+        # -------------------------------------------------
 
-        "approved_count": proposals.filter(
-            status="COORDINATOR_APPROVED"
-        ).count(),
+        "submitted_count":
+            proposals.filter(
+                status="SUBMITTED"
+            ).count(),
 
-        "guide_assigned_count": proposals.filter(
-            status="GUIDE_ASSIGNED"
-        ).count(),
+        "expert_assigned_count":
+            proposals.filter(
+                status="EXPERT_ASSIGNED"
+            ).count(),
 
-        "in_progress_count": proposals.filter(
-            status="IN_PROGRESS"
-        ).count(),
+        "expert_approved_count":
+            proposals.filter(
+                status="EXPERT_APPROVED"
+            ).count(),
 
-        "completed_count": proposals.filter(
-            status="COMPLETED"
-        ).count(),
+        "changes_requested_count":
+            changes_requested_count,
+
+        "approved_count":
+            proposals.filter(
+                status="COORDINATOR_APPROVED"
+            ).count(),
+
+        "guide_assigned_count":
+            proposals.filter(
+                status="GUIDE_ASSIGNED"
+            ).count(),
+
+        "guide_rejected_count":
+            guide_rejected_count,
+
+        "in_progress_count":
+            proposals.filter(
+                status="IN_PROGRESS"
+            ).count(),
+
+        "completed_count":
+            proposals.filter(
+                status="COMPLETED"
+            ).count(),
+
+        # -------------------------------------------------
+        # RECENT CHANGE REQUESTS
+        # -------------------------------------------------
+
+        "recent_change_requests":
+            ProposalChangeRequest.objects.filter(
+                status="PENDING"
+            ).select_related(
+                "proposal",
+                "proposal__student",
+                "expert"
+            ).order_by(
+                "-created_at"
+            )[:5],
+
+        # -------------------------------------------------
+        # RECENT GUIDE REJECTIONS
+        # -------------------------------------------------
+
+        "recent_guide_rejections":
+            proposals.filter(
+                status="GUIDE_REJECTED"
+            ).select_related(
+                "student",
+                "guide"
+            ).order_by(
+                "-guide_rejected_at",
+                "-updated_at"
+            )[:5],
     }
 
     return render(
@@ -148,10 +231,6 @@ def proposal_detail(request, proposal_id):
         id=proposal_id
     )
 
-    # -----------------------------------------------------
-    # ACTIVE DOMAIN EXPERTS
-    # -----------------------------------------------------
-
     experts = User.objects.filter(
         role="EXPERT",
         is_active=True
@@ -160,10 +239,6 @@ def proposal_detail(request, proposal_id):
         "last_name",
         "username"
     )
-
-    # -----------------------------------------------------
-    # ACTIVE GUIDES
-    # -----------------------------------------------------
 
     guides = User.objects.filter(
         role="GUIDE",
@@ -174,6 +249,21 @@ def proposal_detail(request, proposal_id):
         "username"
     )
 
+    # All change requests for this proposal
+    change_requests = (
+        ProposalChangeRequest.objects
+        .filter(
+            proposal=proposal
+        )
+        .select_related(
+            "expert",
+            "coordinator"
+        )
+        .order_by(
+            "-created_at"
+        )
+    )
+
     return render(
         request,
         "coordinator/proposal_detail.html",
@@ -181,6 +271,7 @@ def proposal_detail(request, proposal_id):
             "proposal": proposal,
             "experts": experts,
             "guides": guides,
+            "change_requests": change_requests,
         }
     )
 
@@ -197,7 +288,6 @@ def assign_expert(request, proposal_id):
         id=proposal_id
     )
 
-    # Only POST is allowed
     if request.method != "POST":
 
         return redirect(
@@ -225,10 +315,6 @@ def assign_expert(request, proposal_id):
         role="EXPERT",
         is_active=True
     )
-
-    # -----------------------------------------------------
-    # ASSIGN EXPERT
-    # -----------------------------------------------------
 
     proposal.domain_expert = expert
     proposal.status = "EXPERT_ASSIGNED"
@@ -265,7 +351,6 @@ def approve_project(request, proposal_id):
         id=proposal_id
     )
 
-    # Only POST
     if request.method != "POST":
 
         return redirect(
@@ -273,10 +358,7 @@ def approve_project(request, proposal_id):
             proposal_id=proposal.id
         )
 
-    # -----------------------------------------------------
-    # EXPERT MUST APPROVE FIRST
-    # -----------------------------------------------------
-
+    # Expert approval is required first
     if proposal.status != "EXPERT_APPROVED":
 
         messages.error(
@@ -289,10 +371,6 @@ def approve_project(request, proposal_id):
             "coordinator:proposal_detail",
             proposal_id=proposal.id
         )
-
-    # -----------------------------------------------------
-    # FINAL COORDINATOR APPROVAL
-    # -----------------------------------------------------
 
     proposal.status = "COORDINATOR_APPROVED"
 
@@ -315,7 +393,7 @@ def approve_project(request, proposal_id):
 
 
 # =========================================================
-# ASSIGN GUIDE TO APPROVED PROJECT
+# ASSIGN GUIDE
 # =========================================================
 
 @coordinator_required
@@ -326,7 +404,6 @@ def assign_guide(request, proposal_id):
         id=proposal_id
     )
 
-    # Only POST
     if request.method != "POST":
 
         return redirect(
@@ -334,11 +411,12 @@ def assign_guide(request, proposal_id):
             proposal_id=proposal.id
         )
 
-    # -----------------------------------------------------
-    # COORDINATOR MUST APPROVE FIRST
-    # -----------------------------------------------------
-
-    if proposal.status != "COORDINATOR_APPROVED":
+    # Guide can be assigned after final approval
+    # OR after a Guide rejected the previous assignment
+    if proposal.status not in [
+        "COORDINATOR_APPROVED",
+        "GUIDE_REJECTED",
+    ]:
 
         messages.error(
             request,
@@ -365,10 +443,6 @@ def assign_guide(request, proposal_id):
             proposal_id=proposal.id
         )
 
-    # -----------------------------------------------------
-    # FIND ACTIVE GUIDE
-    # -----------------------------------------------------
-
     guide = get_object_or_404(
         User,
         id=guide_id,
@@ -376,17 +450,19 @@ def assign_guide(request, proposal_id):
         is_active=True
     )
 
-    # -----------------------------------------------------
-    # ASSIGN GUIDE
-    # -----------------------------------------------------
-
     proposal.guide = guide
     proposal.status = "GUIDE_ASSIGNED"
+
+    # Clear previous Guide rejection
+    proposal.guide_rejection_reason = ""
+    proposal.guide_rejected_at = None
 
     proposal.save(
         update_fields=[
             "guide",
             "status",
+            "guide_rejection_reason",
+            "guide_rejected_at",
             "updated_at"
         ]
     )
@@ -400,6 +476,117 @@ def assign_guide(request, proposal_id):
     return redirect(
         "coordinator:proposal_detail",
         proposal_id=proposal.id
+    )
+
+
+# =========================================================
+# CHANGE REQUESTS
+# EXPERT -> COORDINATOR
+# =========================================================
+
+@coordinator_required
+def change_requests(request):
+
+    change_request_list = (
+        ProposalChangeRequest.objects
+        .filter(
+            status="PENDING"
+        )
+        .select_related(
+            "proposal",
+            "proposal__student",
+            "expert"
+        )
+        .order_by(
+            "-created_at"
+        )
+    )
+
+    return render(
+        request,
+        "coordinator/change_requests.html",
+        {
+            "change_requests": change_request_list,
+            "change_request_count": change_request_list.count(),
+        }
+    )
+
+
+# =========================================================
+# CHANGE REQUEST DETAIL / SEND TO STUDENT
+# =========================================================
+
+@coordinator_required
+def send_change_request(request, request_id):
+
+    change_request = get_object_or_404(
+        ProposalChangeRequest.objects.select_related(
+            "proposal",
+            "proposal__student",
+            "expert"
+        ),
+        id=request_id
+    )
+
+    # Only pending requests can be sent
+    if change_request.status != "PENDING":
+
+        messages.error(
+            request,
+            "This change request has already been processed."
+        )
+
+        return redirect(
+            "coordinator:change_requests"
+        )
+
+    if request.method != "POST":
+
+        return render(
+            request,
+            "coordinator/send_change_request.html",
+            {
+                "change_request": change_request
+            }
+        )
+
+    # -----------------------------------------------------
+    # SEND CHANGE REQUEST TO STUDENT
+    # -----------------------------------------------------
+
+    change_request.coordinator = request.user
+
+    change_request.status = "SENT_TO_STUDENT"
+
+    change_request.sent_to_student_at = timezone.now()
+
+    change_request.save(
+        update_fields=[
+            "coordinator",
+            "status",
+            "sent_to_student_at"
+        ]
+    )
+
+    # Proposal remains in CHANGES_REQUESTED
+    proposal = change_request.proposal
+
+    proposal.status = "CHANGES_REQUESTED"
+
+    proposal.save(
+        update_fields=[
+            "status",
+            "updated_at"
+        ]
+    )
+
+    messages.success(
+        request,
+        "Expert change request has been sent to the student."
+    )
+
+    return redirect(
+        "coordinator:change_requests"
     )
 
 
@@ -700,11 +887,25 @@ def guide_detail(request, user_id):
         role="GUIDE"
     )
 
+    assigned_projects = (
+        ProjectProposal.objects
+        .filter(
+            guide=guide
+        )
+        .select_related(
+            "student"
+        )
+        .order_by(
+            "-updated_at"
+        )
+    )
+
     return render(
         request,
         "coordinator/guide_detail.html",
         {
-            "guide": guide
+            "guide": guide,
+            "assigned_projects": assigned_projects,
         }
     )
 
@@ -1125,4 +1326,32 @@ def delete_staff(request, user_id):
 
     return redirect(
         "coordinator:staff"
+    )
+
+
+# =========================================================
+# STUDENTS
+# =========================================================
+
+@coordinator_required
+def students(request):
+
+    students = User.objects.filter(
+        role="STUDENT",
+        is_superuser=False
+    ).order_by(
+        "first_name",
+        "last_name",
+        "username"
+    )
+
+    total_students = students.count()
+
+    return render(
+        request,
+        "coordinator/students.html",
+        {
+            "students": students,
+            "total_students": total_students,
+        }
     )

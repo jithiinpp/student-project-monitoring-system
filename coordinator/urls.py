@@ -47,6 +47,40 @@ urlpatterns = [
         name="approve_project"
     ),
 
+    path(
+        "proposals/<int:proposal_id>/assign-guide/",
+        views.assign_guide,
+        name="assign_guide"
+    ),
+
+
+    # =====================================================
+    # EXPERT CHANGE REQUESTS
+    # =====================================================
+
+    path(
+        "change-requests/",
+        views.change_requests,
+        name="change_requests"
+    ),
+
+    path(
+        "change-requests/<int:request_id>/send/",
+        views.send_change_request,
+        name="send_change_request"
+    ),
+
+
+    # =====================================================
+    # STUDENTS
+    # =====================================================
+
+    path(
+        "students/",
+        views.students,
+        name="students"
+    ),
+
 
     # =====================================================
     # EXPERTS
@@ -107,7 +141,7 @@ urlpatterns = [
 
 
     # =====================================================
-    # PANEL
+    # PANEL MEMBERS
     # =====================================================
 
     path(

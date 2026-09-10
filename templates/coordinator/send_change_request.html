@@ -1,0 +1,334 @@
+{% extends "base.html" %}
+
+{% block title %}
+Review Change Request | SPMS
+{% endblock %}
+
+{% block extra_css %}
+
+<style>
+
+body {
+    background: #f5f7fb;
+}
+
+.main-content {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.review-page {
+    min-height: 100vh;
+    padding: 35px;
+}
+
+.review-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* HEADER */
+
+.review-header {
+    margin-bottom: 20px;
+}
+
+.review-header h1 {
+    margin: 0 0 6px;
+    font-size: 24px;
+    color: #111827;
+}
+
+.review-header p {
+    margin: 0;
+    font-size: 13px;
+    color: #64748b;
+}
+
+/* CARD */
+
+.review-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 25px;
+    margin-bottom: 18px;
+}
+
+.info-row {
+    display: grid;
+    grid-template-columns: 180px 1fr;
+    gap: 15px;
+    padding: 13px 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+.info-label {
+    font-size: 12px;
+    font-weight: 700;
+    color: #64748b;
+}
+
+.info-value {
+    font-size: 14px;
+    color: #111827;
+    font-weight: 500;
+}
+
+/* REQUEST */
+
+.request-box {
+    margin-top: 20px;
+    padding: 18px;
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    border-radius: 8px;
+}
+
+.request-box h3 {
+    margin: 0 0 10px;
+    font-size: 14px;
+    color: #9a3412;
+}
+
+.request-message {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.7;
+    color: #431407;
+}
+
+/* ACTION */
+
+.action-box {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.back-button {
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 15px;
+    border: 1px solid #d1d5db;
+    border-radius: 7px;
+    background: #ffffff;
+    color: #475569;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.send-button {
+    border: none;
+    padding: 10px 17px;
+    border-radius: 7px;
+    background: #2563eb;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.send-button:hover {
+    background: #1d4ed8;
+}
+
+.warning {
+    margin-top: 15px;
+    padding: 12px 14px;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 7px;
+    color: #1e40af;
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+/* MOBILE */
+
+@media (max-width: 650px) {
+
+    .review-page {
+        padding: 20px 14px;
+    }
+
+    .info-row {
+        grid-template-columns: 1fr;
+        gap: 5px;
+    }
+
+    .action-box {
+        flex-direction: column;
+    }
+
+    .back-button,
+    .send-button {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+
+}
+
+</style>
+
+{% endblock %}
+
+
+{% block content %}
+
+<div class="review-page">
+
+    <div class="review-container">
+
+        <!-- HEADER -->
+
+        <div class="review-header">
+
+            <h1>
+                Review Change Request
+            </h1>
+
+            <p>
+                Review the Domain Expert's request before
+                sending it to the student.
+            </p>
+
+        </div>
+
+
+        <!-- DETAILS -->
+
+        <div class="review-card">
+
+            <div class="info-row">
+
+                <div class="info-label">
+                    Student
+                </div>
+
+                <div class="info-value">
+
+                    {{ change_request.proposal.student.get_full_name|default:change_request.proposal.student.username }}
+
+                </div>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <div class="info-label">
+                    Username
+                </div>
+
+                <div class="info-value">
+
+                    {{ change_request.proposal.student.username }}
+
+                </div>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <div class="info-label">
+                    Project
+                </div>
+
+                <div class="info-value">
+
+                    {{ change_request.proposal.title }}
+
+                </div>
+
+            </div>
+
+
+            <div class="info-row">
+
+                <div class="info-label">
+                    Domain Expert
+                </div>
+
+                <div class="info-value">
+
+                    {{ change_request.expert.get_full_name|default:change_request.expert.username }}
+
+                </div>
+
+            </div>
+
+
+            <!-- REQUEST MESSAGE -->
+
+            <div class="request-box">
+
+                <h3>
+                    Changes Requested by Expert
+                </h3>
+
+                <p class="request-message">
+
+                    {{ change_request.message }}
+
+                </p>
+
+            </div>
+
+
+            <div class="warning">
+
+                After clicking
+                <strong>Send to Student</strong>,
+                this change request will appear in the student's
+                dashboard. The student can then edit and resubmit
+                the proposal.
+
+            </div>
+
+
+            <!-- ACTION -->
+
+            <div class="action-box">
+
+                <a
+                    href="{% url 'coordinator:change_requests' %}"
+                    class="back-button"
+                >
+                    Back
+                </a>
+
+
+                <form
+                    method="POST"
+                    action="{% url 'coordinator:send_change_request' change_request.id %}"
+                >
+
+                    {% csrf_token %}
+
+                    <button
+                        type="submit"
+                        class="send-button"
+                    >
+                        Send to Student
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

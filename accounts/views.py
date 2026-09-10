@@ -447,6 +447,75 @@ def proposal_detail(request, proposal_id):
 
 
 # ============================================================
+# EDIT / RESUBMIT PROJECT PROPOSAL AFTER CHANGES REQUESTED
+# ============================================================
+
+@login_required
+def edit_proposal(request, proposal_id):
+
+    if request.user.is_superuser:
+        return redirect("accounts:coordinator_dashboard")
+
+    if request.user.role != "STUDENT":
+        return redirect("accounts:dashboard")
+
+    proposal = get_object_or_404(
+        ProjectProposal,
+        id=proposal_id,
+        student=request.user
+    )
+
+    if proposal.status not in ["SUBMITTED", "CHANGES_REQUESTED"]:
+        messages.error(
+            request,
+            "This proposal cannot be edited in its current status."
+        )
+        return redirect("accounts:proposal_detail", proposal_id=proposal.id)
+
+    if request.method == "POST":
+        form = ProjectProposalForm(
+            request.POST,
+            request.FILES,
+            instance=proposal,
+        )
+
+        if form.is_valid():
+            updated_proposal = form.save(commit=False)
+            updated_proposal.status = "SUBMITTED"
+            updated_proposal.expert_comments = ""
+            updated_proposal.save()
+
+            messages.success(
+                request,
+                "Your proposal has been updated and resubmitted successfully."
+            )
+
+            return redirect(
+                "accounts:proposal_detail",
+                proposal_id=proposal.id
+            )
+
+        messages.error(
+            request,
+            "Please correct the errors in the form."
+        )
+
+    else:
+        form = ProjectProposalForm(instance=proposal)
+
+    return render(
+        request,
+        "student/proposal_form.html",
+        {
+            "form": form,
+            "proposal": proposal,
+            "proposal_count": ProjectProposal.objects.filter(student=request.user).count(),
+            "is_edit_mode": True,
+        },
+    )
+
+
+# ============================================================
 # STUDENT WEEKLY PROGRESS
 # ============================================================
 
@@ -939,7 +1008,7 @@ def guide_dashboard(request):
 
     return render(
         request,
-        "guides/dashboard.html",
+        "guide/dashboard.html",
         context
     )
 
@@ -983,7 +1052,7 @@ def guide_students(request):
 
     return render(
         request,
-        "guides/students.html",
+        "guide/students.html",
         context
     )
 

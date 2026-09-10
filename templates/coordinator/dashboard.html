@@ -6,9 +6,7 @@ Coordinator Dashboard | SPMS
 {% endblock %}
 
 {% block extra_css %}
-
 <style>
-
 /* =========================================================
    GLOBAL
    ========================================================= */
@@ -21,28 +19,82 @@ html,
 body {
     margin: 0;
     padding: 0;
-    font-family: Arial, Helvetica, sans-serif;
-    background: #f4f7fb;
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+    background: #f5f7fb;
     color: #1e293b;
 }
 
+/* Remove base main styling if present */
+.main-content {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* =========================================================
+   SVG ICONS
+   ========================================================= */
+
+.spms-icon {
+    width: 20px;
+    height: 20px;
+
+    display: block;
+
+    fill: none !important;
+    stroke: currentColor !important;
+    stroke-width: 1.8 !important;
+
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+
+    flex-shrink: 0;
+}
+
+.spms-icon-lg {
+    width: 22px;
+    height: 22px;
+}
+
+.spms-icon-xl {
+    width: 24px;
+    height: 24px;
+}
+
+/* Force all SVG children to remain outline */
+.spms-icon *,
+.spms-icon path,
+.spms-icon line,
+.spms-icon circle,
+.spms-icon rect,
+.spms-icon polyline,
+.spms-icon polygon {
+    fill: none !important;
+    stroke: currentColor !important;
+    stroke-width: 1.8 !important;
+    stroke-linecap: round !important;
+    stroke-linejoin: round !important;
+}
 
 /* =========================================================
    SIDEBAR
    ========================================================= */
 
 .coordinator-sidebar {
-
     position: fixed;
-
     top: 0;
     left: 0;
 
-    width: 260px;
+    width: 250px;
     height: 100vh;
 
-    background: #0f172a;
-
+    background: #111827;
     color: #ffffff;
 
     display: flex;
@@ -52,328 +104,268 @@ body {
 
     overflow-y: auto;
 
-    box-shadow:
-        4px 0 15px rgba(15, 23, 42, 0.12);
+    border-right: 1px solid #1f2937;
 }
-
-
-/* SIDEBAR SCROLLBAR */
 
 .coordinator-sidebar::-webkit-scrollbar {
     width: 5px;
 }
 
-.coordinator-sidebar::-webkit-scrollbar-thumb {
-    background: #334155;
-    border-radius: 10px;
+.coordinator-sidebar::-webkit-scrollbar-track {
+    background: #111827;
 }
 
+.coordinator-sidebar::-webkit-scrollbar-thumb {
+    background: #374151;
+    border-radius: 10px;
+}
 
 /* =========================================================
    SIDEBAR LOGO
    ========================================================= */
 
 .sidebar-logo {
+    padding: 24px 20px;
 
-    padding: 25px 20px;
-
-    border-bottom: 1px solid #1e293b;
+    border-bottom: 1px solid #1f2937;
 }
 
 .sidebar-logo h2 {
-
     margin: 0;
 
     font-size: 21px;
-
     font-weight: 700;
 
     color: #ffffff;
 }
 
 .sidebar-logo p {
-
-    margin: 6px 0 0;
+    margin: 5px 0 0;
 
     font-size: 12px;
-
-    color: #94a3b8;
+    color: #9ca3af;
 }
-
 
 /* =========================================================
    SIDEBAR MENU
    ========================================================= */
 
 .sidebar-menu {
-
-    padding: 20px 12px;
+    padding: 15px 11px;
 
     flex: 1;
 }
 
-
-/* MENU TITLE */
-
 .sidebar-title {
+    padding: 13px 11px 7px;
 
-    padding: 10px 12px;
+    margin-top: 6px;
 
-    margin-top: 8px;
-
-    margin-bottom: 8px;
-
-    font-size: 11px;
-
+    font-size: 10px;
     font-weight: 700;
 
-    color: #64748b;
+    color: #6b7280;
 
     text-transform: uppercase;
-
-    letter-spacing: 0.8px;
+    letter-spacing: 1px;
 }
 
-
-/* SIDEBAR LINK */
+/* =========================================================
+   SIDEBAR LINK
+   ========================================================= */
 
 .sidebar-link {
-
     display: flex;
-
     align-items: center;
 
-    gap: 13px;
+    gap: 12px;
 
     width: 100%;
 
-    padding: 12px 14px;
+    padding: 10px 12px;
 
-    margin-bottom: 5px;
+    margin-bottom: 4px;
 
-    border-radius: 8px;
+    border-radius: 7px;
 
     color: #cbd5e1;
 
     text-decoration: none;
 
-    font-size: 14px;
-
+    font-size: 13.5px;
     font-weight: 500;
 
-    transition: all 0.2s ease;
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
 }
 
 .sidebar-link:hover {
-
-    background: #1e293b;
-
+    background: #1f2937;
     color: #ffffff;
-
-    transform: translateX(2px);
 }
 
-
-/* ACTIVE LINK */
-
 .sidebar-link.active {
-
     background: #2563eb;
-
     color: #ffffff;
 
     box-shadow:
-        0 4px 10px rgba(37, 99, 235, 0.25);
+        0 4px 12px rgba(37, 99, 235, 0.20);
 }
-
-
-/* ICON */
 
 .sidebar-icon {
+    width: 22px;
+    min-width: 22px;
+    height: 22px;
 
-    width: 24px;
-
-    min-width: 24px;
-
-    text-align: center;
-
-    font-size: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-
 
 /* =========================================================
    SIDEBAR USER
    ========================================================= */
 
 .sidebar-user {
+    padding: 17px;
 
-    padding: 18px;
+    border-top: 1px solid #1f2937;
 
-    border-top: 1px solid #1e293b;
-
-    background: #0b1220;
+    background: #0d1421;
 }
 
 .sidebar-user-name {
-
-    font-size: 14px;
-
+    font-size: 13.5px;
     font-weight: 600;
 
     color: #ffffff;
 
     margin-bottom: 4px;
+
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .sidebar-user-role {
-
     font-size: 11px;
-
-    color: #94a3b8;
+    color: #9ca3af;
 }
-
 
 /* =========================================================
    LOGOUT
    ========================================================= */
 
 .sidebar-logout {
-
     display: flex;
-
     align-items: center;
 
-    gap: 13px;
+    gap: 12px;
 
-    padding: 12px 14px;
+    padding: 10px 12px;
 
     margin-top: 12px;
 
-    border-radius: 8px;
+    border-radius: 7px;
 
-    background: #7f1d1d;
+    background: #2a1717;
 
-    color: #ffffff;
+    color: #fca5a5;
 
     text-decoration: none;
 
-    font-size: 14px;
-
+    font-size: 13.5px;
     font-weight: 600;
 
-    transition: 0.2s ease;
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
 }
 
 .sidebar-logout:hover {
-
-    background: #991b1b;
-
+    background: #451a1a;
     color: #ffffff;
 }
 
-
 /* =========================================================
-   MAIN CONTENT
+   MAIN
    ========================================================= */
 
 .coordinator-main {
-
-    margin-left: 260px;
+    margin-left: 250px;
 
     min-height: 100vh;
 
-    padding: 35px 40px 50px;
+    padding: 30px 35px 45px;
 }
 
-
-/* =========================================================
-   MAIN CONTAINER
-   ========================================================= */
-
 .coordinator-container {
-
     width: 100%;
 
-    max-width: 1400px;
+    max-width: 1450px;
 
     margin: 0 auto;
 }
-
 
 /* =========================================================
    HEADER
    ========================================================= */
 
 .coordinator-header {
-
     display: flex;
 
     justify-content: space-between;
-
     align-items: center;
 
     background: #ffffff;
 
-    padding: 25px 30px;
+    padding: 22px 25px;
 
-    border-radius: 16px;
+    border-radius: 10px;
 
-    margin-bottom: 30px;
+    margin-bottom: 22px;
 
-    border: 1px solid #e2e8f0;
+    border: 1px solid #e5e7eb;
 
     box-shadow:
-        0 4px 15px rgba(15, 23, 42, 0.05);
+        0 2px 7px rgba(15, 23, 42, 0.035);
 }
 
 .coordinator-header h1 {
+    margin: 0 0 5px;
 
-    margin: 0 0 7px;
-
-    font-size: 28px;
-
+    font-size: 24px;
     font-weight: 700;
 
-    color: #0f172a;
+    color: #111827;
 }
 
 .coordinator-header p {
-
     margin: 0;
 
-    font-size: 14px;
+    font-size: 13px;
 
-    color: #64748b;
+    color: #6b7280;
 }
-
-
-/* =========================================================
-   HEADER ACTIONS
-   ========================================================= */
-
-.header-actions {
-
-    display: flex;
-
-    gap: 10px;
-
-    align-items: center;
-}
-
 
 /* =========================================================
    ADD STAFF BUTTON
    ========================================================= */
 
-.add-staff-button {
+.header-actions {
+    display: flex;
+    align-items: center;
+}
 
+.add-staff-button {
     display: inline-flex;
 
     align-items: center;
 
-    justify-content: center;
+    gap: 8px;
 
-    padding: 11px 18px;
+    padding: 9px 14px;
 
     background: #2563eb;
 
@@ -381,537 +373,701 @@ body {
 
     text-decoration: none;
 
-    border-radius: 8px;
+    border-radius: 7px;
 
-    font-size: 14px;
-
+    font-size: 13px;
     font-weight: 600;
 
-    transition: 0.25s ease;
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
 }
 
 .add-staff-button:hover {
-
     background: #1d4ed8;
 
-    transform: translateY(-1px);
-
     color: #ffffff;
-}
 
+    transform: translateY(-1px);
+}
 
 /* =========================================================
    STATISTICS
    ========================================================= */
 
 .stats-grid {
-
     display: grid;
 
-    grid-template-columns: repeat(5, 1fr);
-
-    gap: 20px;
-
-    margin-bottom: 30px;
-}
-
-
-.stat-card {
-
-    display: flex;
-
-    align-items: center;
+    grid-template-columns:
+        repeat(5, minmax(0, 1fr));
 
     gap: 15px;
 
-    background: #ffffff;
-
-    padding: 22px;
-
-    border-radius: 14px;
-
-    border: 1px solid #e2e8f0;
-
-    box-shadow:
-        0 4px 12px rgba(15, 23, 42, 0.04);
-
-    transition: 0.25s ease;
+    margin-bottom: 22px;
 }
 
-.stat-card:hover {
-
-    transform: translateY(-4px);
-
-    box-shadow:
-        0 10px 25px rgba(15, 23, 42, 0.08);
-}
-
-
-.stat-icon {
-
-    width: 50px;
-
-    height: 50px;
-
+.stat-card {
     display: flex;
 
     align-items: center;
 
-    justify-content: center;
+    gap: 13px;
 
-    background: #eff6ff;
+    min-height: 105px;
 
-    border-radius: 12px;
+    padding: 18px;
 
-    font-size: 24px;
+    background: #ffffff;
 
-    flex-shrink: 0;
+    border: 1px solid #e5e7eb;
+
+    border-radius: 10px;
+
+    box-shadow:
+        0 2px 7px rgba(15, 23, 42, 0.03);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        border-color 0.2s ease;
 }
 
+.stat-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 6px 16px rgba(15, 23, 42, 0.07);
+
+    border-color: #dbeafe;
+}
+
+.stat-card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.stat-icon {
+    width: 45px;
+    height: 45px;
+
+    min-width: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+}
+
+/* Student */
+.stat-card:nth-child(1) .stat-icon {
+    background: #eff6ff;
+    color: #2563eb;
+}
+
+/* Proposal */
+.stat-card:nth-child(2) .stat-icon {
+    background: #ecfdf5;
+    color: #059669;
+}
+
+/* Expert */
+.stat-card:nth-child(3) .stat-icon {
+    background: #fffbeb;
+    color: #d97706;
+}
+
+/* Guide */
+.stat-card:nth-child(4) .stat-icon {
+    background: #f5f3ff;
+    color: #7c3aed;
+}
+
+/* Panel */
+.stat-card:nth-child(5) .stat-icon {
+    background: #fdf2f8;
+    color: #db2777;
+}
 
 .stat-card p {
-
     margin: 0 0 5px;
 
-    font-size: 13px;
+    font-size: 12px;
 
     color: #64748b;
 
     font-weight: 500;
 }
 
-
 .stat-card h2 {
-
     margin: 0;
 
-    font-size: 25px;
+    font-size: 23px;
 
-    color: #0f172a;
+    line-height: 1;
+
+    color: #111827;
 
     font-weight: 700;
 }
-
 
 /* =========================================================
    SECTION CARD
    ========================================================= */
 
 .section-card {
-
     background: #ffffff;
 
-    padding: 28px;
+    padding: 23px;
 
-    border-radius: 16px;
+    border-radius: 10px;
 
-    border: 1px solid #e2e8f0;
+    border: 1px solid #e5e7eb;
 
-    margin-bottom: 30px;
+    margin-bottom: 22px;
 
     box-shadow:
-        0 4px 15px rgba(15, 23, 42, 0.04);
+        0 2px 7px rgba(15, 23, 42, 0.03);
 }
 
-
 .section-header {
-
     display: flex;
 
     justify-content: space-between;
-
     align-items: center;
 
-    margin-bottom: 25px;
+    margin-bottom: 18px;
 }
 
-
-.section-header h2,
-.section-card > h2 {
-
+.section-header h2 {
     margin: 0;
 
-    font-size: 21px;
+    font-size: 17px;
 
-    color: #0f172a;
+    color: #111827;
 
     font-weight: 700;
 }
 
-
 /* =========================================================
-   PRIMARY BUTTON
+   VIEW ALL BUTTON
    ========================================================= */
 
 .primary-button {
-
     display: inline-flex;
 
     align-items: center;
 
-    justify-content: center;
+    gap: 6px;
 
-    padding: 10px 17px;
-
-    background: #2563eb;
-
-    color: #ffffff;
-
-    text-decoration: none;
-
-    border-radius: 8px;
-
-    font-size: 13px;
-
-    font-weight: 600;
-
-    transition: 0.25s ease;
-}
-
-.primary-button:hover {
-
-    background: #1d4ed8;
-
-    color: #ffffff;
-}
-
-
-/* =========================================================
-   STATUS GRID
-   ========================================================= */
-
-.status-grid {
-
-    display: grid;
-
-    grid-template-columns: repeat(4, 1fr);
-
-    gap: 18px;
-}
-
-
-.status-card {
-
-    text-align: center;
-
-    padding: 25px 15px;
+    padding: 8px 12px;
 
     background: #f8fafc;
 
-    border: 1px solid #e2e8f0;
+    color: #2563eb;
 
-    border-radius: 12px;
+    text-decoration: none;
 
-    transition: 0.25s ease;
+    border-radius: 6px;
+
+    border: 1px solid #dbeafe;
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
 }
 
+.primary-button:hover {
+    background: #eff6ff;
+
+    border-color: #bfdbfe;
+
+    color: #1d4ed8;
+}
+
+/* =========================================================
+   PROPOSAL STATUS
+   ========================================================= */
+
+.status-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 13px;
+}
+
+.status-card {
+    padding: 18px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 8px;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
+}
 
 .status-card:hover {
+    background: #ffffff;
 
-    background: #f1f5f9;
-
-    transform: translateY(-3px);
+    border-color: #cbd5e1;
 }
 
-
 .status-card h3 {
+    margin: 0 0 5px;
 
-    margin: 0 0 8px;
-
-    font-size: 28px;
+    font-size: 24px;
 
     font-weight: 700;
 
-    color: #2563eb;
+    color: #1e293b;
 }
 
-
 .status-card p {
-
     margin: 0;
 
-    font-size: 13px;
+    font-size: 12px;
 
     color: #64748b;
 
     font-weight: 500;
 }
 
+/* Different status colors */
+
+.status-card:nth-child(1) {
+    border-left: 3px solid #2563eb;
+}
+
+.status-card:nth-child(1) h3 {
+    color: #2563eb;
+}
+
+.status-card:nth-child(2) {
+    border-left: 3px solid #d97706;
+}
+
+.status-card:nth-child(2) h3 {
+    color: #d97706;
+}
+
+.status-card:nth-child(3) {
+    border-left: 3px solid #dc2626;
+}
+
+.status-card:nth-child(3) h3 {
+    color: #dc2626;
+}
+
+.status-card:nth-child(4) {
+    border-left: 3px solid #059669;
+}
+
+.status-card:nth-child(4) h3 {
+    color: #059669;
+}
+
+.status-card:nth-child(5) {
+    border-left: 3px solid #16a34a;
+}
+
+.status-card:nth-child(5) h3 {
+    color: #16a34a;
+}
+
+.status-card:nth-child(6) {
+    border-left: 3px solid #7c3aed;
+}
+
+.status-card:nth-child(6) h3 {
+    color: #7c3aed;
+}
+
+.status-card:nth-child(7) {
+    border-left: 3px solid #ea580c;
+}
+
+.status-card:nth-child(7) h3 {
+    color: #ea580c;
+}
+
+.status-card:nth-child(8) {
+    border-left: 3px solid #0891b2;
+}
+
+.status-card:nth-child(8) h3 {
+    color: #0891b2;
+}
 
 /* =========================================================
-   MANAGEMENT GRID
+   MANAGEMENT
    ========================================================= */
 
 .management-grid {
-
     display: grid;
 
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
 
-    gap: 20px;
-
-    margin-top: 25px;
+    gap: 14px;
 }
 
-
 .management-card {
+    display: flex;
 
-    display: block;
+    align-items: flex-start;
 
-    padding: 25px;
+    gap: 13px;
 
-    background: #f8fafc;
+    padding: 19px;
 
-    border: 1px solid #e2e8f0;
+    background: #ffffff;
 
-    border-radius: 14px;
+    border: 1px solid #e5e7eb;
+
+    border-radius: 9px;
 
     text-decoration: none;
 
     color: inherit;
 
-    transition: 0.25s ease;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease,
+        transform 0.2s ease;
 }
-
 
 .management-card:hover {
-
-    background: #ffffff;
-
     border-color: #bfdbfe;
 
-    transform: translateY(-5px);
-
     box-shadow:
-        0 10px 25px rgba(15, 23, 42, 0.08);
+        0 6px 16px rgba(15, 23, 42, 0.06);
+
+    transform: translateY(-2px);
 }
 
+.management-icon {
+    width: 43px;
+    height: 43px;
 
-.management-card > span {
-
-    width: 50px;
-
-    height: 50px;
+    min-width: 43px;
 
     display: flex;
 
     align-items: center;
-
     justify-content: center;
+
+    border-radius: 9px;
 
     background: #eff6ff;
 
-    border-radius: 12px;
-
-    font-size: 24px;
-
-    margin-bottom: 17px;
+    color: #2563eb;
 }
 
+.management-card:nth-child(2) .management-icon {
+    background: #ecfdf5;
+    color: #059669;
+}
+
+.management-card:nth-child(3) .management-icon {
+    background: #f5f3ff;
+    color: #7c3aed;
+}
 
 .management-card h3 {
+    margin: 0 0 5px;
 
-    margin: 0 0 9px;
+    font-size: 14px;
 
-    font-size: 17px;
-
-    color: #0f172a;
+    color: #111827;
 
     font-weight: 700;
 }
 
-
 .management-card p {
-
     margin: 0;
 
-    font-size: 13px;
+    font-size: 12px;
 
-    line-height: 1.6;
+    line-height: 1.5;
 
     color: #64748b;
 }
 
-
-/* STAFF CARD */
-
-.staff-management-card {
-
-    border: 2px dashed #93c5fd;
-
-    background: #eff6ff;
-}
-
-
 /* =========================================================
-   MOBILE MENU BUTTON
+   MOBILE BUTTON
    ========================================================= */
 
 .mobile-menu-button {
-
     display: none;
 
     position: fixed;
 
-    top: 15px;
-
-    left: 15px;
+    top: 14px;
+    left: 14px;
 
     z-index: 1100;
 
-    width: 45px;
+    width: 42px;
+    height: 42px;
 
-    height: 45px;
+    border: 1px solid #374151;
 
-    border: none;
+    border-radius: 7px;
 
-    border-radius: 8px;
-
-    background: #0f172a;
+    background: #111827;
 
     color: #ffffff;
 
-    font-size: 22px;
-
     cursor: pointer;
+
+    align-items: center;
+    justify-content: center;
 }
 
+.sidebar-overlay {
+    display: none;
+
+    position: fixed;
+
+    inset: 0;
+
+    background: rgba(15, 23, 42, 0.45);
+
+    z-index: 999;
+}
 
 /* =========================================================
    RESPONSIVE
    ========================================================= */
 
-@media (max-width: 1200px) {
+@media (max-width: 1250px) {
 
     .stats-grid {
-
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns:
+            repeat(3, minmax(0, 1fr));
     }
 
     .management-grid {
-
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .status-grid {
-
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
     }
 }
 
-
-@media (max-width: 768px) {
+@media (max-width: 900px) {
 
     .coordinator-sidebar {
-
         transform: translateX(-100%);
 
-        transition: transform 0.3s ease;
+        transition: transform 0.25s ease;
     }
 
     .coordinator-sidebar.open {
-
         transform: translateX(0);
     }
 
-    .mobile-menu-button {
-
+    .sidebar-overlay.open {
         display: block;
     }
 
-    .coordinator-main {
+    .mobile-menu-button {
+        display: flex;
+    }
 
+    .coordinator-main {
         margin-left: 0;
 
-        padding: 80px 20px 40px;
+        padding:
+            70px 20px 40px;
     }
 
     .coordinator-header {
-
-        flex-direction: column;
-
-        align-items: flex-start;
-
-        gap: 20px;
-    }
-
-    .header-actions {
-
-        width: 100%;
-
-        flex-direction: column;
-    }
-
-    .add-staff-button {
-
-        width: 100%;
-    }
-
-    .stats-grid {
-
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .management-grid {
-
-        grid-template-columns: 1fr;
-    }
-
-    .status-grid {
-
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-
-@media (max-width: 500px) {
-
-    .coordinator-main {
-
-        padding: 75px 15px 30px;
-    }
-
-    .coordinator-header {
-
-        padding: 22px;
-    }
-
-    .coordinator-header h1 {
-
-        font-size: 23px;
-    }
-
-    .stats-grid {
-
-        grid-template-columns: 1fr;
-    }
-
-    .status-grid {
-
-        grid-template-columns: 1fr;
-    }
-
-    .section-card {
-
-        padding: 20px;
-    }
-
-    .section-header {
-
         flex-direction: column;
 
         align-items: flex-start;
 
         gap: 15px;
     }
+
+    .header-actions {
+        width: 100%;
+    }
+
+    .add-staff-button {
+        width: 100%;
+
+        justify-content: center;
+    }
+
+    .stats-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .status-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
 }
 
-</style>
+@media (max-width: 600px) {
 
+    .coordinator-main {
+        padding:
+            65px 14px 30px;
+    }
+
+    .coordinator-header {
+        padding: 19px;
+    }
+
+    .coordinator-header h1 {
+        font-size: 21px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .status-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .management-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .section-card {
+        padding: 18px;
+    }
+
+    .section-header {
+        flex-direction: column;
+
+        align-items: flex-start;
+
+        gap: 10px;
+    }
+
+    .primary-button {
+        width: 100%;
+
+        justify-content: center;
+    }
+}
+</style>
 {% endblock %}
 
 
 {% block content %}
+
+<!-- =========================================================
+     SVG ICON DEFINITIONS
+     ========================================================= -->
+
+<svg
+    width="0"
+    height="0"
+    style="position:absolute"
+    aria-hidden="true"
+>
+
+    <!-- Dashboard -->
+    <symbol id="icon-dashboard" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+        <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+        <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+        <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+    </symbol>
+
+    <!-- Folder -->
+    <symbol id="icon-folder" viewBox="0 0 24 24">
+        <path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H10l2 2h6.5A2.5 2.5 0 0 1 21 9.5v7A2.5 2.5 0 0 1 18.5 19h-13A2.5 2.5 0 0 1 3 16.5z"></path>
+        <path d="M3 10h18"></path>
+    </symbol>
+
+    <!-- Users -->
+    <symbol id="icon-users" viewBox="0 0 24 24">
+        <circle cx="9" cy="8" r="3.5"></circle>
+        <path d="M2.5 20a6.5 6.5 0 0 1 13 0"></path>
+
+        <path d="M16 4.5a3.5 3.5 0 0 1 0 7"></path>
+        <path d="M18 14a5 5 0 0 1 4 5"></path>
+    </symbol>
+
+    <!-- User Plus -->
+    <symbol id="icon-user-plus" viewBox="0 0 24 24">
+        <circle cx="8.5" cy="8" r="3.5"></circle>
+        <path d="M2.5 20a6 6 0 0 1 12 0"></path>
+        <path d="M18 8v7"></path>
+        <path d="M14.5 11.5h7"></path>
+    </symbol>
+
+    <!-- Graduation -->
+    <symbol id="icon-graduation" viewBox="0 0 24 24">
+        <path d="M2.5 9.5 12 5l9.5 4.5L12 14z"></path>
+        <path d="M6 12v4.5c3.5 2.2 8.5 2.2 12 0V12"></path>
+        <path d="M21.5 9.5v5"></path>
+    </symbol>
+
+    <!-- File -->
+    <symbol id="icon-file" viewBox="0 0 24 24">
+        <path d="M6 3h8l5 5v13H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
+        <path d="M14 3v6h5"></path>
+        <path d="M8 13h8"></path>
+        <path d="M8 17h6"></path>
+    </symbol>
+
+    <!-- Briefcase -->
+    <symbol id="icon-briefcase" viewBox="0 0 24 24">
+        <rect x="3" y="7" width="18" height="13" rx="2"></rect>
+        <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        <path d="M3 12h18"></path>
+        <path d="M10 12v2h4v-2"></path>
+    </symbol>
+
+    <!-- Panel Member -->
+    <symbol id="icon-panel" viewBox="0 0 24 24">
+        <circle cx="12" cy="7" r="3.5"></circle>
+        <path d="M5 20a7 7 0 0 1 14 0"></path>
+    </symbol>
+
+    <!-- Plus -->
+    <symbol id="icon-plus" viewBox="0 0 24 24">
+        <path d="M12 5v14"></path>
+        <path d="M5 12h14"></path>
+    </symbol>
+
+    <!-- Arrow -->
+    <symbol id="icon-arrow" viewBox="0 0 24 24">
+        <path d="M5 12h14"></path>
+        <path d="m13 6 6 6-6 6"></path>
+    </symbol>
+
+    <!-- Menu -->
+    <symbol id="icon-menu" viewBox="0 0 24 24">
+        <path d="M4 6h16"></path>
+        <path d="M4 12h16"></path>
+        <path d="M4 18h16"></path>
+    </symbol>
+
+    <!-- Logout -->
+    <symbol id="icon-logout" viewBox="0 0 24 24">
+        <path d="M10 17l5-5-5-5"></path>
+        <path d="M15 12H3"></path>
+        <path d="M13 5V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-1"></path>
+    </symbol>
+
+</svg>
 
 
 <!-- =========================================================
@@ -919,46 +1075,50 @@ body {
      ========================================================= -->
 
 <button
+    type="button"
     class="mobile-menu-button"
     onclick="toggleSidebar()"
+    aria-label="Open menu"
 >
-    ☰
+    <svg class="spms-icon spms-icon-lg">
+        <use href="#icon-menu"></use>
+    </svg>
 </button>
 
 
+<div
+    class="sidebar-overlay"
+    id="sidebarOverlay"
+    onclick="toggleSidebar()"
+></div>
+
+
 <!-- =========================================================
-     FIXED SIDEBAR
+     SIDEBAR
      ========================================================= -->
 
-<aside class="coordinator-sidebar" id="coordinatorSidebar">
-
-
-    <!-- LOGO -->
+<aside
+    class="coordinator-sidebar"
+    id="coordinatorSidebar"
+>
 
     <div class="sidebar-logo">
 
-        <h2>
-            SPMS
-        </h2>
+        <h2>SPMS</h2>
 
-        <p>
-            Coordinator Panel
-        </p>
+        <p>Coordinator Panel</p>
 
     </div>
 
 
-    <!-- MENU -->
-
     <div class="sidebar-menu">
 
+        <!-- MAIN -->
 
         <div class="sidebar-title">
             Main
         </div>
 
-
-        <!-- DASHBOARD -->
 
         <a
             href="{% url 'coordinator:dashboard' %}"
@@ -966,7 +1126,11 @@ body {
         >
 
             <span class="sidebar-icon">
-                🏠
+
+                <svg class="spms-icon">
+                    <use href="#icon-dashboard"></use>
+                </svg>
+
             </span>
 
             <span>
@@ -976,15 +1140,17 @@ body {
         </a>
 
 
-        <!-- PROPOSALS -->
-
         <a
             href="{% url 'coordinator:proposals' %}"
             class="sidebar-link"
         >
 
             <span class="sidebar-icon">
-                📁
+
+                <svg class="spms-icon">
+                    <use href="#icon-folder"></use>
+                </svg>
+
             </span>
 
             <span>
@@ -994,12 +1160,32 @@ body {
         </a>
 
 
+        <a
+            href="{% url 'coordinator:students' %}"
+            class="sidebar-link"
+        >
+
+            <span class="sidebar-icon">
+
+                <svg class="spms-icon">
+                    <use href="#icon-graduation"></use>
+                </svg>
+
+            </span>
+
+            <span>
+                Students
+            </span>
+
+        </a>
+
+
+        <!-- STAFF -->
+
         <div class="sidebar-title">
             Staff Management
         </div>
 
-
-        <!-- ALL STAFF -->
 
         <a
             href="{% url 'coordinator:staff' %}"
@@ -1007,7 +1193,11 @@ body {
         >
 
             <span class="sidebar-icon">
-                👨‍💼
+
+                <svg class="spms-icon">
+                    <use href="#icon-users"></use>
+                </svg>
+
             </span>
 
             <span>
@@ -1017,15 +1207,17 @@ body {
         </a>
 
 
-        <!-- ADD STAFF -->
-
         <a
             href="{% url 'coordinator:add_staff' %}"
             class="sidebar-link"
         >
 
             <span class="sidebar-icon">
-                ➕
+
+                <svg class="spms-icon">
+                    <use href="#icon-user-plus"></use>
+                </svg>
+
             </span>
 
             <span>
@@ -1035,66 +1227,12 @@ body {
         </a>
 
 
-        <!-- EXPERT -->
-
-        <a
-            href="{% url 'coordinator:staff' %}"
-            class="sidebar-link"
-        >
-
-            <span class="sidebar-icon">
-                👨‍🏫
-            </span>
-
-            <span>
-                Domain Experts
-            </span>
-
-        </a>
-
-
-        <!-- GUIDE -->
-
-        <a
-            href="{% url 'coordinator:staff' %}"
-            class="sidebar-link"
-        >
-
-            <span class="sidebar-icon">
-                👨‍💻
-            </span>
-
-            <span>
-                Guides
-            </span>
-
-        </a>
-
-
-        <!-- PANEL -->
-
-        <a
-            href="{% url 'coordinator:staff' %}"
-            class="sidebar-link"
-        >
-
-            <span class="sidebar-icon">
-                👥
-            </span>
-
-            <span>
-                Panel Members
-            </span>
-
-        </a>
-
+        <!-- ACCOUNT -->
 
         <div class="sidebar-title">
             Account
         </div>
 
-
-        <!-- LOGOUT -->
 
         <a
             href="{% url 'accounts:logout' %}"
@@ -1102,7 +1240,11 @@ body {
         >
 
             <span class="sidebar-icon">
-                🚪
+
+                <svg class="spms-icon">
+                    <use href="#icon-logout"></use>
+                </svg>
+
             </span>
 
             <span>
@@ -1111,11 +1253,10 @@ body {
 
         </a>
 
-
     </div>
 
 
-    <!-- USER INFORMATION -->
+    <!-- USER -->
 
     <div class="sidebar-user">
 
@@ -1126,16 +1267,12 @@ body {
         </div>
 
         <div class="sidebar-user-role">
-
             Coordinator
-
         </div>
 
     </div>
 
-
 </aside>
-
 
 
 <!-- =========================================================
@@ -1144,404 +1281,476 @@ body {
 
 <main class="coordinator-main">
 
+    <div class="coordinator-container">
 
-<div class="coordinator-container">
+
+        <!-- HEADER -->
+
+        <div class="coordinator-header">
+
+            <div>
+
+                <h1>
+                    Coordinator Dashboard
+                </h1>
+
+                <p>
+                    Student Project Monitoring System
+                </p>
+
+            </div>
 
 
-    <!-- =====================================================
-         HEADER
-         ===================================================== -->
+            <div class="header-actions">
 
-    <div class="coordinator-header">
+                <a
+                    href="{% url 'coordinator:add_staff' %}"
+                    class="add-staff-button"
+                >
 
-        <div>
+                    <svg class="spms-icon">
+                        <use href="#icon-plus"></use>
+                    </svg>
 
-            <h1>
-                Coordinator Dashboard
-            </h1>
+                    <span>
+                        Add Staff
+                    </span>
 
-            <p>
-                Student Project Monitoring System
-            </p>
+                </a>
+
+            </div>
 
         </div>
 
 
-        <div class="header-actions">
+        <!-- =================================================
+             STATISTICS
+             ================================================= -->
+
+        <div class="stats-grid">
+
+
+            <!-- STUDENTS -->
 
             <a
-                href="{% url 'coordinator:add_staff' %}"
-                class="add-staff-button"
+                href="{% url 'coordinator:students' %}"
+                class="stat-card stat-card-link"
             >
-                ➕ Add Staff
+
+                <span class="stat-icon">
+
+                    <svg class="spms-icon spms-icon-xl">
+                        <use href="#icon-graduation"></use>
+                    </svg>
+
+                </span>
+
+                <div>
+
+                    <p>
+                        Students
+                    </p>
+
+                    <h2>
+                        {{ student_count|default:"0" }}
+                    </h2>
+
+                </div>
+
             </a>
 
-        </div>
 
-    </div>
-
-
-
-    <!-- =====================================================
-         STATISTICS
-         ===================================================== -->
-
-    <div class="stats-grid">
-
-
-        <!-- STUDENTS -->
-
-        <div class="stat-card">
-
-            <span class="stat-icon">
-                👨‍🎓
-            </span>
-
-            <div>
-
-                <p>
-                    Students
-                </p>
-
-                <h2>
-                    {{ student_count }}
-                </h2>
-
-            </div>
-
-        </div>
-
-
-        <!-- PROPOSALS -->
-
-        <div class="stat-card">
-
-            <span class="stat-icon">
-                📁
-            </span>
-
-            <div>
-
-                <p>
-                    Proposals
-                </p>
-
-                <h2>
-                    {{ proposal_count }}
-                </h2>
-
-            </div>
-
-        </div>
-
-
-        <!-- EXPERTS -->
-
-        <div class="stat-card">
-
-            <span class="stat-icon">
-                👨‍🏫
-            </span>
-
-            <div>
-
-                <p>
-                    Domain Experts
-                </p>
-
-                <h2>
-                    {{ expert_count }}
-                </h2>
-
-            </div>
-
-        </div>
-
-
-        <!-- GUIDES -->
-
-        <div class="stat-card">
-
-            <span class="stat-icon">
-                👨‍💻
-            </span>
-
-            <div>
-
-                <p>
-                    Guides
-                </p>
-
-                <h2>
-                    {{ guide_count }}
-                </h2>
-
-            </div>
-
-        </div>
-
-
-        <!-- PANEL -->
-
-        <div class="stat-card">
-
-            <span class="stat-icon">
-                👥
-            </span>
-
-            <div>
-
-                <p>
-                    Panel Members
-                </p>
-
-                <h2>
-                    {{ panel_count }}
-                </h2>
-
-            </div>
-
-        </div>
-
-
-    </div>
-
-
-
-    <!-- =====================================================
-         PROPOSAL STATUS
-         ===================================================== -->
-
-    <div class="section-card">
-
-
-        <div class="section-header">
-
-            <h2>
-                Proposal Status
-            </h2>
-
+            <!-- PROPOSALS -->
 
             <a
                 href="{% url 'coordinator:proposals' %}"
-                class="primary-button"
-            >
-                View All Proposals
-            </a>
-
-        </div>
-
-
-        <div class="status-grid">
-
-
-            <!-- SUBMITTED -->
-
-            <div class="status-card">
-
-                <h3>
-                    {{ submitted_count }}
-                </h3>
-
-                <p>
-                    Submitted
-                </p>
-
-            </div>
-
-
-            <!-- EXPERT ASSIGNED -->
-
-            <div class="status-card">
-
-                <h3>
-                    {{ expert_assigned_count }}
-                </h3>
-
-                <p>
-                    Expert Assigned
-                </p>
-
-            </div>
-
-
-            <!-- EXPERT APPROVED -->
-
-            <div class="status-card">
-
-                <h3>
-                    {{ expert_approved_count }}
-                </h3>
-
-                <p>
-                    Expert Approved
-                </p>
-
-            </div>
-
-
-            <!-- COORDINATOR APPROVED -->
-
-            <div class="status-card">
-
-                <h3>
-                    {{ approved_count }}
-                </h3>
-
-                <p>
-                    Coordinator Approved
-                </p>
-
-            </div>
-
-
-        </div>
-
-    </div>
-
-
-
-    <!-- =====================================================
-         MANAGEMENT
-         ===================================================== -->
-
-    <div class="section-card">
-
-
-        <h2>
-            Management
-        </h2>
-
-
-        <div class="management-grid">
-
-
-            <!-- PROJECT PROPOSALS -->
-
-            <a
-                href="{% url 'coordinator:proposals' %}"
-                class="management-card"
+                class="stat-card stat-card-link"
             >
 
-                <span>
-                    📁
+                <span class="stat-icon">
+
+                    <svg class="spms-icon spms-icon-xl">
+                        <use href="#icon-file"></use>
+                    </svg>
+
                 </span>
 
-                <h3>
-                    Project Proposals
-                </h3>
+                <div>
 
-                <p>
-                    Review student proposals and assign Domain Experts.
-                </p>
+                    <p>
+                        Proposals
+                    </p>
+
+                    <h2>
+                        {{ proposal_count|default:"0" }}
+                    </h2>
+
+                </div>
 
             </a>
 
 
-
-            <!-- STAFF -->
+            <!-- EXPERTS -->
 
             <a
-                href="{% url 'coordinator:staff' %}"
-                class="management-card staff-management-card"
+                href="{% url 'coordinator:experts' %}"
+                class="stat-card stat-card-link"
             >
 
-                <span>
-                    👨‍💼
+                <span class="stat-icon">
+
+                    <svg class="spms-icon spms-icon-xl">
+                        <use href="#icon-briefcase"></use>
+                    </svg>
+
                 </span>
 
-                <h3>
-                    Staff Management
-                </h3>
+                <div>
 
-                <p>
-                    Add and manage Domain Experts, Guides and Panel Members.
-                </p>
+                    <p>
+                        Domain Experts
+                    </p>
 
-            </a>
+                    <h2>
+                        {{ expert_count|default:"0" }}
+                    </h2>
 
-
-
-            <!-- DOMAIN EXPERT -->
-
-            <a
-                href="{% url 'coordinator:staff' %}"
-                class="management-card"
-            >
-
-                <span>
-                    👨‍🏫
-                </span>
-
-                <h3>
-                    Domain Experts
-                </h3>
-
-                <p>
-                    View and manage Domain Expert accounts.
-                </p>
+                </div>
 
             </a>
-
 
 
             <!-- GUIDES -->
 
             <a
-                href="{% url 'coordinator:staff' %}"
-                class="management-card"
+                href="{% url 'coordinator:guides' %}"
+                class="stat-card stat-card-link"
             >
 
-                <span>
-                    👨‍💻
+                <span class="stat-icon">
+
+                    <svg class="spms-icon spms-icon-xl">
+                        <use href="#icon-users"></use>
+                    </svg>
+
                 </span>
 
-                <h3>
-                    Guides
-                </h3>
+                <div>
 
-                <p>
-                    Manage project Guide accounts and assignments.
-                </p>
+                    <p>
+                        Guides
+                    </p>
+
+                    <h2>
+                        {{ guide_count|default:"0" }}
+                    </h2>
+
+                </div>
 
             </a>
-
 
 
             <!-- PANEL -->
 
             <a
-                href="{% url 'coordinator:staff' %}"
-                class="management-card"
+                href="{% url 'coordinator:panels' %}"
+                class="stat-card stat-card-link"
             >
 
-                <span>
-                    👥
+                <span class="stat-icon">
+
+                    <svg class="spms-icon spms-icon-xl">
+                        <use href="#icon-panel"></use>
+                    </svg>
+
                 </span>
 
-                <h3>
-                    Panel Members
-                </h3>
+                <div>
 
-                <p>
-                    Manage Panel Member accounts for project evaluation.
-                </p>
+                    <p>
+                        Panel Members
+                    </p>
+
+                    <h2>
+                        {{ panel_count|default:"0" }}
+                    </h2>
+
+                </div>
 
             </a>
 
+        </div>
+
+
+        <!-- =================================================
+             PROPOSAL STATUS
+             ================================================= -->
+
+        <div class="section-card">
+
+            <div class="section-header">
+
+                <h2>
+                    Proposal Status
+                </h2>
+
+
+                <a
+                    href="{% url 'coordinator:proposals' %}"
+                    class="primary-button"
+                >
+
+                    <span>
+                        View All Proposals
+                    </span>
+
+                    <svg class="spms-icon">
+                        <use href="#icon-arrow"></use>
+                    </svg>
+
+                </a>
+
+            </div>
+
+
+            <div class="status-grid">
+
+
+                <div class="status-card">
+
+                    <h3>
+                        {{ submitted_count|default:"0" }}
+                    </h3>
+
+                    <p>
+                        Submitted
+                    </p>
+
+                </div>
+
+
+                <div class="status-card">
+
+                    <h3>
+                        {{ expert_assigned_count|default:"0" }}
+                    </h3>
+
+                    <p>
+                        Expert Assigned
+                    </p>
+
+                </div>
+
+
+                <div class="status-card">
+
+                    <h3>
+                        {{ changes_requested_count|default:"0" }}
+                    </h3>
+
+                    <p>
+                        Changes Requested
+                    </p>
+
+                </div>
+
+
+                <div class="status-card">
+
+                    <h3>
+                        {{ expert_approved_count|default:"0" }}
+                    </h3>
+
+                    <p>
+                        Expert Approved
+                    </p>
+
+                </div>
+
+
+                <div class="status-card">
+
+                    <h3>
+                        {{ approved_count|default:"0" }}
+                    </h3>
+
+                    <p>
+                        Final Approved
+                    </p>
+
+                </div>
+
+
+                <div class="status-card">
+
+                    <h3>
+                        {{ guide_assigned_count|default:"0" }}
+                    </h3>
+
+                    <p>
+                        Guide Assigned
+                    </p>
+
+                </div>
+
+
+                <div class="status-card">
+
+                    <h3>
+                        {{ guide_rejected_count|default:"0" }}
+                    </h3>
+
+                    <p>
+                        Guide Rejected
+                    </p>
+
+                </div>
+
+
+                <div class="status-card">
+
+                    <h3>
+                        {{ in_progress_count|default:"0" }}
+                    </h3>
+
+                    <p>
+                        In Progress
+                    </p>
+
+                </div>
+
+            </div>
 
         </div>
 
+
+        <!-- =================================================
+             QUICK MANAGEMENT
+             ================================================= -->
+
+        <div class="section-card">
+
+            <div class="section-header">
+
+                <h2>
+                    Quick Management
+                </h2>
+
+            </div>
+
+
+            <div class="management-grid">
+
+
+                <!-- PROJECT PROPOSALS -->
+
+                <a
+                    href="{% url 'coordinator:proposals' %}"
+                    class="management-card"
+                >
+
+                    <span class="management-icon">
+
+                        <svg class="spms-icon spms-icon-xl">
+                            <use href="#icon-folder"></use>
+                        </svg>
+
+                    </span>
+
+
+                    <div>
+
+                        <h3>
+                            Project Proposals
+                        </h3>
+
+                        <p>
+                            Review student proposals,
+                            assign experts and guides,
+                            and monitor project status.
+                        </p>
+
+                    </div>
+
+                </a>
+
+
+                <!-- STAFF -->
+
+                <a
+                    href="{% url 'coordinator:staff' %}"
+                    class="management-card"
+                >
+
+                    <span class="management-icon">
+
+                        <svg class="spms-icon spms-icon-xl">
+                            <use href="#icon-users"></use>
+                        </svg>
+
+                    </span>
+
+
+                    <div>
+
+                        <h3>
+                            Staff Management
+                        </h3>
+
+                        <p>
+                            Manage Domain Experts,
+                            Guides and Panel Members.
+                        </p>
+
+                    </div>
+
+                </a>
+
+
+                <!-- ADD STAFF -->
+
+                <a
+                    href="{% url 'coordinator:add_staff' %}"
+                    class="management-card"
+                >
+
+                    <span class="management-icon">
+
+                        <svg class="spms-icon spms-icon-xl">
+                            <use href="#icon-user-plus"></use>
+                        </svg>
+
+                    </span>
+
+
+                    <div>
+
+                        <h3>
+                            Add Staff
+                        </h3>
+
+                        <p>
+                            Add new Experts, Guides
+                            and Panel Members to SPMS.
+                        </p>
+
+                    </div>
+
+                </a>
+
+
+            </div>
+
+        </div>
+
+
     </div>
-
-
-</div>
 
 </main>
 
 
 <!-- =========================================================
-     SIDEBAR JAVASCRIPT
+     JAVASCRIPT
      ========================================================= -->
 
 <script>
@@ -1551,11 +1760,14 @@ function toggleSidebar() {
     const sidebar =
         document.getElementById("coordinatorSidebar");
 
+    const overlay =
+        document.getElementById("sidebarOverlay");
+
     sidebar.classList.toggle("open");
 
+    overlay.classList.toggle("open");
 }
 
 </script>
-
 
 {% endblock %}

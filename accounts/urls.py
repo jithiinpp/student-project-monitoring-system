@@ -78,6 +78,12 @@ urlpatterns = [
         name="proposal_detail"
     ),
 
+    path(
+        "student/proposals/<int:proposal_id>/edit/",
+        views.edit_proposal,
+        name="edit_proposal"
+    ),
+
 
     # =====================================================
     # WEEKLY PROGRESS

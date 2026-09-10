@@ -1,17 +1,15 @@
 {% extends "base.html" %}
 
-{% block title %}
-Project Proposal Review | SPMS
-{% endblock %}
+{% block title %}Proposal Details | Expert{% endblock %}
 
-{% block content %}
+{% block extra_css %}
 
 <style>
 
-    .page-container {
-        max-width: 1000px;
-        margin: 40px auto;
-        padding: 0 20px;
+    .proposal-page {
+        max-width: 1100px;
+        margin: auto;
+        padding: 30px;
     }
 
     .page-header {
@@ -20,558 +18,473 @@ Project Proposal Review | SPMS
 
     .page-header h1 {
         margin: 0;
-        font-size: 30px;
         color: #1f2937;
     }
 
     .page-header p {
         color: #6b7280;
-        margin-top: 8px;
     }
 
     .card {
-        background: #ffffff;
-        border: 1px solid #e5e7eb;
+        background: white;
         border-radius: 12px;
         padding: 25px;
-        margin-bottom: 25px;
-        box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.07);
     }
 
     .card h2 {
         margin-top: 0;
-        margin-bottom: 20px;
-        color: #111827;
-        font-size: 22px;
-    }
-
-    .detail-row {
-        display: grid;
-        grid-template-columns: 180px 1fr;
-        gap: 20px;
-        padding: 15px 0;
-        border-bottom: 1px solid #f0f0f0;
-    }
-
-    .detail-row:last-child {
-        border-bottom: none;
-    }
-
-    .detail-label {
-        font-weight: 600;
-        color: #4b5563;
-    }
-
-    .detail-value {
         color: #1f2937;
-        line-height: 1.6;
+        border-bottom: 1px solid #e5e7eb;
+        padding-bottom: 12px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .info-item {
+        background: #f9fafb;
+        padding: 15px;
+        border-radius: 8px;
+    }
+
+    .label {
+        font-size: 12px;
+        color: #6b7280;
+        margin-bottom: 5px;
+    }
+
+    .value {
+        color: #111827;
+        font-weight: 600;
+    }
+
+    .text-content {
+        color: #374151;
+        line-height: 1.7;
+        white-space: pre-line;
     }
 
     .status {
         display: inline-block;
-        padding: 7px 14px;
+        padding: 7px 13px;
         border-radius: 20px;
         font-size: 13px;
         font-weight: 600;
-    }
-
-    .status-assigned {
-        background: #fff7ed;
-        color: #c2410c;
-    }
-
-    .status-changes {
-        background: #fef2f2;
-        color: #dc2626;
-    }
-
-    .status-approved {
-        background: #ecfdf5;
-        color: #047857;
-    }
-
-    .status-final {
         background: #eff6ff;
         color: #1d4ed8;
     }
 
-    .review-form label {
-        display: block;
-        font-weight: 600;
-        margin-bottom: 8px;
-        color: #374151;
+    .document-link {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 10px 15px;
+        background: #1d72f3;
+        color: white;
+        text-decoration: none;
+        border-radius: 7px;
     }
 
-    .review-form textarea {
+    .review-box {
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 25px;
+    }
+
+    textarea {
         width: 100%;
         min-height: 150px;
         padding: 12px;
         border: 1px solid #d1d5db;
-        border-radius: 8px;
+        border-radius: 7px;
         resize: vertical;
-        font-size: 15px;
-        box-sizing: border-box;
         font-family: inherit;
+        box-sizing: border-box;
     }
 
-    .review-form textarea:focus {
+    textarea:focus {
         outline: none;
-        border-color: #2563eb;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        border-color: #1d72f3;
     }
 
-    .button-group {
+    .review-buttons {
         display: flex;
         gap: 12px;
-        margin-top: 20px;
-        flex-wrap: wrap;
+        margin-top: 15px;
     }
 
     .btn {
         display: inline-block;
         padding: 11px 18px;
-        border-radius: 8px;
-        border: none;
+        border-radius: 7px;
         text-decoration: none;
+        border: none;
         cursor: pointer;
-        font-size: 14px;
         font-weight: 600;
+        font-size: 14px;
     }
 
-    .btn-approve {
+    .btn-success {
         background: #16a34a;
         color: white;
     }
 
-    .btn-approve:hover {
-        background: #15803d;
-    }
-
-    .btn-changes {
-        background: #dc2626;
+    .btn-warning {
+        background: #f59e0b;
         color: white;
     }
 
-    .btn-changes:hover {
-        background: #b91c1c;
-    }
-
-    .btn-back {
-        background: #6b7280;
+    .btn-dark {
+        background: #12161f;
         color: white;
     }
 
-    .btn-back:hover {
-        background: #4b5563;
-    }
-
-    .btn-document {
-        background: #2563eb;
-        color: white;
-    }
-
-    .btn-document:hover {
-        background: #1d4ed8;
-    }
-
-    .message-box {
-        padding: 18px;
-        border-radius: 8px;
-        line-height: 1.6;
-    }
-
-    .success-box {
-        background: #ecfdf5;
-        border: 1px solid #a7f3d0;
-        color: #065f46;
-    }
-
-    .warning-box {
-        background: #fffbeb;
-        border: 1px solid #fde68a;
-        color: #92400e;
-        margin-bottom: 20px;
-    }
-
-    .message-box p {
-        margin-bottom: 0;
+    .expert-comment {
+        background: #fff7ed;
+        border-left: 4px solid #f59e0b;
+        padding: 15px;
+        margin-top: 15px;
+        color: #374151;
     }
 
     @media (max-width: 700px) {
 
-        .detail-row {
+        .proposal-page {
+            padding: 15px;
+        }
+
+        .info-grid {
             grid-template-columns: 1fr;
-            gap: 5px;
         }
 
-        .page-header h1 {
-            font-size: 25px;
-        }
-
-        .button-group {
+        .review-buttons {
             flex-direction: column;
         }
 
-        .btn {
-            text-align: center;
-        }
     }
 
 </style>
 
+{% endblock %}
 
-<div class="page-container">
+
+{% block content %}
+
+<div class="proposal-page">
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
 
     <div class="page-header">
-        <h1>Project Proposal Review</h1>
+
+        <h1>
+            Proposal Details
+        </h1>
 
         <p>
-            Review the project proposal assigned to you by the Coordinator.
+            Review the project proposal submitted by the student.
         </p>
+
     </div>
 
 
-    <!-- PROJECT DETAILS -->
+    <!-- =====================================================
+         BASIC INFORMATION
+    ====================================================== -->
 
     <div class="card">
 
-        <h2>Project Details</h2>
+        <h2>
+            Project Information
+        </h2>
 
-        <div class="detail-row">
+        <div class="info-grid">
 
-            <div class="detail-label">
-                Project Title
+            <div class="info-item">
+
+                <div class="label">
+                    Project Title
+                </div>
+
+                <div class="value">
+                    {{ proposal.title }}
+                </div>
+
             </div>
 
-            <div class="detail-value">
-                <strong>{{ proposal.title }}</strong>
+
+            <div class="info-item">
+
+                <div class="label">
+                    Student
+                </div>
+
+                <div class="value">
+
+                    {{ proposal.student.get_full_name|default:proposal.student.username }}
+
+                </div>
+
             </div>
 
-        </div>
 
+            <div class="info-item">
 
-        <div class="detail-row">
+                <div class="label">
+                    Username
+                </div>
 
-            <div class="detail-label">
-                Student
-            </div>
-
-            <div class="detail-value">
-
-                {% if proposal.student.get_full_name %}
-                    {{ proposal.student.get_full_name }}
-                {% else %}
+                <div class="value">
                     {{ proposal.student.username }}
-                {% endif %}
+                </div>
 
             </div>
 
-        </div>
 
+            <div class="info-item">
 
-        <div class="detail-row">
+                <div class="label">
+                    Domain
+                </div>
 
-            <div class="detail-label">
-                Domain
+                <div class="value">
+                    {{ proposal.domain|default:"Not specified" }}
+                </div>
+
             </div>
 
-            <div class="detail-value">
-                {{ proposal.domain }}
+
+            <div class="info-item">
+
+                <div class="label">
+                    Technologies
+                </div>
+
+                <div class="value">
+                    {{ proposal.technologies|default:"Not specified" }}
+                </div>
+
             </div>
 
-        </div>
 
+            <div class="info-item">
 
-        <div class="detail-row">
+                <div class="label">
+                    Status
+                </div>
 
-            <div class="detail-label">
-                Technologies
-            </div>
+                <div class="value">
 
-            <div class="detail-value">
-                {{ proposal.technologies }}
-            </div>
-
-        </div>
-
-
-        <div class="detail-row">
-
-            <div class="detail-label">
-                Abstract
-            </div>
-
-            <div class="detail-value">
-                {{ proposal.abstract|linebreaks }}
-            </div>
-
-        </div>
-
-
-        <div class="detail-row">
-
-            <div class="detail-label">
-                Description
-            </div>
-
-            <div class="detail-value">
-                {{ proposal.description|linebreaks }}
-            </div>
-
-        </div>
-
-
-        <div class="detail-row">
-
-            <div class="detail-label">
-                Submitted On
-            </div>
-
-            <div class="detail-value">
-                {{ proposal.submitted_at|date:"d M Y, h:i A" }}
-            </div>
-
-        </div>
-
-
-        <!-- STATUS -->
-
-        <div class="detail-row">
-
-            <div class="detail-label">
-                Current Status
-            </div>
-
-            <div class="detail-value">
-
-                {% if proposal.status == "EXPERT_ASSIGNED" %}
-
-                    <span class="status status-assigned">
-                        Expert Assigned
+                    <span class="status">
+                        {{ proposal.get_status_display }}
                     </span>
 
-                {% elif proposal.status == "CHANGES_REQUESTED" %}
-
-                    <span class="status status-changes">
-                        Changes Requested
-                    </span>
-
-                {% elif proposal.status == "EXPERT_APPROVED" %}
-
-                    <span class="status status-approved">
-                        Expert Approved
-                    </span>
-
-                {% elif proposal.status == "COORDINATOR_APPROVED" %}
-
-                    <span class="status status-final">
-                        Coordinator Final Approved
-                    </span>
-
-                {% else %}
-
-                    <span class="status status-assigned">
-                        {{ proposal.status }}
-                    </span>
-
-                {% endif %}
+                </div>
 
             </div>
 
         </div>
-
-
-        <!-- DOCUMENT -->
-
-        {% if proposal.proposal_document %}
-
-        <div class="detail-row">
-
-            <div class="detail-label">
-                Proposal Document
-            </div>
-
-            <div class="detail-value">
-
-                <a
-                    href="{{ proposal.proposal_document.url }}"
-                    target="_blank"
-                    class="btn btn-document"
-                >
-                    📄 View Proposal Document
-                </a>
-
-            </div>
-
-        </div>
-
-        {% endif %}
 
     </div>
 
 
-    <!-- EXPERT REVIEW -->
-
-    {% if proposal.status == "EXPERT_ASSIGNED" or proposal.status == "CHANGES_REQUESTED" %}
+    <!-- =====================================================
+         ABSTRACT
+    ====================================================== -->
 
     <div class="card">
 
-        <h2>Expert Review</h2>
+        <h2>
+            Abstract
+        </h2>
 
+        <div class="text-content">
 
-        {% if proposal.status == "CHANGES_REQUESTED" %}
-
-        <div class="message-box warning-box">
-
-            <strong>
-                Previous changes were requested.
-            </strong>
-
-            {% if proposal.expert_comments %}
-
-                <p>
-                    {{ proposal.expert_comments|linebreaks }}
-                </p>
-
-            {% endif %}
+            {{ proposal.abstract|default:"No abstract provided." }}
 
         </div>
 
-        {% endif %}
+    </div>
 
 
-        <form
-            method="POST"
-            action="{% url 'experts:review_proposal' proposal.id %}"
-            class="review-form"
+    <!-- =====================================================
+         DESCRIPTION
+    ====================================================== -->
+
+    <div class="card">
+
+        <h2>
+            Project Description
+        </h2>
+
+        <div class="text-content">
+
+            {{ proposal.description|default:"No project description provided." }}
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         DOCUMENT
+    ====================================================== -->
+
+    {% if proposal.proposal_document %}
+
+    <div class="card">
+
+        <h2>
+            Proposal Document
+        </h2>
+
+        <a
+            href="{{ proposal.proposal_document.url }}"
+            target="_blank"
+            class="document-link"
         >
-
-            {% csrf_token %}
-
-
-            <label for="comments">
-                Expert Comments
-            </label>
-
-
-            <textarea
-                name="comments"
-                id="comments"
-                placeholder="Enter your review comments..."
-            >{% if proposal.expert_comments %}{{ proposal.expert_comments }}{% endif %}</textarea>
-
-
-            <div class="button-group">
-
-                <button
-                    type="submit"
-                    name="decision"
-                    value="approve"
-                    class="btn btn-approve"
-                >
-                    ✓ Approve Project
-                </button>
-
-
-                <button
-                    type="submit"
-                    name="decision"
-                    value="changes"
-                    class="btn btn-changes"
-                >
-                    ⚠ Request Changes
-                </button>
-
-
-                <a
-                    href="{% url 'experts:my_proposals' %}"
-                    class="btn btn-back"
-                >
-                    Back
-                </a>
-
-            </div>
-
-        </form>
+            View Proposal PDF
+        </a>
 
     </div>
 
     {% endif %}
 
 
-    <!-- EXPERT APPROVED -->
+    <!-- =====================================================
+         PREVIOUS EXPERT COMMENT
+    ====================================================== -->
+
+    {% if proposal.expert_comments %}
+
+    <div class="card">
+
+        <h2>
+            Expert Comments
+        </h2>
+
+        <div class="expert-comment">
+
+            {{ proposal.expert_comments }}
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- =====================================================
+         REVIEW SECTION
+    ====================================================== -->
+
+    {% if proposal.status == "EXPERT_ASSIGNED" or proposal.status == "SUBMITTED" or proposal.status == "CHANGES_REQUESTED" %}
+
+    <div class="card">
+
+        <h2>
+            Review Proposal
+        </h2>
+
+        <div class="review-box">
+
+            <form
+                method="POST"
+                action="{% url 'experts:review_proposal' proposal.id %}"
+            >
+
+                {% csrf_token %}
+
+                <label>
+                    <strong>
+                        Comments / Feedback
+                    </strong>
+                </label>
+
+                <br><br>
+
+                <textarea
+                    name="comments"
+                    placeholder="Enter your review comments or changes required..."
+                ></textarea>
+
+
+                <div class="review-buttons">
+
+                    <button
+                        type="submit"
+                        name="decision"
+                        value="approve"
+                        class="btn btn-success"
+                    >
+                        ✓ Approve Proposal
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        name="decision"
+                        value="changes"
+                        class="btn btn-warning"
+                    >
+                        Request Changes
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- =====================================================
+         ALREADY APPROVED
+    ====================================================== -->
 
     {% if proposal.status == "EXPERT_APPROVED" %}
 
     <div class="card">
 
-        <h2>Review Completed</h2>
+        <h2>
+            Review Status
+        </h2>
 
-        <div class="message-box success-box">
-
-            <strong>
-                ✓ Project Approved by Expert
-            </strong>
-
-            <p>
-                This project has been approved by you and
-                returned to the Coordinator for final approval.
-            </p>
-
-
-            {% if proposal.expert_comments %}
-
-                <hr>
-
-                <strong>
-                    Your Comments:
-                </strong>
-
-                <p>
-                    {{ proposal.expert_comments|linebreaks }}
-                </p>
-
-            {% endif %}
-
-        </div>
+        <p>
+            This proposal has already been approved by you
+            and has been sent back to the Coordinator for
+            final approval.
+        </p>
 
     </div>
 
     {% endif %}
 
 
-    <!-- FINAL APPROVED -->
+    <!-- =====================================================
+         BACK BUTTON
+    ====================================================== -->
 
-    {% if proposal.status == "COORDINATOR_APPROVED" %}
+    <div>
 
-    <div class="card">
-
-        <h2>Project Status</h2>
-
-        <div class="message-box success-box">
-
-            <strong>
-                ✓ Project Final Approved
-            </strong>
-
-            <p>
-                The Coordinator has given final approval
-                for this project.
-            </p>
-
-        </div>
+        <a
+            href="{% url 'experts:dashboard' %}"
+            class="btn btn-dark"
+        >
+            ← Back to Dashboard
+        </a>
 
     </div>
-
-    {% endif %}
-
-
-    <a
-        href="{% url 'experts:my_proposals' %}"
-        class="btn btn-back"
-    >
-        ← Back to My Projects
-    </a>
 
 </div>
 

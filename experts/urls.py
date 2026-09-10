@@ -8,26 +8,30 @@ app_name = "experts"
 
 urlpatterns = [
 
+    # Dashboard
     path(
         "dashboard/",
         views.dashboard,
         name="dashboard"
     ),
 
+    # My proposals
     path(
         "proposals/",
         views.my_proposals,
         name="my_proposals"
     ),
 
+    # Proposal detail
     path(
-        "proposals/<int:proposal_id>/",
+        "proposal/<int:proposal_id>/",
         views.proposal_detail,
         name="proposal_detail"
     ),
 
+    # Review
     path(
-        "proposals/<int:proposal_id>/review/",
+        "proposal/<int:proposal_id>/review/",
         views.review_proposal,
         name="review_proposal"
     ),

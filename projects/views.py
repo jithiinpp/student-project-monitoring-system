@@ -10,14 +10,14 @@ from .models import ProjectProposal
 def student_proposals(request):
 
     if request.user.is_superuser:
-        return redirect("coordinator_dashboard")
+        return redirect("accounts:coordinator_dashboard")
 
     if request.user.role != "STUDENT":
-        return redirect("dashboard")
+        return redirect("accounts:dashboard")
 
     proposals = ProjectProposal.objects.filter(
         student=request.user
-    ).order_by("-created_at")
+    ).order_by("-submitted_at")
 
     proposal_count = proposals.count()
 
@@ -36,10 +36,10 @@ def add_proposal(request):
 
     # Only students can submit proposals
     if request.user.is_superuser:
-        return redirect("coordinator_dashboard")
+        return redirect("accounts:coordinator_dashboard")
 
     if request.user.role != "STUDENT":
-        return redirect("dashboard")
+        return redirect("accounts:dashboard")
 
     # Count student's existing proposals
     proposal_count = ProjectProposal.objects.filter(
@@ -52,7 +52,7 @@ def add_proposal(request):
             request,
             "You have already submitted the maximum of 3 proposals."
         )
-        return redirect("student_proposals")
+        return redirect("accounts:student_proposals")
 
     # -------------------------
     # SUBMIT PROPOSAL
@@ -85,7 +85,7 @@ def add_proposal(request):
             )
 
             # Go to proposal list
-            return redirect("student_proposals")
+            return redirect("accounts:student_proposals")
 
     else:
         # Display empty form
@@ -105,10 +105,10 @@ def add_proposal(request):
 def proposal_detail(request, proposal_id):
 
     if request.user.is_superuser:
-        return redirect("coordinator_dashboard")
+        return redirect("accounts:coordinator_dashboard")
 
     if request.user.role != "STUDENT":
-        return redirect("dashboard")
+        return redirect("accounts:dashboard")
 
     proposal = get_object_or_404(
         ProjectProposal,
