@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Final Approved Projects{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <div class="page-header">
+        <div>
+            <h1>Final Approved Projects</h1>
+            <p>Projects finally approved by the Coordinator.</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-label">
+            Total Final Approved Projects
+        </div>
+
+        <div class="stat-number">
+            {{ approved_count }}
+        </div>
+    </div>
+
+    <div class="table-card">
+
+        <div class="table-header">
+            <h2>Approved Project List</h2>
+        </div>
+
+        {% if approved_projects %}
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Student</th>
+                    <th>Project</th>
+                    <th>Domain</th>
+                    <th>Expert</th>
+                    <th>Guide</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for project in approved_projects %}
+
+                <tr>
+
+                    <td>
+                        {{ forloop.counter }}
+                    </td>
+
+                    <td>
+                        {{ project.student.get_full_name|default:project.student.username }}
+                    </td>
+
+                    <td>
+                        <strong>
+                            {{ project.title }}
+                        </strong>
+                    </td>
+
+                    <td>
+                        {{ project.domain|default:"—" }}
+                    </td>
+
+                    <td>
+                        {% if project.domain_expert %}
+                            {{ project.domain_expert.get_full_name|default:project.domain_expert.username }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {% if project.guide %}
+                            {{ project.guide.get_full_name|default:project.guide.username }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        <span class="status-approved">
+                            Coordinator Approved
+                        </span>
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% else %}
+
+        <div class="empty-state">
+            <h3>No final approved projects</h3>
+            <p>
+                No project has been finally approved by the Coordinator yet.
+            </p>
+        </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}

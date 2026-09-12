@@ -1,12 +1,16 @@
 {% extends "base.html" %}
+
 {% load static %}
 
 {% block title %}
 Coordinator Dashboard | SPMS
 {% endblock %}
 
+
 {% block extra_css %}
+
 <style>
+
 /* =========================================================
    GLOBAL
    ========================================================= */
@@ -27,15 +31,16 @@ body {
         Roboto,
         Arial,
         sans-serif;
-    background: #f5f7fb;
+
+    background: #f4f6f9;
     color: #1e293b;
 }
 
-/* Remove base main styling if present */
 .main-content {
     margin: 0 !important;
     padding: 0 !important;
 }
+
 
 /* =========================================================
    SVG ICONS
@@ -44,13 +49,12 @@ body {
 .spms-icon {
     width: 20px;
     height: 20px;
-
     display: block;
 
     fill: none !important;
     stroke: currentColor !important;
-    stroke-width: 1.8 !important;
 
+    stroke-width: 1.8 !important;
     stroke-linecap: round !important;
     stroke-linejoin: round !important;
 
@@ -67,7 +71,6 @@ body {
     height: 24px;
 }
 
-/* Force all SVG children to remain outline */
 .spms-icon *,
 .spms-icon path,
 .spms-icon line,
@@ -82,19 +85,21 @@ body {
     stroke-linejoin: round !important;
 }
 
+
 /* =========================================================
    SIDEBAR
    ========================================================= */
 
 .coordinator-sidebar {
     position: fixed;
+
     top: 0;
     left: 0;
 
     width: 250px;
     height: 100vh;
 
-    background: #111827;
+    background: #1b2430;
     color: #ffffff;
 
     display: flex;
@@ -104,7 +109,7 @@ body {
 
     overflow-y: auto;
 
-    border-right: 1px solid #1f2937;
+    border-right: 1px solid #273342;
 }
 
 .coordinator-sidebar::-webkit-scrollbar {
@@ -112,13 +117,14 @@ body {
 }
 
 .coordinator-sidebar::-webkit-scrollbar-track {
-    background: #111827;
+    background: #1b2430;
 }
 
 .coordinator-sidebar::-webkit-scrollbar-thumb {
-    background: #374151;
+    background: #3b4655;
     border-radius: 10px;
 }
+
 
 /* =========================================================
    SIDEBAR LOGO
@@ -127,7 +133,7 @@ body {
 .sidebar-logo {
     padding: 24px 20px;
 
-    border-bottom: 1px solid #1f2937;
+    border-bottom: 1px solid #2b3644;
 }
 
 .sidebar-logo h2 {
@@ -143,8 +149,10 @@ body {
     margin: 5px 0 0;
 
     font-size: 12px;
-    color: #9ca3af;
+
+    color: #9ca8b8;
 }
+
 
 /* =========================================================
    SIDEBAR MENU
@@ -164,18 +172,21 @@ body {
     font-size: 10px;
     font-weight: 700;
 
-    color: #6b7280;
+    color: #7d8998;
 
     text-transform: uppercase;
+
     letter-spacing: 1px;
 }
 
+
 /* =========================================================
-   SIDEBAR LINK
+   SIDEBAR LINKS
    ========================================================= */
 
 .sidebar-link {
     display: flex;
+
     align-items: center;
 
     gap: 12px;
@@ -188,11 +199,12 @@ body {
 
     border-radius: 7px;
 
-    color: #cbd5e1;
+    color: #c7d0dc;
 
     text-decoration: none;
 
     font-size: 13.5px;
+
     font-weight: 500;
 
     transition:
@@ -201,27 +213,33 @@ body {
 }
 
 .sidebar-link:hover {
-    background: #1f2937;
+    background: #293646;
+
     color: #ffffff;
 }
 
 .sidebar-link.active {
     background: #2563eb;
+
     color: #ffffff;
 
     box-shadow:
-        0 4px 12px rgba(37, 99, 235, 0.20);
+        0 4px 12px rgba(37, 99, 235, 0.22);
 }
 
 .sidebar-icon {
     width: 22px;
     min-width: 22px;
+
     height: 22px;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 }
+
 
 /* =========================================================
    SIDEBAR USER
@@ -230,13 +248,14 @@ body {
 .sidebar-user {
     padding: 17px;
 
-    border-top: 1px solid #1f2937;
+    border-top: 1px solid #2b3644;
 
-    background: #0d1421;
+    background: #17202b;
 }
 
 .sidebar-user-name {
     font-size: 13.5px;
+
     font-weight: 600;
 
     color: #ffffff;
@@ -244,14 +263,18 @@ body {
     margin-bottom: 4px;
 
     overflow: hidden;
+
     text-overflow: ellipsis;
+
     white-space: nowrap;
 }
 
 .sidebar-user-role {
     font-size: 11px;
-    color: #9ca3af;
+
+    color: #9ca8b8;
 }
+
 
 /* =========================================================
    LOGOUT
@@ -259,6 +282,7 @@ body {
 
 .sidebar-logout {
     display: flex;
+
     align-items: center;
 
     gap: 12px;
@@ -269,13 +293,14 @@ body {
 
     border-radius: 7px;
 
-    background: #2a1717;
+    background: #322326;
 
-    color: #fca5a5;
+    color: #f3a6aa;
 
     text-decoration: none;
 
     font-size: 13.5px;
+
     font-weight: 600;
 
     transition:
@@ -284,12 +309,14 @@ body {
 }
 
 .sidebar-logout:hover {
-    background: #451a1a;
+    background: #4a292d;
+
     color: #ffffff;
 }
 
+
 /* =========================================================
-   MAIN
+   MAIN CONTENT
    ========================================================= */
 
 .coordinator-main {
@@ -297,7 +324,7 @@ body {
 
     min-height: 100vh;
 
-    padding: 30px 35px 45px;
+    padding: 28px 32px 45px;
 }
 
 .coordinator-container {
@@ -308,14 +335,16 @@ body {
     margin: 0 auto;
 }
 
+
 /* =========================================================
-   HEADER
+   TOP HEADER
    ========================================================= */
 
 .coordinator-header {
     display: flex;
 
     justify-content: space-between;
+
     align-items: center;
 
     background: #ffffff;
@@ -324,21 +353,22 @@ body {
 
     border-radius: 10px;
 
-    margin-bottom: 22px;
+    margin-bottom: 20px;
 
-    border: 1px solid #e5e7eb;
+    border: 1px solid #e2e8f0;
 
     box-shadow:
-        0 2px 7px rgba(15, 23, 42, 0.035);
+        0 2px 8px rgba(15, 23, 42, 0.035);
 }
 
 .coordinator-header h1 {
     margin: 0 0 5px;
 
     font-size: 24px;
+
     font-weight: 700;
 
-    color: #111827;
+    color: #172033;
 }
 
 .coordinator-header p {
@@ -346,50 +376,53 @@ body {
 
     font-size: 13px;
 
-    color: #6b7280;
+    color: #718096;
 }
+
 
 /* =========================================================
-   ADD STAFF BUTTON
+   HEADER RIGHT
    ========================================================= */
 
-.header-actions {
+.header-info {
     display: flex;
+
     align-items: center;
+
+    gap: 10px;
 }
 
-.add-staff-button {
+.header-badge {
     display: inline-flex;
 
     align-items: center;
 
-    gap: 8px;
+    gap: 7px;
 
-    padding: 9px 14px;
-
-    background: #2563eb;
-
-    color: #ffffff;
-
-    text-decoration: none;
+    padding: 8px 12px;
 
     border-radius: 7px;
 
-    font-size: 13px;
+    background: #eff6ff;
+
+    border: 1px solid #dbeafe;
+
+    color: #2563eb;
+
+    font-size: 12px;
+
     font-weight: 600;
-
-    transition:
-        background 0.2s ease,
-        transform 0.2s ease;
 }
 
-.add-staff-button:hover {
-    background: #1d4ed8;
+.header-dot {
+    width: 7px;
+    height: 7px;
 
-    color: #ffffff;
+    border-radius: 50%;
 
-    transform: translateY(-1px);
+    background: #22c55e;
 }
+
 
 /* =========================================================
    STATISTICS
@@ -399,11 +432,11 @@ body {
     display: grid;
 
     grid-template-columns:
-        repeat(5, minmax(0, 1fr));
+        repeat(6, minmax(0, 1fr));
 
-    gap: 15px;
+    gap: 14px;
 
-    margin-bottom: 22px;
+    margin-bottom: 20px;
 }
 
 .stat-card {
@@ -419,7 +452,7 @@ body {
 
     background: #ffffff;
 
-    border: 1px solid #e5e7eb;
+    border: 1px solid #e2e8f0;
 
     border-radius: 10px;
 
@@ -436,13 +469,14 @@ body {
     transform: translateY(-2px);
 
     box-shadow:
-        0 6px 16px rgba(15, 23, 42, 0.07);
+        0 7px 18px rgba(15, 23, 42, 0.07);
 
-    border-color: #dbeafe;
+    border-color: #cbd5e1;
 }
 
 .stat-card-link {
     text-decoration: none;
+
     color: inherit;
 }
 
@@ -453,40 +487,60 @@ body {
     min-width: 45px;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     border-radius: 9px;
 }
 
+
 /* Student */
+
 .stat-card:nth-child(1) .stat-icon {
-    background: #eff6ff;
+    background: #edf5ff;
     color: #2563eb;
 }
 
+
 /* Proposal */
+
 .stat-card:nth-child(2) .stat-icon {
     background: #ecfdf5;
     color: #059669;
 }
 
+
 /* Expert */
+
 .stat-card:nth-child(3) .stat-icon {
-    background: #fffbeb;
+    background: #fff8e7;
     color: #d97706;
 }
 
+
 /* Guide */
+
 .stat-card:nth-child(4) .stat-icon {
-    background: #f5f3ff;
+    background: #f3efff;
     color: #7c3aed;
 }
 
+
 /* Panel */
+
 .stat-card:nth-child(5) .stat-icon {
-    background: #fdf2f8;
+    background: #fff0f6;
     color: #db2777;
+}
+
+
+/* Final Approved */
+
+.stat-card:nth-child(6) .stat-icon {
+    background: #eafaf2;
+    color: #16a34a;
 }
 
 .stat-card p {
@@ -494,7 +548,7 @@ body {
 
     font-size: 12px;
 
-    color: #64748b;
+    color: #718096;
 
     font-weight: 500;
 }
@@ -506,10 +560,11 @@ body {
 
     line-height: 1;
 
-    color: #111827;
+    color: #172033;
 
     font-weight: 700;
 }
+
 
 /* =========================================================
    SECTION CARD
@@ -518,13 +573,13 @@ body {
 .section-card {
     background: #ffffff;
 
-    padding: 23px;
+    padding: 22px;
 
     border-radius: 10px;
 
-    border: 1px solid #e5e7eb;
+    border: 1px solid #e2e8f0;
 
-    margin-bottom: 22px;
+    margin-bottom: 20px;
 
     box-shadow:
         0 2px 7px rgba(15, 23, 42, 0.03);
@@ -534,6 +589,7 @@ body {
     display: flex;
 
     justify-content: space-between;
+
     align-items: center;
 
     margin-bottom: 18px;
@@ -544,13 +600,14 @@ body {
 
     font-size: 17px;
 
-    color: #111827;
+    color: #172033;
 
     font-weight: 700;
 }
 
+
 /* =========================================================
-   VIEW ALL BUTTON
+   BUTTON
    ========================================================= */
 
 .primary-button {
@@ -561,6 +618,10 @@ body {
     gap: 6px;
 
     padding: 8px 12px;
+    background: var(--spms-primary);
+    border: 1px solid var(--spms-primary);
+    color: white;
+    border-radius: 9px;
 
     background: #f8fafc;
 
@@ -589,6 +650,7 @@ body {
     color: #1d4ed8;
 }
 
+
 /* =========================================================
    PROPOSAL STATUS
    ========================================================= */
@@ -607,7 +669,7 @@ body {
 
     background: #f8fafc;
 
-    border: 1px solid #e5e7eb;
+    border: 1px solid #e2e8f0;
 
     border-radius: 8px;
 
@@ -637,12 +699,13 @@ body {
 
     font-size: 12px;
 
-    color: #64748b;
+    color: #718096;
 
     font-weight: 500;
 }
 
-/* Different status colors */
+
+/* Status Colors */
 
 .status-card:nth-child(1) {
     border-left: 3px solid #2563eb;
@@ -652,6 +715,7 @@ body {
     color: #2563eb;
 }
 
+
 .status-card:nth-child(2) {
     border-left: 3px solid #d97706;
 }
@@ -659,6 +723,7 @@ body {
 .status-card:nth-child(2) h3 {
     color: #d97706;
 }
+
 
 .status-card:nth-child(3) {
     border-left: 3px solid #dc2626;
@@ -668,6 +733,7 @@ body {
     color: #dc2626;
 }
 
+
 .status-card:nth-child(4) {
     border-left: 3px solid #059669;
 }
@@ -675,6 +741,7 @@ body {
 .status-card:nth-child(4) h3 {
     color: #059669;
 }
+
 
 .status-card:nth-child(5) {
     border-left: 3px solid #16a34a;
@@ -684,6 +751,7 @@ body {
     color: #16a34a;
 }
 
+
 .status-card:nth-child(6) {
     border-left: 3px solid #7c3aed;
 }
@@ -691,6 +759,7 @@ body {
 .status-card:nth-child(6) h3 {
     color: #7c3aed;
 }
+
 
 .status-card:nth-child(7) {
     border-left: 3px solid #ea580c;
@@ -700,6 +769,7 @@ body {
     color: #ea580c;
 }
 
+
 .status-card:nth-child(8) {
     border-left: 3px solid #0891b2;
 }
@@ -708,8 +778,133 @@ body {
     color: #0891b2;
 }
 
+
 /* =========================================================
-   MANAGEMENT
+   FINAL APPROVED LIST
+   ========================================================= */
+
+.approved-list {
+    display: flex;
+
+    flex-direction: column;
+
+    border-top: 1px solid #f1f5f9;
+}
+
+.approved-item {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 15px 4px;
+
+    border-bottom: 1px solid #f1f5f9;
+
+    text-decoration: none;
+
+    color: inherit;
+
+    transition: background 0.2s ease;
+}
+
+.approved-item:last-child {
+    border-bottom: none;
+}
+
+.approved-item:hover {
+    background: #f8fafc;
+}
+
+.approved-student {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    min-width: 0;
+}
+
+.approved-avatar {
+    width: 38px;
+    height: 38px;
+
+    min-width: 38px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #edf5ff;
+
+    color: #2563eb;
+
+    font-size: 13px;
+
+    font-weight: 700;
+}
+
+.approved-name {
+    font-size: 13px;
+
+    font-weight: 700;
+
+    color: #172033;
+}
+
+.approved-project {
+    margin-top: 3px;
+
+    font-size: 11px;
+
+    color: #718096;
+
+    white-space: nowrap;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+.approved-status {
+    padding: 5px 9px;
+
+    border-radius: 6px;
+
+    background: #ecfdf5;
+
+    color: #059669;
+
+    border: 1px solid #a7f3d0;
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.empty-approved {
+    padding: 30px 10px;
+
+    text-align: center;
+
+    font-size: 12px;
+
+    color: #718096;
+}
+
+
+/* =========================================================
+   QUICK MANAGEMENT
    ========================================================= */
 
 .management-grid {
@@ -732,7 +927,7 @@ body {
 
     background: #ffffff;
 
-    border: 1px solid #e5e7eb;
+    border: 1px solid #e2e8f0;
 
     border-radius: 9px;
 
@@ -764,22 +959,25 @@ body {
     display: flex;
 
     align-items: center;
+
     justify-content: center;
 
     border-radius: 9px;
 
-    background: #eff6ff;
+    background: #edf5ff;
 
     color: #2563eb;
 }
 
 .management-card:nth-child(2) .management-icon {
     background: #ecfdf5;
+
     color: #059669;
 }
 
 .management-card:nth-child(3) .management-icon {
-    background: #f5f3ff;
+    background: #f3efff;
+
     color: #7c3aed;
 }
 
@@ -788,7 +986,7 @@ body {
 
     font-size: 14px;
 
-    color: #111827;
+    color: #172033;
 
     font-weight: 700;
 }
@@ -800,11 +998,12 @@ body {
 
     line-height: 1.5;
 
-    color: #64748b;
+    color: #718096;
 }
 
+
 /* =========================================================
-   MOBILE BUTTON
+   MOBILE
    ========================================================= */
 
 .mobile-menu-button {
@@ -813,6 +1012,7 @@ body {
     position: fixed;
 
     top: 14px;
+
     left: 14px;
 
     z-index: 1100;
@@ -824,13 +1024,14 @@ body {
 
     border-radius: 7px;
 
-    background: #111827;
+    background: #1b2430;
 
     color: #ffffff;
 
     cursor: pointer;
 
     align-items: center;
+
     justify-content: center;
 }
 
@@ -846,16 +1047,21 @@ body {
     z-index: 999;
 }
 
+
 /* =========================================================
    RESPONSIVE
    ========================================================= */
 
-@media (max-width: 1250px) {
+@media (max-width: 1400px) {
 
     .stats-grid {
         grid-template-columns:
             repeat(3, minmax(0, 1fr));
     }
+}
+
+
+@media (max-width: 1250px) {
 
     .management-grid {
         grid-template-columns:
@@ -863,12 +1069,14 @@ body {
     }
 }
 
+
 @media (max-width: 900px) {
 
     .coordinator-sidebar {
         transform: translateX(-100%);
 
-        transition: transform 0.25s ease;
+        transition:
+            transform 0.25s ease;
     }
 
     .coordinator-sidebar.open {
@@ -886,8 +1094,7 @@ body {
     .coordinator-main {
         margin-left: 0;
 
-        padding:
-            70px 20px 40px;
+        padding: 70px 20px 40px;
     }
 
     .coordinator-header {
@@ -898,11 +1105,11 @@ body {
         gap: 15px;
     }
 
-    .header-actions {
+    .header-info {
         width: 100%;
     }
 
-    .add-staff-button {
+    .header-badge {
         width: 100%;
 
         justify-content: center;
@@ -919,11 +1126,11 @@ body {
     }
 }
 
+
 @media (max-width: 600px) {
 
     .coordinator-main {
-        padding:
-            65px 14px 30px;
+        padding: 65px 14px 30px;
     }
 
     .coordinator-header {
@@ -963,12 +1170,22 @@ body {
 
         justify-content: center;
     }
+
+    .approved-item {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
 }
+
 </style>
+
 {% endblock %}
 
 
+
 {% block content %}
+
 
 <!-- =========================================================
      SVG ICON DEFINITIONS
@@ -982,96 +1199,157 @@ body {
 >
 
     <!-- Dashboard -->
+
     <symbol id="icon-dashboard" viewBox="0 0 24 24">
+
         <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+
         <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+
         <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+
         <rect x="14" y="14" width="7" height="7" rx="1"></rect>
+
     </symbol>
+
 
     <!-- Folder -->
+
     <symbol id="icon-folder" viewBox="0 0 24 24">
+
         <path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H10l2 2h6.5A2.5 2.5 0 0 1 21 9.5v7A2.5 2.5 0 0 1 18.5 19h-13A2.5 2.5 0 0 1 3 16.5z"></path>
+
         <path d="M3 10h18"></path>
+
     </symbol>
 
+
     <!-- Users -->
+
     <symbol id="icon-users" viewBox="0 0 24 24">
+
         <circle cx="9" cy="8" r="3.5"></circle>
+
         <path d="M2.5 20a6.5 6.5 0 0 1 13 0"></path>
 
         <path d="M16 4.5a3.5 3.5 0 0 1 0 7"></path>
+
         <path d="M18 14a5 5 0 0 1 4 5"></path>
+
     </symbol>
+
 
     <!-- User Plus -->
+
     <symbol id="icon-user-plus" viewBox="0 0 24 24">
+
         <circle cx="8.5" cy="8" r="3.5"></circle>
+
         <path d="M2.5 20a6 6 0 0 1 12 0"></path>
+
         <path d="M18 8v7"></path>
+
         <path d="M14.5 11.5h7"></path>
+
     </symbol>
+
 
     <!-- Graduation -->
+
     <symbol id="icon-graduation" viewBox="0 0 24 24">
+
         <path d="M2.5 9.5 12 5l9.5 4.5L12 14z"></path>
+
         <path d="M6 12v4.5c3.5 2.2 8.5 2.2 12 0V12"></path>
+
         <path d="M21.5 9.5v5"></path>
+
     </symbol>
+
 
     <!-- File -->
+
     <symbol id="icon-file" viewBox="0 0 24 24">
+
         <path d="M6 3h8l5 5v13H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
+
         <path d="M14 3v6h5"></path>
+
         <path d="M8 13h8"></path>
+
         <path d="M8 17h6"></path>
+
     </symbol>
+
 
     <!-- Briefcase -->
+
     <symbol id="icon-briefcase" viewBox="0 0 24 24">
+
         <rect x="3" y="7" width="18" height="13" rx="2"></rect>
+
         <path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+
         <path d="M3 12h18"></path>
+
         <path d="M10 12v2h4v-2"></path>
+
     </symbol>
 
-    <!-- Panel Member -->
+
+    <!-- Panel -->
+
     <symbol id="icon-panel" viewBox="0 0 24 24">
+
         <circle cx="12" cy="7" r="3.5"></circle>
+
         <path d="M5 20a7 7 0 0 1 14 0"></path>
+
     </symbol>
 
-    <!-- Plus -->
-    <symbol id="icon-plus" viewBox="0 0 24 24">
-        <path d="M12 5v14"></path>
-        <path d="M5 12h14"></path>
-    </symbol>
 
     <!-- Arrow -->
+
     <symbol id="icon-arrow" viewBox="0 0 24 24">
+
         <path d="M5 12h14"></path>
+
         <path d="m13 6 6 6-6 6"></path>
+
     </symbol>
+
 
     <!-- Menu -->
+
     <symbol id="icon-menu" viewBox="0 0 24 24">
+
         <path d="M4 6h16"></path>
+
         <path d="M4 12h16"></path>
+
         <path d="M4 18h16"></path>
+
     </symbol>
 
+
     <!-- Logout -->
+
     <symbol id="icon-logout" viewBox="0 0 24 24">
+
         <path d="M10 17l5-5-5-5"></path>
+
         <path d="M15 12H3"></path>
+
         <path d="M13 5V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2h-4a2 2 0 0 1-2-2v-1"></path>
+
     </symbol>
 
 </svg>
 
 
+
 <!-- =========================================================
-     MOBILE MENU BUTTON
+     MOBILE MENU
      ========================================================= -->
 
 <button
@@ -1080,9 +1358,11 @@ body {
     onclick="toggleSidebar()"
     aria-label="Open menu"
 >
+
     <svg class="spms-icon spms-icon-lg">
         <use href="#icon-menu"></use>
     </svg>
+
 </button>
 
 
@@ -1091,6 +1371,7 @@ body {
     id="sidebarOverlay"
     onclick="toggleSidebar()"
 ></div>
+
 
 
 <!-- =========================================================
@@ -1113,12 +1394,12 @@ body {
 
     <div class="sidebar-menu">
 
-        <!-- MAIN -->
-
         <div class="sidebar-title">
             Main
         </div>
 
+
+        <!-- Dashboard -->
 
         <a
             href="{% url 'coordinator:dashboard' %}"
@@ -1133,12 +1414,12 @@ body {
 
             </span>
 
-            <span>
-                Dashboard
-            </span>
+            <span>Dashboard</span>
 
         </a>
 
+
+        <!-- Proposals -->
 
         <a
             href="{% url 'coordinator:proposals' %}"
@@ -1153,12 +1434,12 @@ body {
 
             </span>
 
-            <span>
-                Project Proposals
-            </span>
+            <span>Project Proposals</span>
 
         </a>
 
+
+        <!-- Students -->
 
         <a
             href="{% url 'coordinator:students' %}"
@@ -1173,19 +1454,77 @@ body {
 
             </span>
 
-            <span>
-                Students
-            </span>
+            <span>Students</span>
 
         </a>
 
 
-        <!-- STAFF -->
+        <!-- Final Approved -->
+
+        <a
+            href="{% url 'coordinator:final_approved_students' %}"
+            class="sidebar-link"
+        >
+
+            <span class="sidebar-icon">
+
+                <svg class="spms-icon">
+                    <use href="#icon-graduation"></use>
+                </svg>
+
+            </span>
+
+            <span>Final Approved Students</span>
+
+        </a>
+
 
         <div class="sidebar-title">
             Staff Management
         </div>
 
+
+        <!-- Experts -->
+
+        <a
+            href="{% url 'coordinator:experts' %}"
+            class="sidebar-link"
+        >
+
+            <span class="sidebar-icon">
+
+                <svg class="spms-icon">
+                    <use href="#icon-briefcase"></use>
+                </svg>
+
+            </span>
+
+            <span>Domain Experts</span>
+
+        </a>
+
+
+        <!-- Guides -->
+
+        <a
+            href="{% url 'coordinator:guides' %}"
+            class="sidebar-link"
+        >
+
+            <span class="sidebar-icon">
+
+                <svg class="spms-icon">
+                    <use href="#icon-users"></use>
+                </svg>
+
+            </span>
+
+            <span>Guides</span>
+
+        </a>
+
+
+        <!-- Staff -->
 
         <a
             href="{% url 'coordinator:staff' %}"
@@ -1200,12 +1539,12 @@ body {
 
             </span>
 
-            <span>
-                Staff Management
-            </span>
+            <span>Staff Management</span>
 
         </a>
 
+
+        <!-- Add Staff -->
 
         <a
             href="{% url 'coordinator:add_staff' %}"
@@ -1220,19 +1559,17 @@ body {
 
             </span>
 
-            <span>
-                Add Staff
-            </span>
+            <span>Add Staff</span>
 
         </a>
 
-
-        <!-- ACCOUNT -->
 
         <div class="sidebar-title">
             Account
         </div>
 
+
+        <!-- Logout -->
 
         <a
             href="{% url 'accounts:logout' %}"
@@ -1247,22 +1584,24 @@ body {
 
             </span>
 
-            <span>
-                Logout
-            </span>
+            <span>Logout</span>
 
         </a>
 
     </div>
 
 
-    <!-- USER -->
+    <!-- CURRENT USER -->
 
     <div class="sidebar-user">
 
         <div class="sidebar-user-name">
 
-            {{ request.user.get_full_name|default:request.user.username }}
+            {% if request.user.get_full_name %}
+                {{ request.user.get_full_name }}
+            {% else %}
+                {{ request.user.username }}
+            {% endif %}
 
         </div>
 
@@ -1275,8 +1614,9 @@ body {
 </aside>
 
 
+
 <!-- =========================================================
-     MAIN CONTENT
+     MAIN
      ========================================================= -->
 
 <main class="coordinator-main">
@@ -1301,26 +1641,20 @@ body {
             </div>
 
 
-            <div class="header-actions">
+            <div class="header-info">
 
-                <a
-                    href="{% url 'coordinator:add_staff' %}"
-                    class="add-staff-button"
-                >
+                <div class="header-badge">
 
-                    <svg class="spms-icon">
-                        <use href="#icon-plus"></use>
-                    </svg>
+                    <span class="header-dot"></span>
 
-                    <span>
-                        Add Staff
-                    </span>
+                    System Active
 
-                </a>
+                </div>
 
             </div>
 
         </div>
+
 
 
         <!-- =================================================
@@ -1360,6 +1694,7 @@ body {
             </a>
 
 
+
             <!-- PROPOSALS -->
 
             <a
@@ -1388,6 +1723,7 @@ body {
                 </div>
 
             </a>
+
 
 
             <!-- EXPERTS -->
@@ -1420,6 +1756,7 @@ body {
             </a>
 
 
+
             <!-- GUIDES -->
 
             <a
@@ -1448,6 +1785,7 @@ body {
                 </div>
 
             </a>
+
 
 
             <!-- PANEL -->
@@ -1479,7 +1817,39 @@ body {
 
             </a>
 
+
+
+            <!-- FINAL APPROVED -->
+
+            <a
+                href="{% url 'coordinator:final_approved_students' %}"
+                class="stat-card stat-card-link"
+            >
+
+                <span class="stat-icon">
+
+                    <svg class="spms-icon spms-icon-xl">
+                        <use href="#icon-graduation"></use>
+                    </svg>
+
+                </span>
+
+                <div>
+
+                    <p>
+                        Final Approved Students
+                    </p>
+
+                    <h2>
+                        {{ final_approved_student_count|default:"0" }}
+                    </h2>
+
+                </div>
+
+            </a>
+
         </div>
+
 
 
         <!-- =================================================
@@ -1493,7 +1863,6 @@ body {
                 <h2>
                     Proposal Status
                 </h2>
-
 
                 <a
                     href="{% url 'coordinator:proposals' %}"
@@ -1624,6 +1993,140 @@ body {
         </div>
 
 
+
+        <!-- =================================================
+             FINAL APPROVED STUDENTS
+             ================================================= -->
+
+        <div class="section-card">
+
+            <div class="section-header">
+
+                <h2>
+                    Final Approved Students
+                </h2>
+
+                <a
+                    href="{% url 'coordinator:final_approved_students' %}"
+                    class="primary-button"
+                >
+
+                    <span>
+                        View All
+                    </span>
+
+                    <svg class="spms-icon">
+                        <use href="#icon-arrow"></use>
+                    </svg>
+
+                </a>
+
+            </div>
+
+
+            {% if final_approved_proposals %}
+
+                <div class="approved-list">
+
+                    {% for proposal in final_approved_proposals %}
+
+                        <a
+                            href="{% url 'coordinator:proposal_detail' proposal.id %}"
+                            class="approved-item"
+                        >
+
+                            <div class="approved-student">
+
+
+                                <div class="approved-avatar">
+
+                                    {% if proposal.student.first_name %}
+
+                                        {{ proposal.student.first_name|first|upper }}
+
+                                    {% else %}
+
+                                        {{ proposal.student.username|first|upper }}
+
+                                    {% endif %}
+
+                                </div>
+
+
+                                <div>
+
+                                    <div class="approved-name">
+
+                                        {% if proposal.student.get_full_name %}
+
+                                            {{ proposal.student.get_full_name }}
+
+                                        {% else %}
+
+                                            {{ proposal.student.username }}
+
+                                        {% endif %}
+
+                                    </div>
+
+
+                                    <div class="approved-project">
+
+                                        {{ proposal.title }}
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <span class="approved-status">
+
+                                {% if proposal.status == "COORDINATOR_APPROVED" %}
+
+                                    Final Approved
+
+                                {% elif proposal.status == "GUIDE_ASSIGNED" %}
+
+                                    Guide Assigned
+
+                                {% elif proposal.status == "GUIDE_REJECTED" %}
+
+                                    Guide Rejected
+
+                                {% elif proposal.status == "IN_PROGRESS" %}
+
+                                    In Progress
+
+                                {% elif proposal.status == "COMPLETED" %}
+
+                                    Completed
+
+                                {% endif %}
+
+                            </span>
+
+                        </a>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="empty-approved">
+
+                    No final approved students yet.
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+
+
         <!-- =================================================
              QUICK MANAGEMENT
              ================================================= -->
@@ -1657,7 +2160,6 @@ body {
 
                     </span>
 
-
                     <div>
 
                         <h3>
@@ -1675,6 +2177,7 @@ body {
                 </a>
 
 
+
                 <!-- STAFF -->
 
                 <a
@@ -1689,7 +2192,6 @@ body {
                         </svg>
 
                     </span>
-
 
                     <div>
 
@@ -1707,6 +2209,7 @@ body {
                 </a>
 
 
+
                 <!-- ADD STAFF -->
 
                 <a
@@ -1721,7 +2224,6 @@ body {
                         </svg>
 
                     </span>
-
 
                     <div>
 
@@ -1738,15 +2240,14 @@ body {
 
                 </a>
 
-
             </div>
 
         </div>
 
-
     </div>
 
 </main>
+
 
 
 <!-- =========================================================
@@ -1769,5 +2270,6 @@ function toggleSidebar() {
 }
 
 </script>
+
 
 {% endblock %}

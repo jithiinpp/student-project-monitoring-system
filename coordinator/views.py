@@ -1,5 +1,6 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.db import transaction
 from django.shortcuts import (
     get_object_or_404,
     redirect,
@@ -13,6 +14,39 @@ from projects.models import (
     ProjectProposal,
     ProposalChangeRequest,
 )
+
+
+# =========================================================
+# FINAL APPROVED PROJECT STATUSES
+# =========================================================
+#
+# Once Coordinator gives final approval:
+#
+# COORDINATOR_APPROVED
+#        ↓
+# GUIDE_ASSIGNED
+#        ↓
+# IN_PROGRESS
+#        ↓
+# COMPLETED
+#
+# If Guide rejects:
+#
+# GUIDE_REJECTED
+#        ↓
+# Coordinator assigns another Guide
+#
+# All these stages belong to a project that has already
+# received Coordinator final approval.
+# =========================================================
+
+FINAL_APPROVED_STATUSES = [
+    "COORDINATOR_APPROVED",
+    "GUIDE_ASSIGNED",
+    "GUIDE_REJECTED",
+    "IN_PROGRESS",
+    "COMPLETED",
+]
 
 
 # =========================================================
@@ -49,24 +83,105 @@ def coordinator_required(view_func):
 @coordinator_required
 def dashboard(request):
 
+    # -----------------------------------------------------
+    # STUDENTS
+    # -----------------------------------------------------
+
     students = User.objects.filter(
         role="STUDENT",
         is_superuser=False
     )
 
+    # -----------------------------------------------------
+    # DOMAIN EXPERTS
+    # -----------------------------------------------------
+
     experts = User.objects.filter(
-        role="EXPERT"
+        role="EXPERT",
+        is_superuser=False
     )
+
+    # -----------------------------------------------------
+    # GUIDES
+    # -----------------------------------------------------
 
     guides = User.objects.filter(
-        role="GUIDE"
+        role="GUIDE",
+        is_superuser=False
     )
+
+    # -----------------------------------------------------
+    # PANEL MEMBERS
+    # -----------------------------------------------------
 
     panels = User.objects.filter(
-        role="PANEL"
+        role="PANEL",
+        is_superuser=False
     )
 
-    proposals = ProjectProposal.objects.all()
+    # -----------------------------------------------------
+    # ALL ACTIVE PROPOSALS
+    # -----------------------------------------------------
+
+    proposals = ProjectProposal.objects.exclude(
+        status="REJECTED"
+    )
+
+    # =====================================================
+    # FINAL APPROVED PROJECTS
+    # =====================================================
+    #
+    # IMPORTANT:
+    #
+    # We cannot use only:
+    #
+    # status="COORDINATOR_APPROVED"
+    #
+    # because after Guide assignment the status becomes:
+    #
+    # GUIDE_ASSIGNED
+    #
+    # and later:
+    #
+    # IN_PROGRESS
+    # COMPLETED
+    #
+    # Therefore all final-approved stages are included.
+    # =====================================================
+
+    final_approved_queryset = (
+        ProjectProposal.objects
+        .filter(
+            status__in=FINAL_APPROVED_STATUSES
+        )
+        .select_related(
+            "student",
+            "domain_expert",
+            "guide"
+        )
+        .order_by("-updated_at")
+    )
+
+    # -----------------------------------------------------
+    # FINAL APPROVED STUDENT COUNT
+    #
+    # Count unique students.
+    # -----------------------------------------------------
+
+    final_approved_count = (
+        final_approved_queryset
+        .values("student_id")
+        .distinct()
+        .count()
+    )
+
+    # -----------------------------------------------------
+    # RECENT FINAL APPROVED PROJECTS
+    # -----------------------------------------------------
+
+    recent_final_approved = (
+        final_approved_queryset[:5]
+    )
 
     # -----------------------------------------------------
     # CHANGE REQUEST COUNT
@@ -83,6 +198,10 @@ def dashboard(request):
     guide_rejected_count = proposals.filter(
         status="GUIDE_REJECTED"
     ).count()
+
+    # =====================================================
+    # DASHBOARD CONTEXT
+    # =====================================================
 
     context = {
 
@@ -106,6 +225,16 @@ def dashboard(request):
             proposals.count(),
 
         # -------------------------------------------------
+        # FINAL APPROVED
+        # -------------------------------------------------
+
+        "final_approved_count":
+            final_approved_count,
+
+        "final_approved_proposals":
+            recent_final_approved,
+
+        # -------------------------------------------------
         # PROPOSAL STATUS
         # -------------------------------------------------
 
@@ -127,6 +256,7 @@ def dashboard(request):
         "changes_requested_count":
             changes_requested_count,
 
+        # Coordinator final approval only
         "approved_count":
             proposals.filter(
                 status="COORDINATOR_APPROVED"
@@ -189,6 +319,58 @@ def dashboard(request):
 
 
 # =========================================================
+# FINAL APPROVED STUDENTS
+# =========================================================
+
+@coordinator_required
+def final_approved_students(request):
+
+    # -----------------------------------------------------
+    # GET ALL FINAL APPROVED PROJECTS
+    # -----------------------------------------------------
+
+    approved_projects = (
+        ProjectProposal.objects
+        .filter(
+            status__in=FINAL_APPROVED_STATUSES
+        )
+        .select_related(
+            "student",
+            "domain_expert",
+            "guide"
+        )
+        .order_by("-updated_at")
+    )
+
+    # -----------------------------------------------------
+    # COUNT UNIQUE FINAL APPROVED STUDENTS
+    # -----------------------------------------------------
+
+    final_approved_count = (
+        approved_projects
+        .values("student_id")
+        .distinct()
+        .count()
+    )
+
+    # -----------------------------------------------------
+    # PAGE
+    # -----------------------------------------------------
+
+    return render(
+        request,
+        "coordinator/final_approved_students.html",
+        {
+            "approved_projects":
+                approved_projects,
+
+            "final_approved_count":
+                final_approved_count,
+        }
+    )
+
+
+# =========================================================
 # VIEW ALL PROJECT PROPOSALS
 # =========================================================
 
@@ -202,8 +384,12 @@ def proposals(request):
             "domain_expert",
             "guide"
         )
-        .all()
-        .order_by("-submitted_at")
+        .exclude(
+            status="REJECTED"
+        )
+        .order_by(
+            "-submitted_at"
+        )
     )
 
     return render(
@@ -231,25 +417,38 @@ def proposal_detail(request, proposal_id):
         id=proposal_id
     )
 
+    # -----------------------------------------------------
+    # DOMAIN EXPERTS
+    # -----------------------------------------------------
+
     experts = User.objects.filter(
         role="EXPERT",
-        is_active=True
+        is_active=True,
+        is_superuser=False
     ).order_by(
         "first_name",
         "last_name",
         "username"
     )
+
+    # -----------------------------------------------------
+    # GUIDES
+    # -----------------------------------------------------
 
     guides = User.objects.filter(
         role="GUIDE",
-        is_active=True
+        is_active=True,
+        is_superuser=False
     ).order_by(
         "first_name",
         "last_name",
         "username"
     )
 
-    # All change requests for this proposal
+    # -----------------------------------------------------
+    # CHANGE REQUESTS
+    # -----------------------------------------------------
+
     change_requests = (
         ProposalChangeRequest.objects
         .filter(
@@ -313,7 +512,8 @@ def assign_expert(request, proposal_id):
         User,
         id=expert_id,
         role="EXPERT",
-        is_active=True
+        is_active=True,
+        is_superuser=False
     )
 
     proposal.domain_expert = expert
@@ -358,7 +558,10 @@ def approve_project(request, proposal_id):
             proposal_id=proposal.id
         )
 
-    # Expert approval is required first
+    # -----------------------------------------------------
+    # EXPERT APPROVAL REQUIRED
+    # -----------------------------------------------------
+
     if proposal.status != "EXPERT_APPROVED":
 
         messages.error(
@@ -372,18 +575,70 @@ def approve_project(request, proposal_id):
             proposal_id=proposal.id
         )
 
-    proposal.status = "COORDINATOR_APPROVED"
+    # -----------------------------------------------------
+    # CHECK WHETHER STUDENT ALREADY HAS FINAL PROJECT
+    # -----------------------------------------------------
 
-    proposal.save(
-        update_fields=[
-            "status",
-            "updated_at"
-        ]
+    already_approved = (
+        ProjectProposal.objects
+        .filter(
+            student=proposal.student,
+            status__in=FINAL_APPROVED_STATUSES
+        )
+        .exclude(
+            id=proposal.id
+        )
+        .exists()
     )
+
+    if already_approved:
+
+        messages.error(
+            request,
+            "This student already has a final approved project."
+        )
+
+        return redirect(
+            "coordinator:proposal_detail",
+            proposal_id=proposal.id
+        )
+
+    # -----------------------------------------------------
+    # FINAL APPROVAL
+    #
+    # Selected proposal:
+    # COORDINATOR_APPROVED
+    #
+    # Other proposals:
+    # REJECTED
+    # -----------------------------------------------------
+
+    with transaction.atomic():
+
+        # Approve selected proposal
+        proposal.status = "COORDINATOR_APPROVED"
+
+        proposal.save(
+            update_fields=[
+                "status",
+                "updated_at"
+            ]
+        )
+
+        # Reject all other proposals of this student
+        ProjectProposal.objects.filter(
+            student=proposal.student
+        ).exclude(
+            id=proposal.id
+        ).update(
+            status="REJECTED"
+        )
 
     messages.success(
         request,
-        "Project has been finally approved by the Coordinator."
+        "Project approved successfully. "
+        "All other proposals from this student "
+        "have been rejected."
     )
 
     return redirect(
@@ -411,8 +666,13 @@ def assign_guide(request, proposal_id):
             proposal_id=proposal.id
         )
 
-    # Guide can be assigned after final approval
-    # OR after a Guide rejected the previous assignment
+    # -----------------------------------------------------
+    # GUIDE CAN BE ASSIGNED ONLY AFTER FINAL APPROVAL
+    #
+    # GUIDE_REJECTED is also allowed because the project
+    # already received Coordinator final approval.
+    # -----------------------------------------------------
+
     if proposal.status not in [
         "COORDINATOR_APPROVED",
         "GUIDE_REJECTED",
@@ -447,8 +707,13 @@ def assign_guide(request, proposal_id):
         User,
         id=guide_id,
         role="GUIDE",
-        is_active=True
+        is_active=True,
+        is_superuser=False
     )
+
+    # -----------------------------------------------------
+    # ASSIGN GUIDE
+    # -----------------------------------------------------
 
     proposal.guide = guide
     proposal.status = "GUIDE_ASSIGNED"
@@ -506,8 +771,11 @@ def change_requests(request):
         request,
         "coordinator/change_requests.html",
         {
-            "change_requests": change_request_list,
-            "change_request_count": change_request_list.count(),
+            "change_requests":
+                change_request_list,
+
+            "change_request_count":
+                change_request_list.count(),
         }
     )
 
@@ -528,7 +796,6 @@ def send_change_request(request, request_id):
         id=request_id
     )
 
-    # Only pending requests can be sent
     if change_request.status != "PENDING":
 
         messages.error(
@@ -546,7 +813,8 @@ def send_change_request(request, request_id):
             request,
             "coordinator/send_change_request.html",
             {
-                "change_request": change_request
+                "change_request":
+                    change_request
             }
         )
 
@@ -555,9 +823,7 @@ def send_change_request(request, request_id):
     # -----------------------------------------------------
 
     change_request.coordinator = request.user
-
     change_request.status = "SENT_TO_STUDENT"
-
     change_request.sent_to_student_at = timezone.now()
 
     change_request.save(
@@ -598,7 +864,8 @@ def send_change_request(request, request_id):
 def experts(request):
 
     expert_list = User.objects.filter(
-        role="EXPERT"
+        role="EXPERT",
+        is_superuser=False
     ).order_by(
         "first_name",
         "last_name",
@@ -609,8 +876,11 @@ def experts(request):
         request,
         "coordinator/experts.html",
         {
-            "experts": expert_list,
-            "expert_count": expert_list.count()
+            "experts":
+                expert_list,
+
+            "expert_count":
+                expert_list.count()
         }
     )
 
@@ -766,7 +1036,8 @@ def delete_expert(request, user_id):
 def guides(request):
 
     guide_list = User.objects.filter(
-        role="GUIDE"
+        role="GUIDE",
+        is_superuser=False
     ).order_by(
         "first_name",
         "last_name",
@@ -777,8 +1048,11 @@ def guides(request):
         request,
         "coordinator/guides.html",
         {
-            "guides": guide_list,
-            "guide_count": guide_list.count()
+            "guides":
+                guide_list,
+
+            "guide_count":
+                guide_list.count()
         }
     )
 
@@ -905,7 +1179,8 @@ def guide_detail(request, user_id):
         "coordinator/guide_detail.html",
         {
             "guide": guide,
-            "assigned_projects": assigned_projects,
+            "assigned_projects":
+                assigned_projects,
         }
     )
 
@@ -947,7 +1222,8 @@ def delete_guide(request, user_id):
 def panels(request):
 
     panel_list = User.objects.filter(
-        role="PANEL"
+        role="PANEL",
+        is_superuser=False
     ).order_by(
         "first_name",
         "last_name",
@@ -958,8 +1234,11 @@ def panels(request):
         request,
         "coordinator/panels.html",
         {
-            "panels": panel_list,
-            "panel_count": panel_list.count()
+            "panels":
+                panel_list,
+
+            "panel_count":
+                panel_list.count()
         }
     )
 
@@ -1119,7 +1398,8 @@ def staff(request):
             "EXPERT",
             "GUIDE",
             "PANEL"
-        ]
+        ],
+        is_superuser=False
     ).order_by(
         "role",
         "first_name",
@@ -1131,7 +1411,8 @@ def staff(request):
         request,
         "coordinator/staff.html",
         {
-            "staff": staff_list
+            "staff":
+                staff_list
         }
     )
 
@@ -1186,6 +1467,10 @@ def add_staff(request):
             "PANEL"
         ]
 
+        # -------------------------------------------------
+        # VALIDATION
+        # -------------------------------------------------
+
         if not username:
 
             messages.error(
@@ -1235,6 +1520,10 @@ def add_staff(request):
                 request,
                 "coordinator/add_staff.html"
             )
+
+        # -------------------------------------------------
+        # CREATE STAFF
+        # -------------------------------------------------
 
         staff_member = User.objects.create_user(
             username=username,
@@ -1290,7 +1579,8 @@ def staff_detail(request, user_id):
         request,
         "coordinator/staff_detail.html",
         {
-            "staff_member": staff_member
+            "staff_member":
+                staff_member
         }
     )
 
@@ -1351,7 +1641,10 @@ def students(request):
         request,
         "coordinator/students.html",
         {
-            "students": students,
-            "total_students": total_students,
+            "students":
+                students,
+
+            "total_students":
+                total_students,
         }
     )

@@ -5,16 +5,18 @@ from django.db import models
 class ProjectProposal(models.Model):
 
     STATUS_CHOICES = [
-        ("SUBMITTED", "Submitted"),
-        ("EXPERT_ASSIGNED", "Expert Assigned"),
-        ("CHANGES_REQUESTED", "Changes Requested"),
-        ("EXPERT_APPROVED", "Expert Approved"),
-        ("COORDINATOR_APPROVED", "Coordinator Approved"),
-        ("GUIDE_ASSIGNED", "Guide Assigned"),
-        ("GUIDE_REJECTED", "Guide Rejected"),
-        ("IN_PROGRESS", "In Progress"),
-        ("COMPLETED", "Completed"),
-    ]
+    ("SUBMITTED", "Submitted"),
+    ("EXPERT_ASSIGNED", "Expert Assigned"),
+    ("CHANGES_REQUESTED", "Changes Requested"),
+    ("CHANGES_SENT_TO_STUDENT", "Changes Sent To Student"),
+    ("EXPERT_APPROVED", "Expert Approved"),
+    ("COORDINATOR_APPROVED", "Coordinator Approved"),
+    ("GUIDE_ASSIGNED", "Guide Assigned"),
+    ("GUIDE_REJECTED", "Guide Rejected"),
+    ("IN_PROGRESS", "In Progress"),
+    ("COMPLETED", "Completed"),
+    ("REJECTED", "Rejected"),
+]
 
     student = models.ForeignKey(
         settings.AUTH_USER_MODEL,

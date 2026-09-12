@@ -4,181 +4,330 @@
 Review Change Request | SPMS
 {% endblock %}
 
+
 {% block extra_css %}
 
 <style>
 
-body {
-    background: #f5f7fb;
-}
+    /* =========================================================
+       BASE
+       ========================================================= */
 
-.main-content {
-    margin: 0 !important;
-    padding: 0 !important;
-}
+    body {
+        background: #f5f7fb;
+    }
 
-.review-page {
-    min-height: 100vh;
-    padding: 35px;
-}
+    .main-content {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
 
-.review-container {
-    max-width: 900px;
-    margin: 0 auto;
-}
 
-/* HEADER */
-
-.review-header {
-    margin-bottom: 20px;
-}
-
-.review-header h1 {
-    margin: 0 0 6px;
-    font-size: 24px;
-    color: #111827;
-}
-
-.review-header p {
-    margin: 0;
-    font-size: 13px;
-    color: #64748b;
-}
-
-/* CARD */
-
-.review-card {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
-    padding: 25px;
-    margin-bottom: 18px;
-}
-
-.info-row {
-    display: grid;
-    grid-template-columns: 180px 1fr;
-    gap: 15px;
-    padding: 13px 0;
-    border-bottom: 1px solid #f1f5f9;
-}
-
-.info-row:last-child {
-    border-bottom: none;
-}
-
-.info-label {
-    font-size: 12px;
-    font-weight: 700;
-    color: #64748b;
-}
-
-.info-value {
-    font-size: 14px;
-    color: #111827;
-    font-weight: 500;
-}
-
-/* REQUEST */
-
-.request-box {
-    margin-top: 20px;
-    padding: 18px;
-    background: #fff7ed;
-    border: 1px solid #fed7aa;
-    border-radius: 8px;
-}
-
-.request-box h3 {
-    margin: 0 0 10px;
-    font-size: 14px;
-    color: #9a3412;
-}
-
-.request-message {
-    margin: 0;
-    font-size: 14px;
-    line-height: 1.7;
-    color: #431407;
-}
-
-/* ACTION */
-
-.action-box {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 22px;
-}
-
-.back-button {
-    display: inline-flex;
-    align-items: center;
-    padding: 10px 15px;
-    border: 1px solid #d1d5db;
-    border-radius: 7px;
-    background: #ffffff;
-    color: #475569;
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.send-button {
-    border: none;
-    padding: 10px 17px;
-    border-radius: 7px;
-    background: #2563eb;
-    color: #ffffff;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-}
-
-.send-button:hover {
-    background: #1d4ed8;
-}
-
-.warning {
-    margin-top: 15px;
-    padding: 12px 14px;
-    background: #eff6ff;
-    border: 1px solid #bfdbfe;
-    border-radius: 7px;
-    color: #1e40af;
-    font-size: 12px;
-    line-height: 1.5;
-}
-
-/* MOBILE */
-
-@media (max-width: 650px) {
+    /* =========================================================
+       PAGE
+       ========================================================= */
 
     .review-page {
-        padding: 20px 14px;
+        min-height: 100vh;
+        background: #f5f7fb;
+        padding: 30px;
     }
+
+    .review-container {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+
+    /* =========================================================
+       PAGE HEADER
+       ========================================================= */
+
+    .review-header {
+        margin-bottom: 22px;
+    }
+
+    .review-header h1 {
+        margin: 0;
+
+        font-size: 25px;
+        font-weight: 700;
+
+        color: #111827;
+    }
+
+    .review-header p {
+        margin: 6px 0 0;
+
+        font-size: 13px;
+
+        color: #64748b;
+    }
+
+
+    /* =========================================================
+       MAIN CARD
+       ========================================================= */
+
+    .review-card {
+        background: #ffffff;
+
+        border: 1px solid #e5e7eb;
+
+        border-radius: 10px;
+
+        padding: 25px;
+
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+    }
+
+
+    /* =========================================================
+       INFORMATION ROWS
+       ========================================================= */
 
     .info-row {
-        grid-template-columns: 1fr;
-        gap: 5px;
+        display: grid;
+
+        grid-template-columns: 180px 1fr;
+
+        gap: 20px;
+
+        padding: 13px 0;
+
+        border-bottom: 1px solid #eef0f3;
     }
+
+    .info-row:first-child {
+        padding-top: 0;
+    }
+
+    .info-row:last-of-type {
+        border-bottom: none;
+    }
+
+    .info-label {
+        font-size: 12px;
+
+        font-weight: 600;
+
+        color: #64748b;
+    }
+
+    .info-value {
+        font-size: 13px;
+
+        color: #111827;
+
+        font-weight: 600;
+
+        line-height: 1.5;
+
+        word-break: break-word;
+    }
+
+
+    /* =========================================================
+       CHANGE REQUEST
+       ========================================================= */
+
+    .request-box {
+        margin-top: 22px;
+
+        padding: 17px;
+
+        background: #fff7ed;
+
+        border: 1px solid #fed7aa;
+
+        border-radius: 8px;
+    }
+
+    .request-box h3 {
+        margin: 0 0 9px;
+
+        font-size: 14px;
+
+        font-weight: 700;
+
+        color: #9a3412;
+    }
+
+    .request-message {
+        margin: 0;
+
+        font-size: 13px;
+
+        line-height: 1.7;
+
+        color: #431407;
+
+        white-space: pre-line;
+    }
+
+
+    /* =========================================================
+       INFORMATION / WARNING
+       ========================================================= */
+
+    .warning {
+        margin-top: 15px;
+
+        padding: 13px 15px;
+
+        background: #eff6ff;
+
+        border: 1px solid #bfdbfe;
+
+        border-radius: 7px;
+
+        color: #1e40af;
+
+        font-size: 12px;
+
+        line-height: 1.6;
+    }
+
+    .warning strong {
+        font-weight: 700;
+    }
+
+
+    /* =========================================================
+       ACTION AREA
+       ========================================================= */
 
     .action-box {
-        flex-direction: column;
+        display: flex;
+
+        justify-content: flex-end;
+
+        align-items: center;
+
+        gap: 10px;
+
+        margin-top: 22px;
+
+        padding-top: 20px;
+
+        border-top: 1px solid #eef0f3;
     }
 
-    .back-button,
-    .send-button {
-        width: 100%;
+
+    /* =========================================================
+       BACK BUTTON
+       ========================================================= */
+
+    .back-button {
+        display: inline-flex;
+
+        align-items: center;
+
         justify-content: center;
-        text-align: center;
+
+        padding: 10px 16px;
+
+        border: 1px solid #d1d5db;
+
+        border-radius: 7px;
+
+        background: #ffffff;
+
+        color: #475569;
+
+        text-decoration: none;
+
+        font-size: 13px;
+
+        font-weight: 600;
+
+        transition: background 0.2s ease,
+                    border-color 0.2s ease;
     }
 
-}
+    .back-button:hover {
+        background: #f8fafc;
+
+        border-color: #cbd5e1;
+
+        color: #334155;
+    }
+
+
+    /* =========================================================
+       SEND BUTTON
+       ========================================================= */
+
+    .send-button {
+        border: none;
+
+        padding: 10px 17px;
+
+        border-radius: 7px;
+
+        background: #2563eb;
+
+        color: #ffffff;
+
+        font-size: 13px;
+
+        font-weight: 600;
+
+        cursor: pointer;
+
+        transition: background 0.2s ease;
+    }
+
+    .send-button:hover {
+        background: #1d4ed8;
+    }
+
+
+    /* =========================================================
+       MOBILE
+       ========================================================= */
+
+    @media (max-width: 650px) {
+
+        .review-page {
+            padding: 20px 14px;
+        }
+
+        .review-card {
+            padding: 20px;
+        }
+
+        .review-header h1 {
+            font-size: 22px;
+        }
+
+        .info-row {
+            grid-template-columns: 1fr;
+
+            gap: 5px;
+        }
+
+        .action-box {
+            flex-direction: column;
+
+            align-items: stretch;
+        }
+
+        .back-button,
+        .send-button {
+            width: 100%;
+
+            justify-content: center;
+
+            text-align: center;
+        }
+
+    }
 
 </style>
 
 {% endblock %}
+
 
 
 {% block content %}
@@ -187,7 +336,10 @@ body {
 
     <div class="review-container">
 
-        <!-- HEADER -->
+
+        <!-- =====================================================
+             HEADER
+             ===================================================== -->
 
         <div class="review-header">
 
@@ -203,9 +355,15 @@ body {
         </div>
 
 
-        <!-- DETAILS -->
+
+        <!-- =====================================================
+             DETAILS
+             ===================================================== -->
 
         <div class="review-card">
+
+
+            <!-- STUDENT -->
 
             <div class="info-row">
 
@@ -222,6 +380,9 @@ body {
             </div>
 
 
+
+            <!-- USERNAME -->
+
             <div class="info-row">
 
                 <div class="info-label">
@@ -236,6 +397,9 @@ body {
 
             </div>
 
+
+
+            <!-- PROJECT -->
 
             <div class="info-row">
 
@@ -252,6 +416,9 @@ body {
             </div>
 
 
+
+            <!-- DOMAIN EXPERT -->
+
             <div class="info-row">
 
                 <div class="info-label">
@@ -267,7 +434,10 @@ body {
             </div>
 
 
-            <!-- REQUEST MESSAGE -->
+
+            <!-- =================================================
+                 REQUEST MESSAGE
+                 ================================================= -->
 
             <div class="request-box">
 
@@ -276,13 +446,16 @@ body {
                 </h3>
 
                 <p class="request-message">
-
                     {{ change_request.message }}
-
                 </p>
 
             </div>
 
+
+
+            <!-- =================================================
+                 WARNING
+                 ================================================= -->
 
             <div class="warning">
 
@@ -295,15 +468,19 @@ body {
             </div>
 
 
-            <!-- ACTION -->
+
+            <!-- =================================================
+                 ACTION
+                 ================================================= -->
 
             <div class="action-box">
+
 
                 <a
                     href="{% url 'coordinator:change_requests' %}"
                     class="back-button"
                 >
-                    Back
+                    ← Back
                 </a>
 
 
@@ -323,7 +500,9 @@ body {
 
                 </form>
 
+
             </div>
+
 
         </div>
 

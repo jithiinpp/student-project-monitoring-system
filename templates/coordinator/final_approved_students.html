@@ -1,0 +1,1196 @@
+{% extends "base.html" %}
+
+{% block title %}Final Approved Students - SPMS{% endblock %}
+
+{% block extra_css %}
+<style>
+
+    /* =========================================================
+       COORDINATOR DASHBOARD MODEL
+       ========================================================= */
+
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        background: #f5f7fb;
+        font-family: Arial, Helvetica, sans-serif;
+        color: #1f2937;
+    }
+
+
+    /* =========================================================
+       LAYOUT
+       ========================================================= */
+
+    .coordinator-layout {
+        display: flex;
+        min-height: 100vh;
+        background: #f5f7fb;
+    }
+
+
+    /* =========================================================
+       SIDEBAR
+       ========================================================= */
+
+    .sidebar {
+        width: 250px;
+        min-height: 100vh;
+
+        background: #12161f;
+        color: #ffffff;
+
+        padding: 22px 14px;
+
+        position: fixed;
+        left: 0;
+        top: 0;
+        bottom: 0;
+
+        overflow-y: auto;
+        z-index: 1000;
+    }
+
+
+    .sidebar-logo {
+        padding: 5px 12px 22px;
+
+        border-bottom: 1px solid #2a303b;
+
+        margin-bottom: 18px;
+    }
+
+
+    .sidebar-logo h2 {
+        margin: 0;
+
+        font-size: 21px;
+        font-weight: 700;
+
+        color: #ffffff;
+    }
+
+
+    .sidebar-logo p {
+        margin: 5px 0 0;
+
+        color: #9ca3af;
+
+        font-size: 13px;
+    }
+
+
+    .sidebar-menu {
+        display: flex;
+        flex-direction: column;
+
+        gap: 5px;
+    }
+
+
+    .sidebar-menu a {
+        text-decoration: none;
+
+        color: #cbd5e1;
+
+        padding: 11px 13px;
+
+        border-radius: 7px;
+
+        display: flex;
+        align-items: center;
+
+        gap: 11px;
+
+        font-size: 14px;
+        font-weight: 500;
+
+        transition: background 0.2s ease,
+                    color 0.2s ease;
+    }
+
+
+    .sidebar-menu a:hover {
+        background: #1d2430;
+        color: #ffffff;
+    }
+
+
+    .sidebar-menu a.active {
+        background: #2563eb;
+        color: #ffffff;
+    }
+
+
+    .sidebar-menu a.active:hover {
+        background: #2563eb;
+        color: #ffffff;
+    }
+
+
+    .icon {
+        width: 19px;
+        height: 19px;
+
+        flex-shrink: 0;
+    }
+
+
+    /* =========================================================
+       MAIN AREA
+       ========================================================= */
+
+    .main-area {
+        margin-left: 250px;
+
+        width: calc(100% - 250px);
+
+        min-height: 100vh;
+
+        padding: 30px;
+    }
+
+
+    /* =========================================================
+       PAGE HEADER
+       ========================================================= */
+
+    .page-header {
+        display: flex;
+
+        justify-content: space-between;
+        align-items: center;
+
+        margin-bottom: 24px;
+    }
+
+
+    .page-header h1 {
+        margin: 0;
+
+        font-size: 25px;
+        line-height: 1.3;
+
+        color: #111827;
+
+        font-weight: 700;
+    }
+
+
+    .page-header p {
+        margin: 6px 0 0;
+
+        color: #64748b;
+
+        font-size: 13px;
+    }
+
+
+    /* =========================================================
+       BACK BUTTON
+       ========================================================= */
+
+    .back-btn {
+        display: inline-flex;
+
+        align-items: center;
+        justify-content: center;
+
+        padding: 10px 15px;
+
+        border-radius: 7px;
+
+        background: #ffffff;
+
+        border: 1px solid #dfe3e8;
+
+        color: #374151;
+
+        text-decoration: none;
+
+        font-size: 13px;
+
+        font-weight: 600;
+
+        transition: background 0.2s ease,
+                    border-color 0.2s ease;
+    }
+
+
+    .back-btn:hover {
+        background: #f8fafc;
+
+        border-color: #cbd5e1;
+    }
+
+
+    /* =========================================================
+       SUMMARY CARD
+       ========================================================= */
+
+    .summary-card {
+        background: #ffffff;
+
+        border: 1px solid #e5e7eb;
+
+        border-radius: 10px;
+
+        padding: 18px 20px;
+
+        margin-bottom: 22px;
+
+        display: flex;
+
+        align-items: center;
+
+        min-height: 88px;
+
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
+    }
+
+
+    .summary-card > div {
+        display: flex;
+
+        align-items: center;
+
+        gap: 18px;
+    }
+
+
+    .summary-card > div::before {
+        content: "✓";
+
+        width: 46px;
+        height: 46px;
+
+        border-radius: 8px;
+
+        background: #eaf2ff;
+
+        color: #2563eb;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        font-size: 22px;
+
+        font-weight: 700;
+    }
+
+
+    .summary-card span {
+        display: block;
+
+        color: #64748b;
+
+        font-size: 12px;
+
+        margin-bottom: 5px;
+    }
+
+
+    .summary-card strong {
+        display: block;
+
+        color: #111827;
+
+        font-size: 24px;
+
+        line-height: 1;
+
+        font-weight: 700;
+    }
+
+
+    /* =========================================================
+       TABLE CARD
+       ========================================================= */
+
+    .table-card {
+        background: #ffffff;
+
+        border: 1px solid #e5e7eb;
+
+        border-radius: 10px;
+
+        overflow: hidden;
+
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
+    }
+
+
+    /* =========================================================
+       TABLE HEADER
+       ========================================================= */
+
+    .table-header {
+        padding: 19px 20px;
+
+        border-bottom: 1px solid #e5e7eb;
+
+        background: #ffffff;
+    }
+
+
+    .table-header h2 {
+        margin: 0;
+
+        font-size: 17px;
+
+        color: #111827;
+
+        font-weight: 700;
+    }
+
+
+    /* =========================================================
+       TABLE
+       ========================================================= */
+
+    .table-wrapper {
+        overflow-x: auto;
+    }
+
+
+    table {
+        width: 100%;
+
+        min-width: 950px;
+
+        border-collapse: collapse;
+    }
+
+
+    th {
+        background: #f8fafc;
+
+        color: #64748b;
+
+        font-size: 11px;
+
+        text-transform: uppercase;
+
+        letter-spacing: 0.4px;
+
+        text-align: left;
+
+        padding: 13px 18px;
+
+        border-bottom: 1px solid #e5e7eb;
+
+        font-weight: 700;
+
+        white-space: nowrap;
+    }
+
+
+    td {
+        padding: 15px 18px;
+
+        border-bottom: 1px solid #f1f5f9;
+
+        font-size: 13px;
+
+        color: #475569;
+
+        vertical-align: middle;
+    }
+
+
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+
+    tr:hover td {
+        background: #fafcff;
+    }
+
+
+    /* =========================================================
+       STUDENT
+       ========================================================= */
+
+    td strong {
+        color: #111827;
+
+        font-size: 13px;
+
+        font-weight: 600;
+    }
+
+
+    td small {
+        display: inline-block;
+
+        margin-top: 3px;
+
+        color: #94a3b8;
+
+        font-size: 11px;
+    }
+
+
+    /* =========================================================
+       STATUS BADGES
+       ========================================================= */
+
+    .status {
+        display: inline-flex;
+
+        align-items: center;
+
+        padding: 5px 9px;
+
+        border-radius: 5px;
+
+        font-size: 11px;
+
+        font-weight: 600;
+
+        white-space: nowrap;
+    }
+
+
+    .status.approved {
+        background: #ecfdf5;
+
+        color: #15803d;
+
+        border: 1px solid #bbf7d0;
+    }
+
+
+    .status.guide {
+        background: #eff6ff;
+
+        color: #2563eb;
+
+        border: 1px solid #dbeafe;
+    }
+
+
+    .status.progress {
+        background: #fff7ed;
+
+        color: #c2410c;
+
+        border: 1px solid #fed7aa;
+    }
+
+
+    .status.completed {
+        background: #f0fdf4;
+
+        color: #166534;
+
+        border: 1px solid #bbf7d0;
+    }
+
+
+    /* =========================================================
+       DETAILS BUTTON
+       ========================================================= */
+
+    .details-btn {
+        display: inline-flex;
+
+        align-items: center;
+        justify-content: center;
+
+        padding: 7px 11px;
+
+        border-radius: 6px;
+
+        background: #eff6ff;
+
+        border: 1px solid #bfdbfe;
+
+        color: #2563eb;
+
+        text-decoration: none;
+
+        font-size: 12px;
+
+        font-weight: 600;
+
+        white-space: nowrap;
+
+        transition: background 0.2s ease,
+                    border-color 0.2s ease;
+    }
+
+
+    .details-btn:hover {
+        background: #dbeafe;
+
+        border-color: #93c5fd;
+    }
+
+
+    /* =========================================================
+       EMPTY STATE
+       ========================================================= */
+
+    .empty-state {
+        padding: 60px 20px;
+
+        text-align: center;
+
+        background: #ffffff;
+    }
+
+
+    .empty-state h3 {
+        margin: 0 0 7px;
+
+        color: #374151;
+
+        font-size: 16px;
+
+        font-weight: 600;
+    }
+
+
+    .empty-state p {
+        margin: 0;
+
+        color: #64748b;
+
+        font-size: 13px;
+
+        line-height: 1.6;
+    }
+
+
+    /* =========================================================
+       RESPONSIVE - TABLET
+       ========================================================= */
+
+    @media (max-width: 1000px) {
+
+        .sidebar {
+            width: 230px;
+        }
+
+
+        .main-area {
+            margin-left: 230px;
+
+            width: calc(100% - 230px);
+
+            padding: 25px;
+        }
+
+    }
+
+
+    /* =========================================================
+       RESPONSIVE - MOBILE
+       ========================================================= */
+
+    @media (max-width: 700px) {
+
+        .coordinator-layout {
+            display: block;
+        }
+
+
+        .sidebar {
+            position: relative;
+
+            width: 100%;
+
+            min-height: auto;
+
+            padding: 15px;
+        }
+
+
+        .sidebar-logo {
+            padding-bottom: 17px;
+
+            margin-bottom: 15px;
+        }
+
+
+        .sidebar-menu {
+            gap: 4px;
+        }
+
+
+        .sidebar-menu a {
+            padding: 10px 12px;
+        }
+
+
+        .main-area {
+            margin-left: 0;
+
+            width: 100%;
+
+            padding: 20px 15px;
+        }
+
+
+        .page-header {
+            flex-direction: column;
+
+            align-items: flex-start;
+
+            gap: 15px;
+        }
+
+
+        .page-header h1 {
+            font-size: 23px;
+        }
+
+
+        .back-btn {
+            width: 100%;
+
+            text-align: center;
+        }
+
+
+        .summary-card {
+            padding: 16px;
+        }
+
+
+        .table-header {
+            padding: 17px 16px;
+        }
+
+
+        th {
+            padding: 12px 14px;
+        }
+
+
+        td {
+            padding: 13px 14px;
+        }
+
+    }
+
+
+    /* =========================================================
+       SMALL MOBILE
+       ========================================================= */
+
+    @media (max-width: 450px) {
+
+        .summary-card > div {
+            gap: 12px;
+        }
+
+
+        .summary-card > div::before {
+            width: 42px;
+            height: 42px;
+
+            font-size: 19px;
+        }
+
+
+        .summary-card strong {
+            font-size: 22px;
+        }
+
+    }
+
+</style>
+{% endblock %}
+
+
+{% block sidebar %}
+
+<div class="coordinator-layout">
+
+    <!-- ================= SIDEBAR ================= -->
+
+    <aside class="sidebar">
+
+        <div class="sidebar-logo">
+
+            <h2>SPMS</h2>
+
+            <p>Coordinator Panel</p>
+
+        </div>
+
+
+        <nav class="sidebar-menu">
+
+            <!-- Dashboard -->
+            <a href="{% url 'coordinator:dashboard' %}">
+
+                <svg class="icon"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+
+                </svg>
+
+                Dashboard
+
+            </a>
+
+
+            <!-- Project Proposals -->
+            <a href="{% url 'coordinator:proposals' %}">
+
+                <svg class="icon"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+
+                    <path d="M4 4h16v16H4z"></path>
+                    <path d="M8 8h8"></path>
+                    <path d="M8 12h8"></path>
+                    <path d="M8 16h5"></path>
+
+                </svg>
+
+                Project Proposals
+
+            </a>
+
+
+            <!-- Students -->
+            <a href="{% url 'coordinator:students' %}">
+
+                <svg class="icon"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+
+                </svg>
+
+                Students
+
+            </a>
+
+
+            <!-- Domain Experts -->
+            <a href="{% url 'coordinator:experts' %}">
+
+                <svg class="icon"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+
+                    <circle cx="12" cy="8" r="4"></circle>
+
+                    <path d="M4 21v-2a6 6 0 0 1 12 0v2"></path>
+
+                    <path d="M19 8v6"></path>
+                    <path d="M16 11h6"></path>
+
+                </svg>
+
+                Domain Experts
+
+            </a>
+
+
+            <!-- Guides -->
+            <a href="{% url 'coordinator:guides' %}">
+
+                <svg class="icon"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+
+                    <circle cx="12" cy="8" r="4"></circle>
+
+                    <path d="M4 21v-2a6 6 0 0 1 16 0v2"></path>
+
+                    <path d="M8 14h8"></path>
+
+                </svg>
+
+                Guides
+
+            </a>
+
+
+            <!-- Panel Members -->
+            <a href="{% url 'coordinator:panels' %}">
+
+                <svg class="icon"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+
+                    <rect x="3" y="4" width="18" height="16" rx="2"></rect>
+                    <path d="M8 9h8"></path>
+                    <path d="M8 13h8"></path>
+                    <path d="M8 17h5"></path>
+
+                </svg>
+
+                Panel Members
+
+            </a>
+
+
+            <!-- Staff -->
+            <a href="{% url 'coordinator:staff' %}">
+
+                <svg class="icon"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="12" cy="7" r="4"></circle>
+
+                </svg>
+
+                Staff Management
+
+            </a>
+
+
+            <!-- Add Expert -->
+            <a href="{% url 'coordinator:add_expert' %}">
+
+                <svg class="icon"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+
+                    <circle cx="12" cy="8" r="4"></circle>
+
+                    <path d="M4 21v-2a6 6 0 0 1 16 0v2"></path>
+
+                    <path d="M19 14v6"></path>
+                    <path d="M16 17h6"></path>
+
+                </svg>
+
+                Add Expert
+
+            </a>
+
+
+            <!-- Logout -->
+            <a href="{% url 'accounts:logout' %}">
+
+                <svg class="icon"
+                     viewBox="0 0 24 24"
+                     fill="none"
+                     stroke="currentColor"
+                     stroke-width="2">
+
+                    <path d="M10 17l5-5-5-5"></path>
+                    <path d="M15 12H3"></path>
+                    <path d="M21 19V5a2 2 0 0 0-2-2h-6"></path>
+
+                </svg>
+
+                Logout
+
+            </a>
+
+        </nav>
+
+    </aside>
+
+
+{% endblock %}
+
+
+{% block content %}
+
+    <!-- ================= MAIN CONTENT ================= -->
+
+    <main class="main-area">
+
+
+        <!-- ================= PAGE HEADER ================= -->
+
+        <div class="page-header">
+
+            <div>
+
+                <h1>Final Approved Students</h1>
+
+                <p>
+                    Students whose projects have received final Coordinator
+                    approval and Guide assignment.
+                </p>
+
+            </div>
+
+
+            <a href="{% url 'coordinator:dashboard' %}"
+               class="back-btn">
+
+                ← Back to Dashboard
+
+            </a>
+
+        </div>
+
+
+        <!-- ================= SUMMARY ================= -->
+
+        <div class="summary-card">
+
+            <div>
+
+                <div>
+
+                    <span>
+                        Total Final Approved Students
+                    </span>
+
+                    <strong>
+                        {{ final_approved_count }}
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================= TABLE ================= -->
+
+        <div class="table-card">
+
+
+            <div class="table-header">
+
+                <h2>
+                    Approved Students & Projects
+                </h2>
+
+            </div>
+
+
+            {% if approved_projects %}
+
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>#</th>
+
+                                <th>Student</th>
+
+                                <th>Roll Number</th>
+
+                                <th>Project</th>
+
+                                <th>Domain</th>
+
+                                <th>Guide</th>
+
+                                <th>Status</th>
+
+                                <th>Details</th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+
+                            {% for proposal in approved_projects %}
+
+
+                                <tr>
+
+
+                                    <td>
+                                        {{ forloop.counter }}
+                                    </td>
+
+
+                                    <td>
+
+                                        <strong>
+
+                                            {{ proposal.student.get_full_name|default:proposal.student.username }}
+
+                                        </strong>
+
+                                        <br>
+
+                                        <small>
+
+                                            {{ proposal.student.username }}
+
+                                        </small>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {{ proposal.student.roll_number|default:"-" }}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {{ proposal.title }}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {{ proposal.domain|default:"-" }}
+
+                                    </td>
+
+
+                                    <td>
+
+                                        {% if proposal.guide %}
+
+                                            {{ proposal.guide.get_full_name|default:proposal.guide.username }}
+
+                                        {% else %}
+
+                                            Not Assigned
+
+                                        {% endif %}
+
+                                    </td>
+
+
+                                    <td>
+
+
+                                        {% if proposal.status == "COORDINATOR_APPROVED" %}
+
+                                            <span class="status approved">
+                                                Coordinator Approved
+                                            </span>
+
+
+                                        {% elif proposal.status == "GUIDE_ASSIGNED" %}
+
+                                            <span class="status guide">
+                                                Guide Assigned
+                                            </span>
+
+
+                                        {% elif proposal.status == "IN_PROGRESS" %}
+
+                                            <span class="status progress">
+                                                In Progress
+                                            </span>
+
+
+                                        {% elif proposal.status == "COMPLETED" %}
+
+                                            <span class="status completed">
+                                                Completed
+                                            </span>
+
+                                        {% endif %}
+
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <a
+                                            href="{% url 'coordinator:proposal_detail' proposal.id %}"
+                                            class="details-btn"
+                                        >
+
+                                            View Details
+
+                                        </a>
+
+                                    </td>
+
+
+                                </tr>
+
+
+                            {% endfor %}
+
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+            {% else %}
+
+
+                <!-- ================= EMPTY STATE ================= -->
+
+                <div class="empty-state">
+
+                    <h3>
+                        No Final Approved Students
+                    </h3>
+
+                    <p>
+
+                        Students will appear here after the Coordinator
+                        approves their project and a Guide is assigned.
+
+                    </p>
+
+                </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+    </main>
+
+</div>
+
+{% endblock %}

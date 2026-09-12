@@ -4,12 +4,13 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Guide Dashboard - SPMS</title>
+    <title>Guide Dashboard | SPMS</title>
+
 
     <style>
 
@@ -23,11 +24,15 @@
             box-sizing: border-box;
         }
 
+
         body {
             font-family: Arial, Helvetica, sans-serif;
-            background: #f4f7fb;
+
+            background: #f5f7fb;
+
             color: #1f2937;
         }
+
 
         a {
             text-decoration: none;
@@ -35,11 +40,10 @@
 
 
         /* =====================================================
-           DASHBOARD CONTAINER
+           LAYOUT
         ===================================================== */
 
         .dashboard-container {
-            display: flex;
             min-height: 100vh;
         }
 
@@ -49,75 +53,140 @@
         ===================================================== */
 
         .sidebar {
-            width: 260px;
-            min-height: 100vh;
-            background: #111827;
-            color: white;
-            padding: 25px 18px;
-
             position: fixed;
-            left: 0;
+
             top: 0;
+            left: 0;
             bottom: 0;
 
-            box-shadow: 3px 0 15px rgba(0, 0, 0, 0.12);
+            width: 250px;
+
+            background: #12161f;
+
+            color: #ffffff;
+
+            padding: 24px 16px;
+
+            overflow-y: auto;
+
+            z-index: 100;
         }
 
-        .sidebar h2 {
+
+        .sidebar-brand {
             text-align: center;
-            font-size: 30px;
-            letter-spacing: 1px;
-            margin-bottom: 5px;
+
+            margin-bottom: 4px;
         }
+
+
+        .sidebar-brand h2 {
+            color: #ffffff;
+
+            font-size: 25px;
+
+            font-weight: 700;
+
+            letter-spacing: 1px;
+        }
+
 
         .role-title {
             text-align: center;
-            color: #9ca3af;
-            font-size: 14px;
-            margin-bottom: 35px;
+
+            color: #94a3b8;
+
+            font-size: 12px;
+
+            margin-top: 5px;
+
+            margin-bottom: 28px;
         }
 
 
         /* =====================================================
-           SIDEBAR NAVIGATION
+           NAVIGATION
         ===================================================== */
 
         .sidebar nav {
             display: flex;
+
             flex-direction: column;
-            gap: 8px;
+
+            gap: 5px;
         }
+
 
         .sidebar nav a {
-            color: #d1d5db;
-            padding: 14px 16px;
-            border-radius: 8px;
+            display: flex;
 
-            font-size: 15px;
+            align-items: center;
+
+            gap: 11px;
+
+            padding: 11px 13px;
+
+            border-radius: 7px;
+
+            color: #cbd5e1;
+
+            font-size: 13px;
+
             font-weight: 500;
 
-            transition: all 0.2s ease;
+            transition: background 0.2s ease,
+                        color 0.2s ease;
         }
+
 
         .sidebar nav a:hover {
-            background: #374151;
-            color: white;
-            transform: translateX(4px);
+            background: #1f2937;
+
+            color: #ffffff;
         }
 
-        .sidebar nav a:first-child {
+
+        .sidebar nav a.active {
             background: #2563eb;
-            color: white;
+
+            color: #ffffff;
         }
 
-        .sidebar nav a:last-child {
-            margin-top: 25px;
-            background: #dc2626;
-            color: white;
+
+        .sidebar nav a.logout {
+            margin-top: 20px;
+
+            color: #fca5a5;
         }
 
-        .sidebar nav a:last-child:hover {
-            background: #b91c1c;
+
+        .sidebar nav a.logout:hover {
+            background: #7f1d1d;
+
+            color: #ffffff;
+        }
+
+
+        /* =====================================================
+           SVG ICONS
+        ===================================================== */
+
+        .nav-icon {
+            width: 18px;
+
+            height: 18px;
+
+            flex-shrink: 0;
+
+            stroke: currentColor;
+
+            fill: none;
+
+            stroke-width: 1.8;
+
+            stroke-linecap: round;
+
+            stroke-linejoin: round;
         }
 
 
@@ -126,9 +195,18 @@
         ===================================================== */
 
         .main-content {
-            margin-left: 260px;
-            width: calc(100% - 260px);
-            padding: 30px;
+            margin-left: 250px;
+
+            min-height: 100vh;
+
+            padding: 28px;
+        }
+
+
+        .content-wrapper {
+            max-width: 1400px;
+
+            margin: 0 auto;
         }
 
 
@@ -137,30 +215,38 @@
         ===================================================== */
 
         .dashboard-header {
-            background: white;
-            padding: 28px 30px;
+            background: #ffffff;
 
-            border-radius: 14px;
+            border: 1px solid #e5e7eb;
 
-            margin-bottom: 25px;
+            border-radius: 10px;
 
-            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.06);
+            padding: 23px 25px;
 
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            margin-bottom: 22px;
+
+            box-shadow:
+                0 1px 2px rgba(15, 23, 42, 0.03);
         }
+
 
         .dashboard-header h1 {
-            font-size: 29px;
             color: #111827;
-            margin-bottom: 8px;
+
+            font-size: 24px;
+
+            font-weight: 700;
+
+            margin-bottom: 6px;
         }
 
+
         .dashboard-header p {
-            color: #6b7280;
-            font-size: 15px;
+            color: #64748b;
+
+            font-size: 13px;
         }
+
 
         .dashboard-header strong {
             color: #2563eb;
@@ -176,71 +262,67 @@
 
             grid-template-columns: repeat(4, 1fr);
 
-            gap: 20px;
+            gap: 16px;
 
-            margin-bottom: 30px;
+            margin-bottom: 22px;
         }
+
 
         .stat-card {
-            background: white;
+            background: #ffffff;
 
-            padding: 25px;
+            border: 1px solid #e5e7eb;
 
-            border-radius: 12px;
+            border-radius: 9px;
 
-            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.06);
-
-            border-left: 5px solid #2563eb;
-
-            transition: all 0.2s ease;
-        }
-
-        .stat-card:hover {
-            transform: translateY(-4px);
+            padding: 20px;
 
             box-shadow:
-                0 7px 20px rgba(0, 0, 0, 0.10);
+                0 1px 2px rgba(15, 23, 42, 0.03);
+
+            border-left: 4px solid #2563eb;
         }
+
 
         .stat-card h3 {
-            font-size: 14px;
-            color: #6b7280;
+            color: #64748b;
 
-            margin-bottom: 12px;
+            font-size: 12px;
 
             font-weight: 600;
+
+            margin-bottom: 9px;
         }
 
+
         .stat-card p {
-            font-size: 32px;
-
-            font-weight: bold;
-
             color: #111827;
+
+            font-size: 27px;
+
+            font-weight: 700;
         }
 
 
         /* =====================================================
-           DASHBOARD SECTION
+           SECTIONS
         ===================================================== */
 
         .dashboard-section {
-            background: white;
+            background: #ffffff;
 
-            padding: 25px;
+            border: 1px solid #e5e7eb;
 
-            border-radius: 12px;
+            border-radius: 10px;
 
-            margin-bottom: 25px;
+            padding: 22px;
+
+            margin-bottom: 22px;
 
             box-shadow:
-                0 3px 15px rgba(0, 0, 0, 0.06);
+                0 1px 2px rgba(15, 23, 42, 0.03);
         }
 
-
-        /* =====================================================
-           SECTION HEADER
-        ===================================================== */
 
         .section-header {
             display: flex;
@@ -249,29 +331,42 @@
 
             align-items: center;
 
-            margin-bottom: 20px;
+            gap: 15px;
+
+            margin-bottom: 18px;
         }
 
-        .section-header h2 {
-            font-size: 21px;
+
+        .section-header h2,
+        .dashboard-section > h2 {
             color: #111827;
+
+            font-size: 17px;
+
+            font-weight: 700;
         }
+
 
         .section-header a {
+            display: inline-flex;
+
+            align-items: center;
+
+            padding: 8px 12px;
+
+            border-radius: 6px;
+
             background: #2563eb;
 
-            color: white;
+            color: #ffffff;
 
-            padding: 9px 16px;
+            font-size: 11px;
 
-            border-radius: 7px;
+            font-weight: 600;
 
-            font-size: 14px;
-
-            font-weight: 500;
-
-            transition: 0.2s ease;
+            transition: background 0.2s ease;
         }
+
 
         .section-header a:hover {
             background: #1d4ed8;
@@ -284,61 +379,141 @@
 
         .table-container {
             width: 100%;
+
             overflow-x: auto;
         }
+
 
         table {
             width: 100%;
 
-            border-collapse: collapse;
+            min-width: 760px;
 
-            min-width: 750px;
+            border-collapse: collapse;
         }
+
 
         thead {
-            background: #f3f4f6;
+            background: #f8fafc;
         }
 
+
         th {
-            padding: 14px;
+            padding: 12px 13px;
+
+            border-bottom: 1px solid #e5e7eb;
+
+            color: #475569;
 
             text-align: left;
 
-            font-size: 13px;
+            font-size: 10px;
 
-            color: #374151;
+            font-weight: 700;
 
-            font-weight: 600;
+            text-transform: uppercase;
 
-            border-bottom: 1px solid #e5e7eb;
+            letter-spacing: 0.3px;
+
+            white-space: nowrap;
         }
+
 
         td {
-            padding: 15px 14px;
+            padding: 13px;
 
-            font-size: 14px;
+            border-bottom: 1px solid #eef0f3;
 
-            color: #4b5563;
+            color: #475569;
 
-            border-bottom: 1px solid #e5e7eb;
+            font-size: 12px;
+
+            vertical-align: middle;
         }
 
-        tbody tr {
-            transition: 0.2s ease;
+
+        tbody tr:last-child td {
+            border-bottom: none;
         }
+
 
         tbody tr:hover {
             background: #f8fafc;
         }
 
+
         td strong {
-            color: #111827;
+            color: #1e293b;
+
+            font-weight: 600;
         }
 
-        td small {
-            color: #9ca3af;
 
-            font-size: 12px;
+        td small {
+            display: block;
+
+            margin-top: 3px;
+
+            color: #94a3b8;
+
+            font-size: 10px;
+        }
+
+
+        /* =====================================================
+           STATUS
+        ===================================================== */
+
+        .status {
+            display: inline-flex;
+
+            align-items: center;
+
+            padding: 5px 9px;
+
+            border-radius: 6px;
+
+            font-size: 10px;
+
+            font-weight: 600;
+
+            white-space: nowrap;
+        }
+
+
+        .status-guide {
+            background: #eff6ff;
+
+            border: 1px solid #dbeafe;
+
+            color: #1d4ed8;
+        }
+
+
+        .status-progress {
+            background: #fff7ed;
+
+            border: 1px solid #fed7aa;
+
+            color: #c2410c;
+        }
+
+
+        .status-completed {
+            background: #ecfdf5;
+
+            border: 1px solid #bbf7d0;
+
+            color: #15803d;
+        }
+
+
+        .status-other {
+            background: #f1f5f9;
+
+            border: 1px solid #e2e8f0;
+
+            color: #475569;
         }
 
 
@@ -346,26 +521,33 @@
            VIEW BUTTON
         ===================================================== */
 
-        td a {
-            display: inline-block;
+        .view-btn {
+            display: inline-flex;
 
-            background: #2563eb;
+            align-items: center;
 
-            color: white;
+            justify-content: center;
 
-            padding: 7px 14px;
+            padding: 7px 12px;
 
             border-radius: 6px;
 
-            font-size: 13px;
+            background: #2563eb;
 
-            font-weight: 500;
+            color: #ffffff;
 
-            transition: 0.2s ease;
+            font-size: 11px;
+
+            font-weight: 600;
+
+            transition: background 0.2s ease;
         }
 
-        td a:hover {
+
+        .view-btn:hover {
             background: #1d4ed8;
+
+            color: #ffffff;
         }
 
 
@@ -374,29 +556,59 @@
         ===================================================== */
 
         .empty-state {
+            padding: 50px 20px;
+
             text-align: center;
 
-            padding: 55px 20px;
+            border: 1px dashed #cbd5e1;
 
-            border: 2px dashed #d1d5db;
+            border-radius: 8px;
 
-            border-radius: 10px;
-
-            background: #f9fafb;
+            background: #f8fafc;
         }
+
+
+        .empty-icon {
+            width: 44px;
+
+            height: 44px;
+
+            margin: 0 auto 13px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 50%;
+
+            background: #eff6ff;
+
+            color: #2563eb;
+        }
+
+
+        .empty-icon svg {
+            width: 21px;
+
+            height: 21px;
+        }
+
 
         .empty-state h3 {
-            font-size: 20px;
+            color: #334155;
 
-            color: #374151;
+            font-size: 15px;
 
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
 
-        .empty-state p {
-            font-size: 14px;
 
-            color: #6b7280;
+        .empty-state p {
+            color: #64748b;
+
+            font-size: 12px;
         }
 
 
@@ -405,47 +617,54 @@
         ===================================================== */
 
         .dashboard-section > h2 {
-            font-size: 21px;
-
-            color: #111827;
-
-            margin-bottom: 20px;
+            margin-bottom: 17px;
         }
+
 
         .quick-actions {
             display: grid;
 
             grid-template-columns: repeat(4, 1fr);
 
-            gap: 15px;
+            gap: 12px;
         }
 
+
         .quick-actions a {
-            display: block;
+            display: flex;
 
-            text-align: center;
+            align-items: center;
 
-            background: #f3f4f6;
+            justify-content: center;
 
-            color: #1f2937;
+            min-height: 48px;
 
-            padding: 16px;
+            padding: 12px;
 
-            border-radius: 8px;
+            border: 1px solid #e2e8f0;
 
-            font-size: 14px;
+            border-radius: 7px;
+
+            background: #f8fafc;
+
+            color: #334155;
+
+            font-size: 12px;
 
             font-weight: 600;
 
-            transition: all 0.2s ease;
+            transition: background 0.2s ease,
+                        border-color 0.2s ease,
+                        color 0.2s ease;
         }
 
+
         .quick-actions a:hover {
-            background: #2563eb;
+            background: #eff6ff;
 
-            color: white;
+            border-color: #bfdbfe;
 
-            transform: translateY(-3px);
+            color: #2563eb;
         }
 
 
@@ -459,9 +678,11 @@
                 grid-template-columns: repeat(2, 1fr);
             }
 
+
             .quick-actions {
                 grid-template-columns: repeat(2, 1fr);
             }
+
         }
 
 
@@ -471,10 +692,6 @@
 
         @media (max-width: 768px) {
 
-            .dashboard-container {
-                display: block;
-            }
-
             .sidebar {
                 position: relative;
 
@@ -482,8 +699,9 @@
 
                 min-height: auto;
 
-                padding: 20px;
+                padding: 18px;
             }
+
 
             .sidebar nav {
                 flex-direction: row;
@@ -491,47 +709,47 @@
                 flex-wrap: wrap;
             }
 
+
             .sidebar nav a {
                 flex: 1 1 45%;
 
-                text-align: center;
+                justify-content: center;
             }
 
-            .sidebar nav a:last-child {
+
+            .sidebar nav a.logout {
                 margin-top: 0;
             }
+
 
             .main-content {
                 margin-left: 0;
 
-                width: 100%;
+                padding: 18px 14px;
+            }
 
+
+            .dashboard-header {
                 padding: 20px;
             }
 
-            .dashboard-header {
-                padding: 22px;
-            }
-
-            .dashboard-header h1 {
-                font-size: 24px;
-            }
 
             .stats-grid {
                 grid-template-columns: 1fr;
             }
 
+
             .quick-actions {
                 grid-template-columns: 1fr;
             }
+
 
             .section-header {
                 flex-direction: column;
 
                 align-items: flex-start;
-
-                gap: 12px;
             }
+
         }
 
 
@@ -545,86 +763,232 @@
                 padding: 12px;
             }
 
+
             .sidebar nav {
                 flex-direction: column;
             }
+
 
             .sidebar nav a {
                 width: 100%;
             }
 
-            .dashboard-header {
-                padding: 18px;
-            }
 
             .dashboard-header h1 {
                 font-size: 21px;
             }
 
+
             .dashboard-section {
-                padding: 18px;
+                padding: 17px;
             }
 
-            .stat-card {
-                padding: 20px;
-            }
         }
 
     </style>
 
 </head>
 
+
 <body>
+
 
 <div class="dashboard-container">
 
-    <!-- SIDEBAR -->
+
+    <!-- =====================================================
+         SIDEBAR
+    ===================================================== -->
+
     <aside class="sidebar">
 
-        <h2>SPMS</h2>
 
-        <p class="role-title">Guide Panel</p>
+        <div class="sidebar-brand">
+
+            <h2>
+                SPMS
+            </h2>
+
+        </div>
+
+
+        <p class="role-title">
+            Guide Panel
+        </p>
+
 
         <nav>
 
-            <a href="{% url 'accounts:guide_dashboard' %}">
+
+            <!-- Dashboard -->
+
+            <a
+                href="{% url 'accounts:guide_dashboard' %}"
+                class="active"
+            >
+
+                <svg
+                    class="nav-icon"
+                    viewBox="0 0 24 24"
+                >
+
+                    <rect x="3" y="3" width="7" height="7"></rect>
+
+                    <rect x="14" y="3" width="7" height="7"></rect>
+
+                    <rect x="3" y="14" width="7" height="7"></rect>
+
+                    <rect x="14" y="14" width="7" height="7"></rect>
+
+                </svg>
+
                 Dashboard
+
             </a>
 
-            <a href="{% url 'accounts:guide_students' %}">
+
+            <!-- Students -->
+
+            <a
+                href="{% url 'accounts:guide_students' %}"
+            >
+
+                <svg
+                    class="nav-icon"
+                    viewBox="0 0 24 24"
+                >
+
+                    <circle cx="9" cy="8" r="3"></circle>
+
+                    <path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6"></path>
+
+                    <path d="M16 11c2.8 0 5 2.2 5 5"></path>
+
+                    <path d="M16 5.5a3 3 0 0 1 0 5.5"></path>
+
+                </svg>
+
                 My Students
+
             </a>
 
+
+            <!-- Progress -->
+
             <a href="#">
+
+                <svg
+                    class="nav-icon"
+                    viewBox="0 0 24 24"
+                >
+
+                    <path d="M4 4h16v16H4z"></path>
+
+                    <path d="M8 8h8"></path>
+
+                    <path d="M8 12h8"></path>
+
+                    <path d="M8 16h5"></path>
+
+                </svg>
+
                 Progress Reports
+
             </a>
 
+
+            <!-- Feedback -->
+
             <a href="#">
+
+                <svg
+                    class="nav-icon"
+                    viewBox="0 0 24 24"
+                >
+
+                    <path d="M4 5h16v11H8l-4 4z"></path>
+
+                    <path d="M8 9h8"></path>
+
+                    <path d="M8 12h5"></path>
+
+                </svg>
+
                 Feedback
+
             </a>
+
+
+            <!-- Completed Projects -->
 
             <a href="#">
+
+                <svg
+                    class="nav-icon"
+                    viewBox="0 0 24 24"
+                >
+
+                    <path d="M4 7h5l2 2h9v10H4z"></path>
+
+                    <path d="m9 14 2 2 4-4"></path>
+
+                </svg>
+
                 Completed Projects
+
             </a>
 
-            <a href="{% url 'accounts:logout' %}">
+
+            <!-- Logout -->
+
+            <a
+                href="{% url 'accounts:logout' %}"
+                class="logout"
+            >
+
+                <svg
+                    class="nav-icon"
+                    viewBox="0 0 24 24"
+                >
+
+                    <path d="M9 4H4v16h5"></path>
+
+                    <path d="M14 8l4 4-4 4"></path>
+
+                    <path d="M8 12h10"></path>
+
+                </svg>
+
                 Logout
+
             </a>
+
 
         </nav>
 
     </aside>
 
 
-    <!-- MAIN CONTENT -->
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ===================================================== -->
+
     <main class="main-content">
 
-        <!-- HEADER -->
-        <div class="dashboard-header">
 
-            <div>
+        <div class="content-wrapper">
 
-                <h1>Guide Dashboard</h1>
+
+            <!-- =================================================
+                 HEADER
+            ================================================= -->
+
+            <div class="dashboard-header">
+
+                <h1>
+                    Guide Dashboard
+                </h1>
 
                 <p>
                     Welcome,
@@ -635,200 +999,345 @@
 
             </div>
 
-        </div>
 
 
-        <!-- STAT CARDS -->
-        <div class="stats-grid">
+            <!-- =================================================
+                 STATISTICS
+            ================================================= -->
 
-            <div class="stat-card">
+            <div class="stats-grid">
 
-                <h3>Assigned Students</h3>
 
-                <p>
-                    {{ student_count }}
-                </p>
+                <div class="stat-card">
 
-            </div>
-
-
-            <div class="stat-card">
-
-                <h3>Assigned Projects</h3>
-
-                <p>
-                    {{ project_count }}
-                </p>
-
-            </div>
-
-
-            <div class="stat-card">
-
-                <h3>Pending Reviews</h3>
-
-                <p>
-                    0
-                </p>
-
-            </div>
-
-
-            <div class="stat-card">
-
-                <h3>Completed Projects</h3>
-
-                <p>
-                    0
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <!-- ASSIGNED PROJECTS -->
-        <section class="dashboard-section">
-
-            <div class="section-header">
-
-                <h2>My Assigned Projects</h2>
-
-                <a href="{% url 'accounts:guide_students' %}">
-                    View All Students
-                </a>
-
-            </div>
-
-
-            {% if assigned_projects %}
-
-                <div class="table-container">
-
-                    <table>
-
-                        <thead>
-
-                            <tr>
-
-                                <th>#</th>
-
-                                <th>Student</th>
-
-                                <th>Project Title</th>
-
-                                <th>Department</th>
-
-                                <th>Status</th>
-
-                                <th>Action</th>
-
-                            </tr>
-
-                        </thead>
-
-
-                        <tbody>
-
-                            {% for project in assigned_projects %}
-
-                                <tr>
-
-                                    <td>
-                                        {{ forloop.counter }}
-                                    </td>
-
-                                    <td>
-
-                                        <strong>
-                                            {{ project.student.get_full_name|default:project.student.username }}
-                                        </strong>
-
-                                        <br>
-
-                                        <small>
-                                            {{ project.student.username }}
-                                        </small>
-
-                                    </td>
-
-                                    <td>
-                                        {{ project.title }}
-                                    </td>
-
-                                    <td>
-                                        {{ project.student.department|default:"-" }}
-                                    </td>
-
-                                    <td>
-                                        {{ project.get_status_display }}
-                                    </td>
-
-                                    <td>
-
-                                        <a href="#">
-                                            View
-                                        </a>
-
-                                    </td>
-
-                                </tr>
-
-                            {% endfor %}
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            {% else %}
-
-                <div class="empty-state">
-
-                    <h3>No Projects Assigned</h3>
+                    <h3>
+                        Assigned Students
+                    </h3>
 
                     <p>
-                        You currently do not have any projects assigned to you.
+                        {{ student_count }}
                     </p>
 
                 </div>
 
-            {% endif %}
 
-        </section>
+                <div class="stat-card">
+
+                    <h3>
+                        Assigned Projects
+                    </h3>
+
+                    <p>
+                        {{ project_count }}
+                    </p>
+
+                </div>
 
 
-        <!-- QUICK ACTIONS -->
-        <section class="dashboard-section">
+                <div class="stat-card">
 
-            <h2>Quick Actions</h2>
+                    <h3>
+                        Pending Reviews
+                    </h3>
 
-            <div class="quick-actions">
+                    <p>
+                        0
+                    </p>
 
-                <a href="{% url 'accounts:guide_students' %}">
-                    View Students
-                </a>
+                </div>
 
-                <a href="#">
-                    Review Progress
-                </a>
 
-                <a href="#">
-                    Give Feedback
-                </a>
+                <div class="stat-card">
 
-                <a href="#">
-                    View Projects
-                </a>
+                    <h3>
+                        Completed Projects
+                    </h3>
+
+                    <p>
+                        0
+                    </p>
+
+                </div>
+
 
             </div>
 
-        </section>
+
+
+            <!-- =================================================
+                 ASSIGNED PROJECTS
+            ================================================= -->
+
+            <section class="dashboard-section">
+
+
+                <div class="section-header">
+
+                    <h2>
+                        My Assigned Projects
+                    </h2>
+
+
+                    <a
+                        href="{% url 'accounts:guide_students' %}"
+                    >
+                        View All Students
+                    </a>
+
+                </div>
+
+
+
+                {% if assigned_projects %}
+
+
+                    <div class="table-container">
+
+
+                        <table>
+
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        #
+                                    </th>
+
+                                    <th>
+                                        Student
+                                    </th>
+
+                                    <th>
+                                        Project Title
+                                    </th>
+
+                                    <th>
+                                        Department
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                    <th>
+                                        Action
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+
+                            <tbody>
+
+
+                                {% for project in assigned_projects %}
+
+
+                                    <tr>
+
+
+                                        <td>
+                                            {{ forloop.counter }}
+                                        </td>
+
+
+                                        <td>
+
+                                            <strong>
+                                                {{ project.student.get_full_name|default:project.student.username }}
+                                            </strong>
+
+                                            <small>
+                                                {{ project.student.username }}
+                                            </small>
+
+                                        </td>
+
+
+                                        <td>
+
+                                            <strong>
+                                                {{ project.title }}
+                                            </strong>
+
+                                        </td>
+
+
+                                        <td>
+
+                                            {{ project.student.department|default:"-" }}
+
+                                        </td>
+
+
+                                        <td>
+
+
+                                            {% if project.status == "GUIDE_ASSIGNED" %}
+
+                                                <span class="status status-guide">
+                                                    Guide Assigned
+                                                </span>
+
+
+                                            {% elif project.status == "IN_PROGRESS" %}
+
+                                                <span class="status status-progress">
+                                                    In Progress
+                                                </span>
+
+
+                                            {% elif project.status == "COMPLETED" %}
+
+                                                <span class="status status-completed">
+                                                    Completed
+                                                </span>
+
+
+                                            {% else %}
+
+                                                <span class="status status-other">
+                                                    {{ project.get_status_display }}
+                                                </span>
+
+                                            {% endif %}
+
+
+                                        </td>
+
+
+                                        <td>
+
+                                            <a
+                                                href="#"
+                                                class="view-btn"
+                                            >
+                                                View
+                                            </a>
+
+                                        </td>
+
+
+                                    </tr>
+
+
+                                {% endfor %}
+
+
+                            </tbody>
+
+
+                        </table>
+
+
+                    </div>
+
+
+                {% else %}
+
+
+                    <div class="empty-state">
+
+
+                        <div class="empty-icon">
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+
+                                <path d="M4 4h16v16H4z"></path>
+
+                                <path d="M8 8h8"></path>
+
+                                <path d="M8 12h8"></path>
+
+                                <path d="M8 16h5"></path>
+
+                            </svg>
+
+                        </div>
+
+
+                        <h3>
+                            No Projects Assigned
+                        </h3>
+
+
+                        <p>
+                            You currently do not have any projects assigned to you.
+                        </p>
+
+
+                    </div>
+
+
+                {% endif %}
+
+
+            </section>
+
+
+
+            <!-- =================================================
+                 QUICK ACTIONS
+            ================================================= -->
+
+            <section class="dashboard-section">
+
+
+                <h2>
+                    Quick Actions
+                </h2>
+
+
+                <div class="quick-actions">
+
+
+                    <a
+                        href="{% url 'accounts:guide_students' %}"
+                    >
+                        View Students
+                    </a>
+
+
+                    <a href="#">
+                        Review Progress
+                    </a>
+
+
+                    <a href="#">
+                        Give Feedback
+                    </a>
+
+
+                    <a href="#">
+                        View Projects
+                    </a>
+
+
+                </div>
+
+
+            </section>
+
+
+        </div>
+
 
     </main>
 
+
 </div>
+
 
 </body>
 

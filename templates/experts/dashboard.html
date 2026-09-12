@@ -16,7 +16,7 @@ Expert Dashboard | SPMS
 
     body {
         margin: 0;
-        background: #f4f6f9;
+        background: #f5f7fb;
         font-family: Arial, Helvetica, sans-serif;
     }
 
@@ -27,13 +27,15 @@ Expert Dashboard | SPMS
 
     .expert-sidebar {
         position: fixed;
+
         top: 0;
         left: 0;
+
         width: 250px;
         height: 100vh;
 
         background: #12161f;
-        color: white;
+        color: #ffffff;
 
         display: flex;
         flex-direction: column;
@@ -41,6 +43,10 @@ Expert Dashboard | SPMS
         z-index: 1000;
     }
 
+
+    /* =====================================================
+       SIDEBAR LOGO
+    ===================================================== */
 
     .sidebar-logo {
         height: 70px;
@@ -57,20 +63,20 @@ Expert Dashboard | SPMS
     .sidebar-logo h2 {
         margin: 0;
 
+        color: #ffffff;
+
         font-size: 22px;
         font-weight: 700;
-
-        color: white;
     }
 
 
     .sidebar-logo span {
-        color: #1d72f3;
+        color: #2563eb;
     }
 
 
     /* =====================================================
-       EXPERT PROFILE
+       PROFILE
     ===================================================== */
 
     .expert-profile {
@@ -81,50 +87,53 @@ Expert Dashboard | SPMS
 
 
     .profile-icon {
-        width: 50px;
-        height: 50px;
+        width: 48px;
+        height: 48px;
 
-        border-radius: 50%;
-
-        background: #1d72f3;
+        margin-bottom: 12px;
 
         display: flex;
         align-items: center;
         justify-content: center;
 
-        font-size: 20px;
-        font-weight: 700;
+        background: #2563eb;
 
-        margin-bottom: 12px;
+        border-radius: 50%;
+
+        color: #ffffff;
+
+        font-size: 17px;
+        font-weight: 700;
     }
 
 
     .expert-profile h3 {
         margin: 0;
 
-        font-size: 16px;
+        color: #ffffff;
 
-        color: white;
+        font-size: 15px;
+        font-weight: 600;
     }
 
 
     .expert-profile p {
         margin: 5px 0 0;
 
-        font-size: 13px;
-
         color: #9ca3af;
+
+        font-size: 12px;
     }
 
 
     /* =====================================================
-       SIDEBAR MENU
+       MENU
     ===================================================== */
 
     .sidebar-menu {
-        padding: 20px 12px;
-
         flex: 1;
+
+        padding: 20px 12px;
     }
 
 
@@ -133,13 +142,15 @@ Expert Dashboard | SPMS
 
         margin-bottom: 10px;
 
-        font-size: 11px;
+        color: #6b7280;
 
-        text-transform: uppercase;
+        font-size: 10px;
+
+        font-weight: 600;
 
         letter-spacing: 1px;
 
-        color: #6b7280;
+        text-transform: uppercase;
     }
 
 
@@ -149,47 +160,72 @@ Expert Dashboard | SPMS
 
         gap: 12px;
 
-        padding: 12px 14px;
+        padding: 11px 13px;
 
         margin-bottom: 5px;
 
         border-radius: 7px;
 
-        color: #d1d5db;
+        color: #cbd5e1;
 
         text-decoration: none;
 
-        font-size: 14px;
+        font-size: 13px;
 
-        transition: 0.2s;
+        transition:
+            background 0.2s ease,
+            color 0.2s ease;
     }
 
 
     .sidebar-menu a:hover {
         background: #1d2531;
 
-        color: white;
+        color: #ffffff;
     }
 
 
     .sidebar-menu a.active {
-        background: #1d72f3;
+        background: #2563eb;
 
-        color: white;
-    }
-
-
-    .menu-icon {
-        width: 20px;
-
-        text-align: center;
-
-        font-size: 16px;
+        color: #ffffff;
     }
 
 
     /* =====================================================
-       LOGOUT
+       MENU ICON
+    ===================================================== */
+
+    .menu-icon {
+        width: 19px;
+        height: 19px;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        flex-shrink: 0;
+    }
+
+
+    .menu-icon svg {
+        width: 17px;
+        height: 17px;
+
+        fill: none;
+
+        stroke: currentColor;
+
+        stroke-width: 1.8;
+
+        stroke-linecap: round;
+
+        stroke-linejoin: round;
+    }
+
+
+    /* =====================================================
+       SIDEBAR BOTTOM
     ===================================================== */
 
     .sidebar-bottom {
@@ -207,7 +243,7 @@ Expert Dashboard | SPMS
 
         gap: 12px;
 
-        padding: 12px 14px;
+        padding: 11px 13px;
 
         border-radius: 7px;
 
@@ -215,9 +251,11 @@ Expert Dashboard | SPMS
 
         text-decoration: none;
 
-        font-size: 14px;
+        font-size: 13px;
 
-        transition: 0.2s;
+        transition:
+            background 0.2s ease,
+            color 0.2s ease;
     }
 
 
@@ -249,34 +287,36 @@ Expert Dashboard | SPMS
 
 
     /* =====================================================
-       HEADER
+       PAGE HEADER
     ===================================================== */
 
     .page-header {
-        margin-bottom: 30px;
+        margin-bottom: 24px;
     }
 
 
     .page-header h1 {
         margin: 0;
 
-        font-size: 30px;
+        color: #111827;
 
-        color: #1f2937;
+        font-size: 25px;
+
+        font-weight: 700;
     }
 
 
     .page-header p {
-        margin-top: 8px;
+        margin: 6px 0 0;
 
-        color: #6b7280;
+        color: #64748b;
 
-        font-size: 15px;
+        font-size: 13px;
     }
 
 
     /* =====================================================
-       STAT CARDS
+       STATISTICS
     ===================================================== */
 
     .stats-grid {
@@ -284,61 +324,65 @@ Expert Dashboard | SPMS
 
         grid-template-columns: repeat(4, 1fr);
 
-        gap: 20px;
+        gap: 16px;
 
-        margin-bottom: 30px;
+        margin-bottom: 24px;
     }
 
 
     .stat-card {
-        background: white;
+        padding: 18px;
 
-        border-radius: 12px;
-
-        padding: 22px;
-
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        background: #ffffff;
 
         border: 1px solid #e5e7eb;
+
+        border-radius: 10px;
+
+        box-shadow:
+            0 1px 2px rgba(15, 23, 42, 0.03);
     }
 
 
     .stat-card h3 {
         margin: 0;
 
-        font-size: 14px;
+        color: #64748b;
 
-        color: #6b7280;
+        font-size: 12px;
 
         font-weight: 500;
+
+        line-height: 1.5;
     }
 
 
     .stat-number {
-        margin-top: 10px;
-
-        font-size: 32px;
-
-        font-weight: 700;
+        margin-top: 8px;
 
         color: #111827;
+
+        font-size: 28px;
+
+        font-weight: 700;
     }
 
 
     /* =====================================================
-       PROPOSAL CARD
+       CONTENT CARD
     ===================================================== */
 
     .content-card {
-        background: white;
-
-        border-radius: 12px;
-
-        padding: 25px;
-
-        box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+        background: #ffffff;
 
         border: 1px solid #e5e7eb;
+
+        border-radius: 10px;
+
+        box-shadow:
+            0 1px 2px rgba(15, 23, 42, 0.03);
+
+        overflow: hidden;
     }
 
 
@@ -349,16 +393,20 @@ Expert Dashboard | SPMS
 
         align-items: center;
 
-        margin-bottom: 20px;
+        padding: 17px 20px;
+
+        border-bottom: 1px solid #e5e7eb;
     }
 
 
     .content-header h2 {
         margin: 0;
 
-        font-size: 22px;
+        color: #111827;
 
-        color: #1f2937;
+        font-size: 16px;
+
+        font-weight: 600;
     }
 
 
@@ -367,15 +415,19 @@ Expert Dashboard | SPMS
     ===================================================== */
 
     .btn {
-        display: inline-block;
+        display: inline-flex;
 
-        padding: 9px 15px;
+        align-items: center;
 
-        border-radius: 7px;
+        justify-content: center;
+
+        padding: 8px 13px;
+
+        border-radius: 6px;
 
         text-decoration: none;
 
-        font-size: 13px;
+        font-size: 11px;
 
         font-weight: 600;
 
@@ -386,14 +438,16 @@ Expert Dashboard | SPMS
 
 
     .btn-primary {
-        background: #1d72f3;
+        background: #2563eb;
 
-        color: white;
+        color: #ffffff;
     }
 
 
     .btn-primary:hover {
-        background: #155dcc;
+        background: #1d4ed8;
+
+        color: #ffffff;
     }
 
 
@@ -402,45 +456,60 @@ Expert Dashboard | SPMS
     ===================================================== */
 
     .table-wrapper {
+        width: 100%;
+
         overflow-x: auto;
     }
 
 
-    table {
+    .proposal-table {
         width: 100%;
+
+        min-width: 800px;
 
         border-collapse: collapse;
     }
 
 
-    th {
+    .proposal-table th {
+        padding: 13px 15px;
+
         background: #f8fafc;
 
-        padding: 14px;
+        border-bottom: 1px solid #e5e7eb;
+
+        color: #475569;
 
         text-align: left;
 
+        font-size: 11px;
+
+        font-weight: 600;
+
+        white-space: nowrap;
+    }
+
+
+    .proposal-table td {
+        padding: 14px 15px;
+
+        border-bottom: 1px solid #eef0f3;
+
+        color: #334155;
+
         font-size: 13px;
 
-        color: #4b5563;
-
-        border-bottom: 1px solid #e5e7eb;
+        vertical-align: middle;
     }
 
 
-    td {
-        padding: 15px 14px;
-
-        border-bottom: 1px solid #e5e7eb;
-
-        color: #374151;
-
-        font-size: 14px;
+    .proposal-table tbody tr:hover {
+        background: #fafcff;
     }
 
 
-    tr:hover {
-        background: #f9fafb;
+    .proposal-table tbody tr:last-child td {
+        border-bottom: none;
     }
 
 
@@ -449,15 +518,19 @@ Expert Dashboard | SPMS
     ===================================================== */
 
     .status {
-        display: inline-block;
+        display: inline-flex;
 
-        padding: 6px 10px;
+        align-items: center;
 
-        border-radius: 20px;
+        padding: 5px 9px;
 
-        font-size: 12px;
+        border-radius: 6px;
+
+        font-size: 10px;
 
         font-weight: 600;
+
+        white-space: nowrap;
     }
 
 
@@ -501,18 +574,27 @@ Expert Dashboard | SPMS
     ===================================================== */
 
     .empty-state {
+        padding: 55px 20px;
+
         text-align: center;
 
-        padding: 50px 20px;
-
-        color: #6b7280;
+        color: #64748b;
     }
 
 
     .empty-state h3 {
-        margin-bottom: 8px;
+        margin: 0 0 7px;
 
-        color: #374151;
+        color: #334155;
+
+        font-size: 16px;
+    }
+
+
+    .empty-state p {
+        margin: 0;
+
+        font-size: 13px;
     }
 
 
@@ -543,17 +625,17 @@ Expert Dashboard | SPMS
         }
 
 
-        .stats-grid {
-            grid-template-columns: 1fr;
-        }
-
-
         .content-header {
             flex-direction: column;
 
             align-items: flex-start;
 
-            gap: 15px;
+            gap: 12px;
+        }
+
+
+        .stats-grid {
+            grid-template-columns: 1fr;
         }
 
     }
@@ -583,6 +665,7 @@ Expert Dashboard | SPMS
 {% endblock %}
 
 
+
 {% block content %}
 
 
@@ -604,7 +687,8 @@ Expert Dashboard | SPMS
     </div>
 
 
-    <!-- EXPERT PROFILE -->
+
+    <!-- PROFILE -->
 
     <div class="expert-profile">
 
@@ -645,17 +729,17 @@ Expert Dashboard | SPMS
     </div>
 
 
+
     <!-- MENU -->
 
     <div class="sidebar-menu">
-
 
         <div class="menu-title">
             Expert Menu
         </div>
 
 
-        <!-- Dashboard -->
+        <!-- DASHBOARD -->
 
         <a
             href="{% url 'experts:dashboard' %}"
@@ -663,7 +747,19 @@ Expert Dashboard | SPMS
         >
 
             <span class="menu-icon">
-                🏠
+
+                <svg viewBox="0 0 24 24">
+
+                    <rect x="3" y="3" width="7" height="7"></rect>
+
+                    <rect x="14" y="3" width="7" height="7"></rect>
+
+                    <rect x="3" y="14" width="7" height="7"></rect>
+
+                    <rect x="14" y="14" width="7" height="7"></rect>
+
+                </svg>
+
             </span>
 
             Dashboard
@@ -671,14 +767,27 @@ Expert Dashboard | SPMS
         </a>
 
 
-        <!-- My Proposals -->
+
+        <!-- MY PROPOSALS -->
 
         <a
             href="{% url 'experts:my_proposals' %}"
         >
 
             <span class="menu-icon">
-                📋
+
+                <svg viewBox="0 0 24 24">
+
+                    <rect x="5" y="3" width="14" height="18" rx="2"></rect>
+
+                    <line x1="8" y1="8" x2="16" y2="8"></line>
+
+                    <line x1="8" y1="12" x2="16" y2="12"></line>
+
+                    <line x1="8" y1="16" x2="13" y2="16"></line>
+
+                </svg>
+
             </span>
 
             My Proposals
@@ -687,6 +796,7 @@ Expert Dashboard | SPMS
 
 
     </div>
+
 
 
     <!-- LOGOUT -->
@@ -699,7 +809,17 @@ Expert Dashboard | SPMS
         >
 
             <span class="menu-icon">
-                🚪
+
+                <svg viewBox="0 0 24 24">
+
+                    <path d="M10 17l5-5-5-5"></path>
+
+                    <path d="M15 12H3"></path>
+
+                    <path d="M21 3v18"></path>
+
+                </svg>
+
             </span>
 
             Logout
@@ -717,7 +837,6 @@ Expert Dashboard | SPMS
 ===================================================== -->
 
 <main class="expert-main">
-
 
     <div class="expert-container">
 
@@ -747,8 +866,6 @@ Expert Dashboard | SPMS
         <div class="stats-grid">
 
 
-            <!-- TOTAL ASSIGNED -->
-
             <div class="stat-card">
 
                 <h3>
@@ -762,8 +879,6 @@ Expert Dashboard | SPMS
             </div>
 
 
-
-            <!-- PENDING -->
 
             <div class="stat-card">
 
@@ -779,8 +894,6 @@ Expert Dashboard | SPMS
 
 
 
-            <!-- APPROVED -->
-
             <div class="stat-card">
 
                 <h3>
@@ -794,8 +907,6 @@ Expert Dashboard | SPMS
             </div>
 
 
-
-            <!-- CHANGES -->
 
             <div class="stat-card">
 
@@ -841,179 +952,169 @@ Expert Dashboard | SPMS
 
             {% if proposals %}
 
+                <div class="table-wrapper">
 
-            <div class="table-wrapper">
+                    <table class="proposal-table">
 
-                <table>
+                        <thead>
 
+                            <tr>
 
-                    <thead>
+                                <th>
+                                    Student
+                                </th>
 
-                        <tr>
+                                <th>
+                                    Project Title
+                                </th>
 
-                            <th>
-                                Student
-                            </th>
+                                <th>
+                                    Domain
+                                </th>
 
-                            <th>
-                                Project Title
-                            </th>
+                                <th>
+                                    Status
+                                </th>
 
-                            <th>
-                                Domain
-                            </th>
+                                <th>
+                                    Action
+                                </th>
 
-                            <th>
-                                Status
-                            </th>
+                            </tr>
 
-                            <th>
-                                Action
-                            </th>
+                        </thead>
 
-                        </tr>
 
-                    </thead>
+                        <tbody>
 
+                            {% for proposal in proposals %}
 
+                                <tr>
 
-                    <tbody>
 
+                                    <!-- STUDENT -->
 
-                        {% for proposal in proposals %}
+                                    <td>
 
+                                        {% if proposal.student.get_full_name %}
 
-                        <tr>
+                                            {{ proposal.student.get_full_name }}
 
+                                        {% else %}
 
-                            <!-- STUDENT -->
+                                            {{ proposal.student.username }}
 
-                            <td>
+                                        {% endif %}
 
-                                {% if proposal.student.get_full_name %}
+                                    </td>
 
-                                    {{ proposal.student.get_full_name }}
 
-                                {% else %}
 
-                                    {{ proposal.student.username }}
+                                    <!-- TITLE -->
 
-                                {% endif %}
+                                    <td>
 
-                            </td>
+                                        {{ proposal.title }}
 
+                                    </td>
 
 
-                            <!-- PROJECT -->
 
-                            <td>
+                                    <!-- DOMAIN -->
 
-                                {{ proposal.title }}
+                                    <td>
 
-                            </td>
+                                        {{ proposal.domain|default:"-" }}
 
+                                    </td>
 
 
-                            <!-- DOMAIN -->
 
-                            <td>
+                                    <!-- STATUS -->
 
-                                {{ proposal.domain|default:"-" }}
+                                    <td>
 
-                            </td>
+                                        {% if proposal.status == "EXPERT_ASSIGNED" %}
 
+                                            <span class="status status-assigned">
+                                                Pending Review
+                                            </span>
 
 
-                            <!-- STATUS -->
+                                        {% elif proposal.status == "EXPERT_APPROVED" %}
 
-                            <td>
+                                            <span class="status status-approved">
+                                                Approved
+                                            </span>
 
 
-                                {% if proposal.status == "EXPERT_ASSIGNED" %}
+                                        {% elif proposal.status == "CHANGES_REQUESTED" %}
 
-                                    <span class="status status-assigned">
-                                        Pending Review
-                                    </span>
+                                            <span class="status status-changes">
+                                                Changes Requested
+                                            </span>
 
 
-                                {% elif proposal.status == "EXPERT_APPROVED" %}
+                                        {% elif proposal.status == "SUBMITTED" %}
 
-                                    <span class="status status-approved">
-                                        Approved
-                                    </span>
+                                            <span class="status status-submitted">
+                                                Resubmitted
+                                            </span>
 
 
-                                {% elif proposal.status == "CHANGES_REQUESTED" %}
+                                        {% else %}
 
-                                    <span class="status status-changes">
-                                        Changes Requested
-                                    </span>
+                                            <span class="status status-default">
+                                                {{ proposal.get_status_display }}
+                                            </span>
 
+                                        {% endif %}
 
-                                {% elif proposal.status == "SUBMITTED" %}
+                                    </td>
 
-                                    <span class="status status-submitted">
-                                        Resubmitted
-                                    </span>
 
 
-                                {% else %}
+                                    <!-- ACTION -->
 
-                                    <span class="status status-default">
-                                        {{ proposal.get_status_display }}
-                                    </span>
+                                    <td>
 
-                                {% endif %}
+                                        <a
+                                            href="{% url 'experts:proposal_detail' proposal.id %}"
+                                            class="btn btn-primary"
+                                        >
+                                            View
+                                        </a>
 
+                                    </td>
 
-                            </td>
 
+                                </tr>
 
+                            {% endfor %}
 
-                            <!-- ACTION -->
+                        </tbody>
 
-                            <td>
+                    </table>
 
-                                <a
-                                    href="{% url 'experts:proposal_detail' proposal.id %}"
-                                    class="btn btn-primary"
-                                >
-                                    View
-                                </a>
-
-                            </td>
-
-
-                        </tr>
-
-
-                        {% endfor %}
-
-
-                    </tbody>
-
-
-                </table>
-
-            </div>
+                </div>
 
 
             {% else %}
 
 
-            <!-- EMPTY -->
+                <!-- EMPTY STATE -->
 
-            <div class="empty-state">
+                <div class="empty-state">
 
-                <h3>
-                    No Proposals Assigned
-                </h3>
+                    <h3>
+                        No Proposals Assigned
+                    </h3>
 
-                <p>
-                    There are currently no project proposals assigned to you.
-                </p>
+                    <p>
+                        There are currently no project proposals assigned to you.
+                    </p>
 
-            </div>
+                </div>
 
 
             {% endif %}
@@ -1023,7 +1124,6 @@ Expert Dashboard | SPMS
 
 
     </div>
-
 
 </main>
 

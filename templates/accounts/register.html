@@ -6,6 +6,7 @@
 SPMS | Student Registration
 {% endblock %}
 
+
 {% block extra_css %}
 
 <link
@@ -15,25 +16,44 @@ SPMS | Student Registration
 
 {% endblock %}
 
+
 {% block content %}
 
 <div class="auth-page">
 
     <div class="register-card">
 
+
+        <!-- =====================================================
+             LOGO
+             ===================================================== -->
+
         <div class="auth-logo">
             SPMS
         </div>
+
+
+        <!-- =====================================================
+             TITLE
+             ===================================================== -->
 
         <h1>
             Student Registration
         </h1>
 
+
         <p class="auth-subtitle">
             Create your SPMS student account
         </p>
 
+
+
+        <!-- =====================================================
+             MESSAGES
+             ===================================================== -->
+
         {% if messages %}
+
             <div class="auth-messages">
 
                 {% for message in messages %}
@@ -45,7 +65,14 @@ SPMS | Student Registration
                 {% endfor %}
 
             </div>
+
         {% endif %}
+
+
+
+        <!-- =====================================================
+             REGISTRATION FORM
+             ===================================================== -->
 
         <form
             method="POST"
@@ -54,15 +81,25 @@ SPMS | Student Registration
 
             {% csrf_token %}
 
+
             {% for field in form %}
 
                 <div class="form-group">
+
+
+                    <!-- FIELD LABEL -->
 
                     <label for="{{ field.id_for_label }}">
                         {{ field.label }}
                     </label>
 
+
+                    <!-- FIELD -->
+
                     {{ field }}
+
+
+                    <!-- HELP TEXT -->
 
                     {% if field.help_text %}
 
@@ -71,6 +108,9 @@ SPMS | Student Registration
                         </small>
 
                     {% endif %}
+
+
+                    <!-- FIELD ERRORS -->
 
                     {% if field.errors %}
 
@@ -88,9 +128,16 @@ SPMS | Student Registration
 
                     {% endif %}
 
+
                 </div>
 
             {% endfor %}
+
+
+
+            <!-- =================================================
+                 SUBMIT
+                 ================================================= -->
 
             <button
                 type="submit"
@@ -99,7 +146,14 @@ SPMS | Student Registration
                 Create Student Account
             </button>
 
+
         </form>
+
+
+
+        <!-- =====================================================
+             LOGIN LINK
+             ===================================================== -->
 
         <div class="auth-footer">
 
@@ -112,6 +166,7 @@ SPMS | Student Registration
             </a>
 
         </div>
+
 
     </div>
 

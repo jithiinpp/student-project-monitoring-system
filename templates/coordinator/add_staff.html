@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 
+
 {% block title %}
 Add Staff | SPMS
 {% endblock %}
@@ -9,15 +10,46 @@ Add Staff | SPMS
 
 <style>
 
+/* =========================================================
+   GLOBAL
+   ========================================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: #f4f6f9;
+    color: #1e293b;
+
+    font-family:
+        Inter,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        Roboto,
+        Arial,
+        sans-serif;
+}
+
+
+/* =========================================================
+   PAGE CONTAINER
+   ========================================================= */
+
 .staff-container {
 
-    max-width: 850px;
+    max-width: 920px;
 
-    margin: 40px auto;
+    margin: 35px auto;
 
     padding: 0 20px;
 }
 
+
+/* =========================================================
+   CARD
+   ========================================================= */
 
 .staff-card {
 
@@ -25,28 +57,66 @@ Add Staff | SPMS
 
     border: 1px solid #e2e8f0;
 
-    border-radius: 16px;
+    border-radius: 12px;
 
-    padding: 35px;
+    padding: 32px;
 
     box-shadow:
-        0 5px 20px rgba(15, 23, 42, 0.06);
+        0 3px 12px rgba(15, 23, 42, 0.05);
 }
 
 
+/* =========================================================
+   HEADER
+   ========================================================= */
+
 .staff-header {
 
-    margin-bottom: 30px;
+    display: flex;
+
+    align-items: center;
+
+    gap: 15px;
+
+    margin-bottom: 28px;
+
+    padding-bottom: 22px;
+
+    border-bottom: 1px solid #edf1f5;
+}
+
+
+.staff-header-icon {
+
+    width: 48px;
+
+    height: 48px;
+
+    min-width: 48px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #edf5ff;
+
+    color: #2563eb;
 }
 
 
 .staff-header h1 {
 
-    margin: 0 0 8px;
+    margin: 0 0 5px;
 
-    color: #0f172a;
+    color: #172033;
 
-    font-size: 26px;
+    font-size: 24px;
+
+    font-weight: 700;
 }
 
 
@@ -54,22 +124,52 @@ Add Staff | SPMS
 
     margin: 0;
 
-    color: #64748b;
+    color: #718096;
 
-    font-size: 14px;
+    font-size: 13px;
 }
 
+
+/* =========================================================
+   SVG ICON
+   ========================================================= */
+
+.staff-icon {
+
+    width: 22px;
+
+    height: 22px;
+
+    fill: none;
+
+    stroke: currentColor;
+
+    stroke-width: 1.8;
+
+    stroke-linecap: round;
+
+    stroke-linejoin: round;
+}
+
+
+/* =========================================================
+   FORM GRID
+   ========================================================= */
 
 .form-grid {
 
     display: grid;
 
     grid-template-columns:
-        repeat(2, 1fr);
+        repeat(2, minmax(0, 1fr));
 
-    gap: 20px;
+    gap: 19px;
 }
 
+
+/* =========================================================
+   FORM GROUP
+   ========================================================= */
 
 .form-group {
 
@@ -89,7 +189,7 @@ Add Staff | SPMS
 
     margin-bottom: 7px;
 
-    font-size: 14px;
+    font-size: 13px;
 
     font-weight: 600;
 
@@ -97,46 +197,64 @@ Add Staff | SPMS
 }
 
 
+/* =========================================================
+   INPUTS
+   ========================================================= */
+
 .form-group input,
 .form-group select {
 
     width: 100%;
 
-    padding: 12px 14px;
+    min-height: 44px;
+
+    padding: 10px 13px;
 
     border: 1px solid #cbd5e1;
 
-    border-radius: 8px;
+    border-radius: 7px;
 
-    font-size: 14px;
+    font-size: 13px;
+
+    color: #1e293b;
 
     outline: none;
 
     background: #ffffff;
 
-    transition: 0.2s;
+    transition:
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+
+.form-group input::placeholder {
+
+    color: #94a3b8;
 }
 
 
 .form-group input:focus,
 .form-group select:focus {
 
-    border-color: #2563eb;
+    border-color: #3b82f6;
 
     box-shadow:
-        0 0 0 3px rgba(37, 99, 235, 0.1);
+        0 0 0 3px rgba(59, 130, 246, 0.10);
 }
 
 
-/* ROLE SELECT */
+/* =========================================================
+   ROLE SECTION
+   ========================================================= */
 
 .role-box {
 
-    background: #eff6ff;
+    background: #f7faff;
 
-    border: 1px solid #bfdbfe;
+    border: 1px solid #dbeafe;
 
-    border-radius: 12px;
+    border-radius: 10px;
 
     padding: 18px;
 }
@@ -145,6 +263,14 @@ Add Staff | SPMS
 .role-box label {
 
     color: #1e3a8a;
+
+    font-size: 13px;
+}
+
+
+.role-box select {
+
+    border-color: #bfdbfe;
 }
 
 
@@ -152,13 +278,17 @@ Add Staff | SPMS
 
     margin-top: 7px;
 
-    font-size: 12px;
+    font-size: 11.5px;
 
-    color: #64748b;
+    line-height: 1.5;
+
+    color: #718096;
 }
 
 
-/* BUTTONS */
+/* =========================================================
+   FORM ACTIONS
+   ========================================================= */
 
 .form-actions {
 
@@ -170,72 +300,153 @@ Add Staff | SPMS
 
     margin-top: 30px;
 
-    padding-top: 25px;
+    padding-top: 23px;
 
     border-top: 1px solid #e2e8f0;
 }
 
 
+/* =========================================================
+   BACK BUTTON
+   ========================================================= */
+
 .back-button {
 
-    padding: 11px 20px;
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    min-height: 42px;
+
+    padding: 10px 18px;
 
     background: #f1f5f9;
 
-    color: #334155;
+    color: #475569;
 
     text-decoration: none;
 
-    border-radius: 8px;
+    border: 1px solid #e2e8f0;
 
-    font-size: 14px;
+    border-radius: 7px;
+
+    font-size: 13px;
 
     font-weight: 600;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease;
 }
 
 
+.back-button:hover {
+
+    background: #e2e8f0;
+
+    border-color: #cbd5e1;
+
+    color: #1e293b;
+}
+
+
+/* =========================================================
+   SUBMIT BUTTON
+   ========================================================= */
+
 .submit-button {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    min-height: 42px;
 
     border: none;
 
-    padding: 11px 22px;
+    padding: 10px 20px;
 
     background: #2563eb;
 
     color: #ffffff;
 
-    border-radius: 8px;
+    border-radius: 7px;
 
-    font-size: 14px;
+    font-size: 13px;
 
     font-weight: 600;
 
     cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 
 .submit-button:hover {
 
     background: #1d4ed8;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 4px 10px rgba(37, 99, 235, 0.20);
 }
 
 
-@media (max-width: 650px) {
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+    .staff-container {
+
+        margin: 25px auto;
+
+        padding: 0 14px;
+    }
+
 
     .staff-card {
 
-        padding: 25px 20px;
+        padding: 24px 19px;
     }
+
+
+    .staff-header {
+
+        align-items: flex-start;
+    }
+
+
+    .staff-header h1 {
+
+        font-size: 21px;
+    }
+
 
     .form-grid {
 
         grid-template-columns: 1fr;
     }
 
+
     .form-group.full {
 
         grid-column: auto;
     }
+
 
     .form-actions {
 
@@ -245,6 +456,7 @@ Add Staff | SPMS
 
         align-items: stretch;
     }
+
 
     .back-button,
     .submit-button {
@@ -261,30 +473,72 @@ Add Staff | SPMS
 {% endblock %}
 
 
+
 {% block content %}
 
+
 <div class="staff-container">
+
 
     <div class="staff-card">
 
 
-        <!-- HEADER -->
+        <!-- =================================================
+             HEADER
+             ================================================= -->
 
         <div class="staff-header">
 
-            <h1>
-                ➕ Add Staff
-            </h1>
+            <div class="staff-header-icon">
 
-            <p>
-                Create a login account for a Domain Expert,
-                Guide or Panel Member.
-            </p>
+                <svg
+                    class="staff-icon"
+                    viewBox="0 0 24 24"
+                >
+
+                    <circle
+                        cx="9"
+                        cy="8"
+                        r="3.5"
+                    ></circle>
+
+                    <path
+                        d="M2.5 20a6 6 0 0 1 12 0"
+                    ></path>
+
+                    <path
+                        d="M18 8v7"
+                    ></path>
+
+                    <path
+                        d="M14.5 11.5h7"
+                    ></path>
+
+                </svg>
+
+            </div>
+
+
+            <div>
+
+                <h1>
+                    Add Staff
+                </h1>
+
+                <p>
+                    Create a login account for a Domain Expert,
+                    Guide or Panel Member.
+                </p>
+
+            </div>
 
         </div>
 
 
-        <!-- FORM -->
+
+        <!-- =================================================
+             FORM
+             ================================================= -->
 
         <form
             method="POST"
@@ -297,12 +551,16 @@ Add Staff | SPMS
             <div class="form-grid">
 
 
-                <!-- ROLE -->
+                <!-- =================================================
+                     ROLE
+                     ================================================= -->
 
                 <div class="form-group full role-box">
 
                     <label for="role">
+
                         Select Staff Type *
+
                     </label>
 
 
@@ -316,16 +574,19 @@ Add Staff | SPMS
                             -- Select Staff Type --
                         </option>
 
+
                         <option value="EXPERT">
-                            👨‍🏫 Domain Expert
+                            Domain Expert
                         </option>
+
 
                         <option value="GUIDE">
-                            👨‍🏫 Guide
+                            Guide
                         </option>
 
+
                         <option value="PANEL">
-                            👥 Panel Member
+                            Panel Member
                         </option>
 
                     </select>
@@ -341,13 +602,17 @@ Add Staff | SPMS
                 </div>
 
 
-                <!-- USERNAME -->
+
+                <!-- =================================================
+                     USERNAME
+                     ================================================= -->
 
                 <div class="form-group">
 
                     <label for="username">
                         Username *
                     </label>
+
 
                     <input
                         type="text"
@@ -360,13 +625,17 @@ Add Staff | SPMS
                 </div>
 
 
-                <!-- PASSWORD -->
+
+                <!-- =================================================
+                     PASSWORD
+                     ================================================= -->
 
                 <div class="form-group">
 
                     <label for="password">
                         Password *
                     </label>
+
 
                     <input
                         type="password"
@@ -379,13 +648,17 @@ Add Staff | SPMS
                 </div>
 
 
-                <!-- FIRST NAME -->
+
+                <!-- =================================================
+                     FIRST NAME
+                     ================================================= -->
 
                 <div class="form-group">
 
                     <label for="first_name">
                         First Name
                     </label>
+
 
                     <input
                         type="text"
@@ -397,13 +670,17 @@ Add Staff | SPMS
                 </div>
 
 
-                <!-- LAST NAME -->
+
+                <!-- =================================================
+                     LAST NAME
+                     ================================================= -->
 
                 <div class="form-group">
 
                     <label for="last_name">
                         Last Name
                     </label>
+
 
                     <input
                         type="text"
@@ -415,13 +692,17 @@ Add Staff | SPMS
                 </div>
 
 
-                <!-- EMAIL -->
+
+                <!-- =================================================
+                     EMAIL
+                     ================================================= -->
 
                 <div class="form-group">
 
                     <label for="email">
                         Email
                     </label>
+
 
                     <input
                         type="email"
@@ -433,13 +714,17 @@ Add Staff | SPMS
                 </div>
 
 
-                <!-- PHONE -->
+
+                <!-- =================================================
+                     PHONE
+                     ================================================= -->
 
                 <div class="form-group">
 
                     <label for="phone">
                         Phone
                     </label>
+
 
                     <input
                         type="text"
@@ -454,15 +739,21 @@ Add Staff | SPMS
             </div>
 
 
-            <!-- ACTIONS -->
+
+            <!-- =================================================
+                 ACTIONS
+                 ================================================= -->
 
             <div class="form-actions">
+
 
                 <a
                     href="{% url 'coordinator:dashboard' %}"
                     class="back-button"
                 >
-                    ← Back
+
+                    ← Back to Dashboard
+
                 </a>
 
 
@@ -470,7 +761,9 @@ Add Staff | SPMS
                     type="submit"
                     class="submit-button"
                 >
+
                     Create Staff Account
+
                 </button>
 
             </div>
@@ -478,9 +771,9 @@ Add Staff | SPMS
 
         </form>
 
-
     </div>
 
 </div>
+
 
 {% endblock %}

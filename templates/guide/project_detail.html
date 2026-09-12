@@ -4,360 +4,749 @@
 Project Details | Guide
 {% endblock %}
 
-{% block content %}
+
+{% block extra_css %}
 
 <style>
 
-.project-page {
-    max-width: 1100px;
-    margin: 40px auto;
-    padding: 0 20px;
-}
+    /* =====================================================
+       PAGE
+    ===================================================== */
 
-.project-card {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 14px;
-    padding: 30px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-}
+    .project-page {
+        min-height: 100vh;
 
-.project-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 20px;
-    margin-bottom: 25px;
-}
+        background: #f5f7fb;
 
-.project-header h1 {
-    margin: 0 0 8px;
-    color: #111827;
-    font-size: 26px;
-}
-
-.project-header p {
-    margin: 0;
-    color: #6b7280;
-}
-
-.status {
-    padding: 8px 14px;
-    border-radius: 20px;
-    background: #eff6ff;
-    color: #2563eb;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-.info-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 18px;
-    margin-bottom: 25px;
-}
-
-.info-box {
-    background: #f8fafc;
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
-    padding: 18px;
-}
-
-.info-box label {
-    display: block;
-    color: #64748b;
-    font-size: 12px;
-    margin-bottom: 6px;
-}
-
-.info-box strong {
-    color: #111827;
-    font-size: 14px;
-}
-
-.content-section {
-    margin-top: 25px;
-}
-
-.content-section h3 {
-    font-size: 17px;
-    color: #111827;
-    margin-bottom: 10px;
-}
-
-.content-section p {
-    line-height: 1.7;
-    color: #475569;
-    white-space: pre-line;
-}
-
-.actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 30px;
-    flex-wrap: wrap;
-}
-
-.btn {
-    border: none;
-    padding: 11px 18px;
-    border-radius: 8px;
-    font-size: 13px;
-    font-weight: 600;
-    cursor: pointer;
-    text-decoration: none;
-}
-
-.btn-success {
-    background: #16a34a;
-    color: white;
-}
-
-.btn-danger {
-    background: #dc2626;
-    color: white;
-}
-
-.btn-secondary {
-    background: #e5e7eb;
-    color: #374151;
-}
-
-.btn:hover {
-    opacity: 0.9;
-}
-
-@media (max-width: 700px) {
-
-    .info-grid {
-        grid-template-columns: 1fr;
+        padding: 30px;
     }
+
+
+    .project-container {
+        max-width: 1100px;
+
+        margin: 0 auto;
+    }
+
+
+    /* =====================================================
+       MAIN CARD
+    ===================================================== */
+
+    .project-card {
+        background: #ffffff;
+
+        border: 1px solid #e5e7eb;
+
+        border-radius: 10px;
+
+        padding: 28px;
+
+        box-shadow:
+            0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+
+
+    /* =====================================================
+       HEADER
+    ===================================================== */
 
     .project-header {
-        flex-direction: column;
+        display: flex;
+
+        justify-content: space-between;
+
+        align-items: flex-start;
+
+        gap: 20px;
+
+        padding-bottom: 22px;
+
+        border-bottom: 1px solid #e5e7eb;
+
+        margin-bottom: 22px;
     }
-}
+
+
+    .project-header h1 {
+        margin: 0 0 7px;
+
+        color: #111827;
+
+        font-size: 24px;
+
+        font-weight: 700;
+
+        line-height: 1.4;
+    }
+
+
+    .project-header p {
+        margin: 0;
+
+        color: #64748b;
+
+        font-size: 13px;
+    }
+
+
+    .project-header strong {
+        color: #334155;
+    }
+
+
+    /* =====================================================
+       STATUS
+    ===================================================== */
+
+    .status {
+        display: inline-flex;
+
+        align-items: center;
+
+        padding: 7px 11px;
+
+        border-radius: 6px;
+
+        background: #eff6ff;
+
+        border: 1px solid #dbeafe;
+
+        color: #1d4ed8;
+
+        font-size: 11px;
+
+        font-weight: 600;
+
+        white-space: nowrap;
+    }
+
+
+    /* =====================================================
+       PROJECT INFORMATION
+    ===================================================== */
+
+    .info-grid {
+        display: grid;
+
+        grid-template-columns: repeat(2, 1fr);
+
+        gap: 14px;
+
+        margin-bottom: 25px;
+    }
+
+
+    .info-box {
+        background: #f8fafc;
+
+        border: 1px solid #e5e7eb;
+
+        border-radius: 8px;
+
+        padding: 15px;
+    }
+
+
+    .info-box label {
+        display: block;
+
+        margin-bottom: 6px;
+
+        color: #64748b;
+
+        font-size: 10px;
+
+        font-weight: 600;
+
+        text-transform: uppercase;
+
+        letter-spacing: 0.3px;
+    }
+
+
+    .info-box strong {
+        display: block;
+
+        color: #1e293b;
+
+        font-size: 13px;
+
+        font-weight: 600;
+
+        line-height: 1.5;
+
+        word-break: break-word;
+    }
+
+
+    /* =====================================================
+       CONTENT SECTIONS
+    ===================================================== */
+
+    .content-section {
+        margin-top: 24px;
+
+        padding-top: 20px;
+
+        border-top: 1px solid #eef0f3;
+    }
+
+
+    .content-section h3 {
+        margin: 0 0 9px;
+
+        color: #111827;
+
+        font-size: 15px;
+
+        font-weight: 700;
+    }
+
+
+    .content-section p {
+        margin: 0;
+
+        color: #475569;
+
+        font-size: 13px;
+
+        line-height: 1.7;
+
+        white-space: pre-line;
+    }
+
+
+    /* =====================================================
+       DOCUMENT
+    ===================================================== */
+
+    .document-link {
+        display: inline-flex;
+
+        align-items: center;
+
+        gap: 8px;
+
+        padding: 9px 13px;
+
+        border: 1px solid #dbeafe;
+
+        border-radius: 6px;
+
+        background: #eff6ff;
+
+        color: #1d4ed8;
+
+        font-size: 11px;
+
+        font-weight: 600;
+
+        transition: background 0.2s ease,
+                    border-color 0.2s ease;
+    }
+
+
+    .document-link:hover {
+        background: #dbeafe;
+
+        border-color: #bfdbfe;
+
+        color: #1d4ed8;
+    }
+
+
+    .document-icon {
+        width: 16px;
+
+        height: 16px;
+
+        stroke: currentColor;
+
+        fill: none;
+
+        stroke-width: 1.8;
+
+        stroke-linecap: round;
+
+        stroke-linejoin: round;
+    }
+
+
+    /* =====================================================
+       ACTIONS
+    ===================================================== */
+
+    .actions {
+        display: flex;
+
+        align-items: center;
+
+        gap: 10px;
+
+        flex-wrap: wrap;
+
+        margin-top: 28px;
+
+        padding-top: 22px;
+
+        border-top: 1px solid #e5e7eb;
+    }
+
+
+    .action-form {
+        margin: 0;
+    }
+
+
+    .btn {
+        display: inline-flex;
+
+        align-items: center;
+
+        justify-content: center;
+
+        padding: 9px 14px;
+
+        border: none;
+
+        border-radius: 6px;
+
+        font-size: 11px;
+
+        font-weight: 600;
+
+        cursor: pointer;
+
+        text-decoration: none;
+
+        transition: background 0.2s ease;
+    }
+
+
+    .btn-success {
+        background: #16a34a;
+
+        color: #ffffff;
+    }
+
+
+    .btn-success:hover {
+        background: #15803d;
+
+        color: #ffffff;
+    }
+
+
+    .btn-danger {
+        background: #dc2626;
+
+        color: #ffffff;
+    }
+
+
+    .btn-danger:hover {
+        background: #b91c1c;
+
+        color: #ffffff;
+    }
+
+
+    .btn-secondary {
+        background: #f1f5f9;
+
+        border: 1px solid #e2e8f0;
+
+        color: #475569;
+    }
+
+
+    .btn-secondary:hover {
+        background: #e2e8f0;
+
+        color: #334155;
+    }
+
+
+    /* =====================================================
+       RESPONSIVE
+    ===================================================== */
+
+    @media (max-width: 700px) {
+
+        .project-page {
+            padding: 18px 14px;
+        }
+
+
+        .project-card {
+            padding: 20px;
+        }
+
+
+        .project-header {
+            flex-direction: column;
+        }
+
+
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+
+
+        .status {
+            align-self: flex-start;
+        }
+
+    }
+
+
+    @media (max-width: 480px) {
+
+        .project-page {
+            padding: 12px;
+        }
+
+
+        .project-card {
+            padding: 17px;
+        }
+
+
+        .project-header h1 {
+            font-size: 21px;
+        }
+
+
+        .actions {
+            align-items: stretch;
+
+            flex-direction: column;
+        }
+
+
+        .action-form,
+        .actions .btn {
+            width: 100%;
+        }
+
+    }
 
 </style>
 
+{% endblock %}
+
+
+
+{% block content %}
 
 <div class="project-page">
 
-    <div class="project-card">
+    <div class="project-container">
 
-        <div class="project-header">
+        <div class="project-card">
 
-            <div>
 
-                <h1>
-                    {{ proposal.title }}
-                </h1>
+            <!-- =================================================
+                 PROJECT HEADER
+            ================================================= -->
+
+            <div class="project-header">
+
+                <div>
+
+                    <h1>
+                        {{ proposal.title }}
+                    </h1>
+
+                    <p>
+
+                        Student:
+
+                        <strong>
+                            {{ proposal.student.get_full_name|default:proposal.student.username }}
+                        </strong>
+
+                    </p>
+
+                </div>
+
+
+                <span class="status">
+
+                    {{ proposal.get_status_display }}
+
+                </span>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 PROJECT INFORMATION
+            ================================================= -->
+
+            <div class="info-grid">
+
+
+                <!-- Student Username -->
+
+                <div class="info-box">
+
+                    <label>
+                        Student Username
+                    </label>
+
+                    <strong>
+                        {{ proposal.student.username }}
+                    </strong>
+
+                </div>
+
+
+
+                <!-- Domain -->
+
+                <div class="info-box">
+
+                    <label>
+                        Domain
+                    </label>
+
+                    <strong>
+                        {{ proposal.domain|default:"Not specified" }}
+                    </strong>
+
+                </div>
+
+
+
+                <!-- Technologies -->
+
+                <div class="info-box">
+
+                    <label>
+                        Technologies
+                    </label>
+
+                    <strong>
+                        {{ proposal.technologies|default:"Not specified" }}
+                    </strong>
+
+                </div>
+
+
+
+                <!-- Domain Expert -->
+
+                <div class="info-box">
+
+                    <label>
+                        Domain Expert
+                    </label>
+
+                    <strong>
+
+                        {% if proposal.domain_expert %}
+
+                            {{ proposal.domain_expert.get_full_name|default:proposal.domain_expert.username }}
+
+                        {% else %}
+
+                            Not assigned
+
+                        {% endif %}
+
+                    </strong>
+
+                </div>
+
+
+            </div>
+
+
+
+            <!-- =================================================
+                 ABSTRACT
+            ================================================= -->
+
+            <div class="content-section">
+
+                <h3>
+                    Abstract
+                </h3>
 
                 <p>
-                    Student:
-                    {{ proposal.student.get_full_name|default:proposal.student.username }}
+                    {{ proposal.abstract|default:"No abstract provided." }}
                 </p>
 
             </div>
 
-            <div class="status">
-
-                {{ proposal.get_status_display }}
-
-            </div>
-
-        </div>
 
 
-        <!-- PROJECT INFORMATION -->
+            <!-- =================================================
+                 PROJECT DESCRIPTION
+            ================================================= -->
 
-        <div class="info-grid">
+            <div class="content-section">
 
-            <div class="info-box">
+                <h3>
+                    Project Description
+                </h3>
 
-                <label>
-                    Student Username
-                </label>
-
-                <strong>
-                    {{ proposal.student.username }}
-                </strong>
+                <p>
+                    {{ proposal.description|default:"No description provided." }}
+                </p>
 
             </div>
 
 
-            <div class="info-box">
 
-                <label>
-                    Domain
-                </label>
+            <!-- =================================================
+                 PROPOSAL DOCUMENT
+            ================================================= -->
 
-                <strong>
-                    {{ proposal.domain|default:"Not specified" }}
-                </strong>
+            {% if proposal.proposal_document %}
 
-            </div>
+                <div class="content-section">
 
-
-            <div class="info-box">
-
-                <label>
-                    Technologies
-                </label>
-
-                <strong>
-                    {{ proposal.technologies|default:"Not specified" }}
-                </strong>
-
-            </div>
+                    <h3>
+                        Proposal Document
+                    </h3>
 
 
-            <div class="info-box">
-
-                <label>
-                    Domain Expert
-                </label>
-
-                <strong>
-
-                    {% if proposal.domain_expert %}
-
-                        {{ proposal.domain_expert.get_full_name|default:proposal.domain_expert.username }}
-
-                    {% else %}
-
-                        Not assigned
-
-                    {% endif %}
-
-                </strong>
-
-            </div>
-
-        </div>
-
-
-        <!-- ABSTRACT -->
-
-        <div class="content-section">
-
-            <h3>
-                Abstract
-            </h3>
-
-            <p>
-                {{ proposal.abstract|default:"No abstract provided." }}
-            </p>
-
-        </div>
-
-
-        <!-- DESCRIPTION -->
-
-        <div class="content-section">
-
-            <h3>
-                Project Description
-            </h3>
-
-            <p>
-                {{ proposal.description|default:"No description provided." }}
-            </p>
-
-        </div>
-
-
-        <!-- PROPOSAL DOCUMENT -->
-
-        {% if proposal.proposal_document %}
-
-        <div class="content-section">
-
-            <h3>
-                Proposal Document
-            </h3>
-
-            <a
-                href="{{ proposal.proposal_document.url }}"
-                target="_blank"
-                class="btn btn-secondary"
-            >
-                View Proposal Document
-            </a>
-
-        </div>
-
-        {% endif %}
-
-
-        <!-- ACTIONS -->
-
-        <div class="actions">
-
-            {% if proposal.status == "GUIDE_ASSIGNED" %}
-
-                <form
-                    method="POST"
-                    action="{% url 'guides:start_project' proposal.id %}"
-                >
-
-                    {% csrf_token %}
-
-                    <button
-                        type="submit"
-                        class="btn btn-success"
+                    <a
+                        href="{{ proposal.proposal_document.url }}"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        class="document-link"
                     >
-                        Accept & Start Project
-                    </button>
 
-                </form>
+                        <svg
+                            class="document-icon"
+                            viewBox="0 0 24 24"
+                        >
 
+                            <path
+                                d="M6 3h9l4 4v14H6z"
+                            ></path>
 
-                <form
-                    method="POST"
-                    action="{% url 'guides:reject_project' proposal.id %}"
-                    onsubmit="return confirm('Are you sure you want to reject this project?');"
-                >
+                            <path
+                                d="M14 3v5h5"
+                            ></path>
 
-                    {% csrf_token %}
+                            <path
+                                d="M9 13h6"
+                            ></path>
 
-                    <button
-                        type="submit"
-                        class="btn btn-danger"
-                    >
-                        Reject Project
-                    </button>
+                            <path
+                                d="M9 17h6"
+                            ></path>
 
-                </form>
+                        </svg>
 
-            {% elif proposal.status == "GUIDE_REJECTED" %}
+                        View Proposal Document
 
-                <span class="btn btn-danger">
-                    Project Rejected
-                </span>
+                    </a>
 
-            {% elif proposal.status == "IN_PROGRESS" %}
-
-                <span class="btn btn-success">
-                    Project In Progress
-                </span>
-
-            {% elif proposal.status == "COMPLETED" %}
-
-                <span class="btn btn-success">
-                    Project Completed
-                </span>
+                </div>
 
             {% endif %}
 
 
-            <a
-                href="{% url 'guides:dashboard' %}"
-                class="btn btn-secondary"
-            >
-                ← Back to Dashboard
-            </a>
+
+            <!-- =================================================
+                 ACTIONS
+            ================================================= -->
+
+            <div class="actions">
+
+
+                {% if proposal.status == "GUIDE_ASSIGNED" %}
+
+
+                    <!-- Accept Project -->
+
+                    <form
+                        method="POST"
+                        action="{% url 'guides:start_project' proposal.id %}"
+                        class="action-form"
+                    >
+
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="btn btn-success"
+                        >
+                            Accept &amp; Start Project
+                        </button>
+
+                    </form>
+
+
+
+                    <!-- Reject Project -->
+
+                    <form
+                        method="POST"
+                        action="{% url 'guides:reject_project' proposal.id %}"
+                        class="action-form"
+                        onsubmit="return confirm('Are you sure you want to reject this project?');"
+                    >
+
+                        {% csrf_token %}
+
+                        <button
+                            type="submit"
+                            class="btn btn-danger"
+                        >
+                            Reject Project
+                        </button>
+
+                    </form>
+
+
+                {% elif proposal.status == "GUIDE_REJECTED" %}
+
+
+                    <span class="btn btn-danger">
+                        Project Rejected
+                    </span>
+
+
+                {% elif proposal.status == "IN_PROGRESS" %}
+
+
+                    <span class="btn btn-success">
+                        Project In Progress
+                    </span>
+
+
+                {% elif proposal.status == "COMPLETED" %}
+
+
+                    <span class="btn btn-success">
+                        Project Completed
+                    </span>
+
+
+                {% endif %}
+
+
+
+                <!-- Back -->
+
+                <a
+                    href="{% url 'guides:dashboard' %}"
+                    class="btn btn-secondary"
+                >
+                    Back to Dashboard
+                </a>
+
+
+            </div>
+
 
         </div>
 

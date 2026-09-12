@@ -1,5 +1,4 @@
 from django.urls import path
-
 from . import views
 
 
@@ -8,21 +7,20 @@ app_name = "coordinator"
 
 urlpatterns = [
 
-    # =====================================================
-    # DASHBOARD
-    # =====================================================
-
     path(
         "dashboard/",
         views.dashboard,
         name="dashboard"
     ),
 
+    # Final approved students
+    path(
+        "final-approved-students/",
+        views.final_approved_students,
+        name="final_approved_students"
+    ),
 
-    # =====================================================
-    # PROJECT PROPOSALS
-    # =====================================================
-
+    # Proposals
     path(
         "proposals/",
         views.proposals,
@@ -53,11 +51,7 @@ urlpatterns = [
         name="assign_guide"
     ),
 
-
-    # =====================================================
-    # EXPERT CHANGE REQUESTS
-    # =====================================================
-
+    # Change requests
     path(
         "change-requests/",
         views.change_requests,
@@ -70,22 +64,7 @@ urlpatterns = [
         name="send_change_request"
     ),
 
-
-    # =====================================================
-    # STUDENTS
-    # =====================================================
-
-    path(
-        "students/",
-        views.students,
-        name="students"
-    ),
-
-
-    # =====================================================
-    # EXPERTS
-    # =====================================================
-
+    # Experts
     path(
         "experts/",
         views.experts,
@@ -110,11 +89,7 @@ urlpatterns = [
         name="delete_expert"
     ),
 
-
-    # =====================================================
-    # GUIDES
-    # =====================================================
-
+    # Guides
     path(
         "guides/",
         views.guides,
@@ -139,11 +114,7 @@ urlpatterns = [
         name="delete_guide"
     ),
 
-
-    # =====================================================
-    # PANEL MEMBERS
-    # =====================================================
-
+    # Panels
     path(
         "panels/",
         views.panels,
@@ -168,11 +139,7 @@ urlpatterns = [
         name="delete_panel"
     ),
 
-
-    # =====================================================
-    # STAFF
-    # =====================================================
-
+    # Staff
     path(
         "staff/",
         views.staff,
@@ -195,5 +162,12 @@ urlpatterns = [
         "staff/<int:user_id>/delete/",
         views.delete_staff,
         name="delete_staff"
+    ),
+
+    # Students
+    path(
+        "students/",
+        views.students,
+        name="students"
     ),
 ]
