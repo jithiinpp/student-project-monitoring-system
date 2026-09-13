@@ -1,662 +1,296 @@
 {% extends "base.html" %}
 
-{% block title %}Project Proposals | Coordinator{% endblock %}
-
+{% block title %}Project Proposals{% endblock %}
 
 {% block content %}
 
 <style>
-
-    /* =========================================================
-       PAGE
-       ========================================================= */
-
     .page {
-        min-height: 100vh;
-        background: #f5f7fb;
         padding: 30px;
     }
 
-    .page-container {
-        max-width: 1250px;
-        margin: 0 auto;
-    }
-
-
-    /* =========================================================
-       PAGE HEADER
-       ========================================================= */
-
     .page-header {
-        margin-bottom: 22px;
+        margin-bottom: 20px;
     }
 
     .page-header h2 {
         margin: 0;
-
-        font-size: 25px;
-        font-weight: 700;
-
-        color: #111827;
+        font-size: 24px;
+        color: #222;
     }
 
     .page-header p {
-        margin: 6px 0 0;
-
-        color: #64748b;
-
-        font-size: 13px;
-    }
-
-
-    /* =========================================================
-       TABLE CARD
-       ========================================================= */
-
-    .table-box {
-        background: #ffffff;
-
-        border: 1px solid #e5e7eb;
-
-        border-radius: 10px;
-
-        overflow: hidden;
-
-        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
-    }
-
-    .table-wrapper {
-        width: 100%;
-        overflow-x: auto;
-    }
-
-
-    /* =========================================================
-       TABLE
-       ========================================================= */
-
-    table {
-        width: 100%;
-
-        border-collapse: collapse;
-
-        min-width: 950px;
-    }
-
-
-    th {
-        background: #f8fafc;
-
-        padding: 13px 15px;
-
-        text-align: left;
-
-        font-size: 12px;
-
-        font-weight: 600;
-
-        color: #475569;
-
-        border-bottom: 1px solid #e5e7eb;
-
-        white-space: nowrap;
-    }
-
-
-    td {
-        padding: 14px 15px;
-
-        font-size: 13px;
-
-        color: #334155;
-
-        border-bottom: 1px solid #eef0f3;
-
-        vertical-align: middle;
-    }
-
-
-    tbody tr:hover {
-        background: #fafcff;
-    }
-
-
-    tbody tr:last-child td {
-        border-bottom: none;
-    }
-
-
-    td strong {
-        color: #111827;
-
-        font-weight: 600;
-    }
-
-
-    td small {
-        display: inline-block;
-
-        margin-top: 3px;
-
-        color: #64748b;
-
-        font-size: 11px;
-    }
-
-
-    /* =========================================================
-       STATUS BADGES
-       ========================================================= */
-
-    .status {
-        display: inline-flex;
-
-        align-items: center;
-
-        padding: 5px 9px;
-
-        border-radius: 6px;
-
-        font-size: 11px;
-
-        font-weight: 600;
-
-        white-space: nowrap;
-    }
-
-
-    /* Submitted */
-
-    .submitted {
-        background: #eff6ff;
-
-        color: #2563eb;
-
-        border: 1px solid #dbeafe;
-    }
-
-
-    /* Expert Assigned */
-
-    .expert {
-        background: #fffbeb;
-
-        color: #a16207;
-
-        border: 1px solid #fde68a;
-    }
-
-
-    /* Changes Requested */
-
-    .changes {
-        background: #fef2f2;
-
-        color: #dc2626;
-
-        border: 1px solid #fecaca;
-    }
-
-
-    /* Expert Approved */
-
-    .approved {
-        background: #f0fdf4;
-
-        color: #15803d;
-
-        border: 1px solid #bbf7d0;
-    }
-
-
-    /* Coordinator Approved */
-
-    .coordinator {
-        background: #f5f3ff;
-
-        color: #6d28d9;
-
-        border: 1px solid #ddd6fe;
-    }
-
-
-    /* Guide Assigned */
-
-    .guide {
-        background: #ecfeff;
-
-        color: #0e7490;
-
-        border: 1px solid #a5f3fc;
-    }
-
-
-    /* Guide Rejected */
-
-    .rejected {
-        background: #fef2f2;
-
-        color: #dc2626;
-
-        border: 1px solid #fecaca;
-    }
-
-
-    /* In Progress */
-
-    .progress {
-        background: #ecfdf5;
-
-        color: #047857;
-
-        border: 1px solid #a7f3d0;
-    }
-
-
-    /* Completed */
-
-    .completed {
-        background: #f0fdf4;
-
-        color: #166534;
-
-        border: 1px solid #bbf7d0;
-    }
-
-
-    /* =========================================================
-       VIEW BUTTON
-       ========================================================= */
-
-    .view-btn {
-        display: inline-flex;
-
-        align-items: center;
-        justify-content: center;
-
-        padding: 7px 11px;
-
-        background: #eff6ff;
-
-        color: #2563eb;
-
-        border: 1px solid #dbeafe;
-
-        border-radius: 6px;
-
-        text-decoration: none;
-
-        font-size: 11px;
-
-        font-weight: 600;
-
-        transition: background 0.2s ease,
-                    border-color 0.2s ease;
-    }
-
-
-    .view-btn:hover {
-        background: #dbeafe;
-
-        border-color: #bfdbfe;
-
-        color: #1d4ed8;
-    }
-
-
-    /* =========================================================
-       EMPTY STATE
-       ========================================================= */
-
-    .empty {
-        padding: 55px 30px;
-
-        text-align: center;
-
-        color: #64748b;
-
+        margin-top: 5px;
+        color: #777;
         font-size: 14px;
     }
 
+    .table-box {
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        overflow-x: auto;
+    }
 
-    .empty-title {
-        margin-bottom: 6px;
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
 
-        color: #334155;
+    th {
+        background: #f5f6f8;
+        padding: 13px;
+        text-align: left;
+        font-size: 13px;
+        color: #555;
+        border-bottom: 1px solid #ddd;
+    }
 
-        font-size: 15px;
+    td {
+        padding: 13px;
+        font-size: 13px;
+        color: #333;
+        border-bottom: 1px solid #eee;
+    }
 
+    tr:last-child td {
+        border-bottom: none;
+    }
+
+    .status {
+        padding: 5px 9px;
+        border-radius: 4px;
+        font-size: 11px;
+        font-weight: 600;
+        display: inline-block;
+    }
+
+    .submitted {
+        background: #e8f1ff;
+        color: #2563eb;
+    }
+
+    .expert {
+        background: #fff4d6;
+        color: #946200;
+    }
+
+    .changes {
+        background: #ffe5e5;
+        color: #c62828;
+    }
+
+    .approved {
+        background: #e4f7e9;
+        color: #16803c;
+    }
+
+    .coordinator {
+        background: #eee8ff;
+        color: #6842c2;
+    }
+
+    .guide {
+        background: #e4f5f7;
+        color: #087f8c;
+    }
+
+    .rejected {
+        background: #ffe5e5;
+        color: #c62828;
+    }
+
+    .progress {
+        background: #e8f7ef;
+        color: #18794e;
+    }
+
+    .completed {
+        background: #dff5df;
+        color: #267326;
+    }
+
+    .view-btn {
+        color: #2563eb;
+        text-decoration: none;
+        font-size: 12px;
         font-weight: 600;
     }
 
-
-    /* =========================================================
-       RESPONSIVE
-       ========================================================= */
-
-    @media (max-width: 800px) {
-
-        .page {
-            padding: 22px 18px;
-        }
-
-        .page-header h2 {
-            font-size: 22px;
-        }
-
+    .view-btn:hover {
+        text-decoration: underline;
     }
 
-
-    @media (max-width: 600px) {
-
-        .page {
-            padding: 18px 14px;
-        }
-
-        .page-header h2 {
-            font-size: 21px;
-        }
-
-        .page-header p {
-            font-size: 12px;
-        }
-
-        .table-box {
-            border-radius: 8px;
-        }
-
+    .empty {
+        padding: 40px;
+        text-align: center;
+        color: #777;
     }
-
 </style>
 
 
 <div class="page">
 
-    <div class="page-container">
+    <div class="page-header">
+        <h2>Project Proposals</h2>
+        <p>View and manage student project proposals.</p>
+    </div>
 
 
-        <!-- =====================================================
-             PAGE HEADER
-             ===================================================== -->
+    <div class="table-box">
 
-        <div class="page-header">
+        {% if proposals %}
 
-            <h2>
-                Project Proposals
-            </h2>
+        <table>
 
-            <p>
-                View and manage student project proposals.
-            </p>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Student</th>
+                    <th>Project</th>
+                    <th>Expert</th>
+                    <th>Guide</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
 
-        </div>
+            <tbody>
 
+                {% for proposal in proposals %}
 
+                <tr>
 
-        <!-- =====================================================
-             PROPOSALS TABLE
-             ===================================================== -->
+                    <td>
+                        {{ forloop.counter }}
+                    </td>
 
-        <div class="table-box">
+                    <td>
+                        {{ proposal.student.get_full_name|default:proposal.student.username }}
+                    </td>
 
-            {% if proposals %}
+                    <td>
+                        <strong>{{ proposal.title }}</strong>
+                        <br>
+                        <small>
+                            {{ proposal.domain|default:"No domain" }}
+                        </small>
+                    </td>
 
-                <div class="table-wrapper">
+                    <td>
+                        {% if proposal.domain_expert %}
+                            {{ proposal.domain_expert.get_full_name|default:proposal.domain_expert.username }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
 
-                    <table>
+                    <td>
+                        {% if proposal.guide %}
+                            {{ proposal.guide.get_full_name|default:proposal.guide.username }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
 
-                        <thead>
 
-                            <tr>
+                    <!-- STATUS -->
 
-                                <th>
-                                    #
-                                </th>
+                    <td>
 
-                                <th>
-                                    Student
-                                </th>
+                        {% if proposal.status == "SUBMITTED" %}
 
-                                <th>
-                                    Project
-                                </th>
+                            <span class="status submitted">
+                                Submitted
+                            </span>
 
-                                <th>
-                                    Expert
-                                </th>
+                        {% elif proposal.status == "EXPERT_ASSIGNED" %}
 
-                                <th>
-                                    Guide
-                                </th>
+                            <span class="status expert">
+                                Expert Assigned
+                            </span>
 
-                                <th>
-                                    Status
-                                </th>
+                        {% elif proposal.status == "CHANGES_REQUESTED" %}
 
-                                <th>
-                                    Action
-                                </th>
+                            <span class="status changes">
+                                Changes Requested
+                            </span>
 
-                            </tr>
+                        {% elif proposal.status == "EXPERT_APPROVED" %}
 
-                        </thead>
+                            <span class="status approved">
+                                Expert Approved
+                            </span>
 
+                        {% elif proposal.status == "COORDINATOR_APPROVED" %}
 
-                        <tbody>
+                            <span class="status coordinator">
+                                Coordinator Approved
+                            </span>
 
-                            {% for proposal in proposals %}
+                        {% elif proposal.status == "GUIDE_ASSIGNED" %}
 
-                                <tr>
+                            <span class="status guide">
+                                Guide Assigned
+                            </span>
 
+                        {% elif proposal.status == "GUIDE_REJECTED" %}
 
-                                    <!-- NUMBER -->
+                            <span class="status rejected">
+                                Guide Rejected
+                            </span>
 
-                                    <td>
-                                        {{ forloop.counter }}
-                                    </td>
+                        {% elif proposal.status == "IN_PROGRESS" %}
 
+                            <span class="status progress">
+                                In Progress
+                            </span>
 
+                        {% elif proposal.status == "COMPLETED" %}
 
-                                    <!-- STUDENT -->
+                            <span class="status completed">
+                                Completed
+                            </span>
 
-                                    <td>
+                        {% else %}
 
-                                        <strong>
-                                            {{ proposal.student.get_full_name|default:proposal.student.username }}
-                                        </strong>
+                            <span class="status submitted">
+                                {{ proposal.get_status_display }}
+                            </span>
 
-                                        <br>
+                        {% endif %}
 
-                                        <small>
-                                            {{ proposal.student.username }}
-                                        </small>
+                    </td>
 
-                                    </td>
 
+                    <!-- ACTION -->
 
+                    <td>
 
-                                    <!-- PROJECT -->
+                        <a
+                            href="{% url 'coordinator:proposal_detail' proposal.id %}"
+                            class="view-btn"
+                        >
+                            View
+                        </a>
 
-                                    <td>
+                    </td>
 
-                                        <strong>
-                                            {{ proposal.title }}
-                                        </strong>
+                </tr>
 
-                                        <br>
+                {% endfor %}
 
-                                        <small>
-                                            {{ proposal.domain|default:"No domain" }}
-                                        </small>
+            </tbody>
 
-                                    </td>
+        </table>
 
+        {% else %}
 
+            <div class="empty">
+                No project proposals found.
+            </div>
 
-                                    <!-- EXPERT -->
-
-                                    <td>
-
-                                        {% if proposal.domain_expert %}
-
-                                            {{ proposal.domain_expert.get_full_name|default:proposal.domain_expert.username }}
-
-                                        {% else %}
-
-                                            —
-
-                                        {% endif %}
-
-                                    </td>
-
-
-
-                                    <!-- GUIDE -->
-
-                                    <td>
-
-                                        {% if proposal.guide %}
-
-                                            {{ proposal.guide.get_full_name|default:proposal.guide.username }}
-
-                                        {% else %}
-
-                                            —
-
-                                        {% endif %}
-
-                                    </td>
-
-
-
-                                    <!-- STATUS -->
-
-                                    <td>
-
-                                        {% if proposal.status == "SUBMITTED" %}
-
-                                            <span class="status submitted">
-                                                Submitted
-                                            </span>
-
-
-                                        {% elif proposal.status == "EXPERT_ASSIGNED" %}
-
-                                            <span class="status expert">
-                                                Expert Assigned
-                                            </span>
-
-
-                                        {% elif proposal.status == "CHANGES_REQUESTED" %}
-
-                                            <span class="status changes">
-                                                Changes Requested
-                                            </span>
-
-
-                                        {% elif proposal.status == "EXPERT_APPROVED" %}
-
-                                            <span class="status approved">
-                                                Expert Approved
-                                            </span>
-
-
-                                        {% elif proposal.status == "COORDINATOR_APPROVED" %}
-
-                                            <span class="status coordinator">
-                                                Coordinator Approved
-                                            </span>
-
-
-                                        {% elif proposal.status == "GUIDE_ASSIGNED" %}
-
-                                            <span class="status guide">
-                                                Guide Assigned
-                                            </span>
-
-
-                                        {% elif proposal.status == "GUIDE_REJECTED" %}
-
-                                            <span class="status rejected">
-                                                Guide Rejected
-                                            </span>
-
-
-                                        {% elif proposal.status == "IN_PROGRESS" %}
-
-                                            <span class="status progress">
-                                                In Progress
-                                            </span>
-
-
-                                        {% elif proposal.status == "COMPLETED" %}
-
-                                            <span class="status completed">
-                                                Completed
-                                            </span>
-
-
-                                        {% elif proposal.status == "REJECTED" %}
-
-                                            <span class="status rejected">
-                                                Rejected
-                                            </span>
-
-
-                                        {% else %}
-
-                                            <span class="status submitted">
-                                                {{ proposal.get_status_display }}
-                                            </span>
-
-                                        {% endif %}
-
-                                    </td>
-
-
-
-                                    <!-- ACTION -->
-
-                                    <td>
-
-                                        <a
-                                            href="{% url 'coordinator:proposal_detail' proposal.id %}"
-                                            class="view-btn"
-                                        >
-                                            View
-                                        </a>
-
-                                    </td>
-
-
-                                </tr>
-
-                            {% endfor %}
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            {% else %}
-
-                <div class="empty">
-
-                    <div class="empty-title">
-                        No Project Proposals
-                    </div>
-
-                    <div>
-                        No project proposals found.
-                    </div>
-
-                </div>
-
-            {% endif %}
-
-        </div>
-
+        {% endif %}
 
     </div>
 

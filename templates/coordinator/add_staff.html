@@ -1,6 +1,5 @@
 {% extends "base.html" %}
 
-
 {% block title %}
 Add Staff | SPMS
 {% endblock %}
@@ -10,46 +9,15 @@ Add Staff | SPMS
 
 <style>
 
-/* =========================================================
-   GLOBAL
-   ========================================================= */
-
-* {
-    box-sizing: border-box;
-}
-
-body {
-    background: #f4f6f9;
-    color: #1e293b;
-
-    font-family:
-        Inter,
-        -apple-system,
-        BlinkMacSystemFont,
-        "Segoe UI",
-        Roboto,
-        Arial,
-        sans-serif;
-}
-
-
-/* =========================================================
-   PAGE CONTAINER
-   ========================================================= */
-
 .staff-container {
 
-    max-width: 920px;
+    max-width: 850px;
 
-    margin: 35px auto;
+    margin: 40px auto;
 
     padding: 0 20px;
 }
 
-
-/* =========================================================
-   CARD
-   ========================================================= */
 
 .staff-card {
 
@@ -57,66 +25,28 @@ body {
 
     border: 1px solid #e2e8f0;
 
-    border-radius: 12px;
+    border-radius: 16px;
 
-    padding: 32px;
+    padding: 35px;
 
     box-shadow:
-        0 3px 12px rgba(15, 23, 42, 0.05);
+        0 5px 20px rgba(15, 23, 42, 0.06);
 }
 
-
-/* =========================================================
-   HEADER
-   ========================================================= */
 
 .staff-header {
 
-    display: flex;
-
-    align-items: center;
-
-    gap: 15px;
-
-    margin-bottom: 28px;
-
-    padding-bottom: 22px;
-
-    border-bottom: 1px solid #edf1f5;
-}
-
-
-.staff-header-icon {
-
-    width: 48px;
-
-    height: 48px;
-
-    min-width: 48px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    border-radius: 10px;
-
-    background: #edf5ff;
-
-    color: #2563eb;
+    margin-bottom: 30px;
 }
 
 
 .staff-header h1 {
 
-    margin: 0 0 5px;
+    margin: 0 0 8px;
 
-    color: #172033;
+    color: #0f172a;
 
-    font-size: 24px;
-
-    font-weight: 700;
+    font-size: 26px;
 }
 
 
@@ -124,52 +54,22 @@ body {
 
     margin: 0;
 
-    color: #718096;
+    color: #64748b;
 
-    font-size: 13px;
+    font-size: 14px;
 }
 
-
-/* =========================================================
-   SVG ICON
-   ========================================================= */
-
-.staff-icon {
-
-    width: 22px;
-
-    height: 22px;
-
-    fill: none;
-
-    stroke: currentColor;
-
-    stroke-width: 1.8;
-
-    stroke-linecap: round;
-
-    stroke-linejoin: round;
-}
-
-
-/* =========================================================
-   FORM GRID
-   ========================================================= */
 
 .form-grid {
 
     display: grid;
 
     grid-template-columns:
-        repeat(2, minmax(0, 1fr));
+        repeat(2, 1fr);
 
-    gap: 19px;
+    gap: 20px;
 }
 
-
-/* =========================================================
-   FORM GROUP
-   ========================================================= */
 
 .form-group {
 
@@ -189,7 +89,7 @@ body {
 
     margin-bottom: 7px;
 
-    font-size: 13px;
+    font-size: 14px;
 
     font-weight: 600;
 
@@ -197,64 +97,46 @@ body {
 }
 
 
-/* =========================================================
-   INPUTS
-   ========================================================= */
-
 .form-group input,
 .form-group select {
 
     width: 100%;
 
-    min-height: 44px;
-
-    padding: 10px 13px;
+    padding: 12px 14px;
 
     border: 1px solid #cbd5e1;
 
-    border-radius: 7px;
+    border-radius: 8px;
 
-    font-size: 13px;
-
-    color: #1e293b;
+    font-size: 14px;
 
     outline: none;
 
     background: #ffffff;
 
-    transition:
-        border-color 0.2s ease,
-        box-shadow 0.2s ease;
-}
-
-
-.form-group input::placeholder {
-
-    color: #94a3b8;
+    transition: 0.2s;
 }
 
 
 .form-group input:focus,
 .form-group select:focus {
 
-    border-color: #3b82f6;
+    border-color: #2563eb;
 
     box-shadow:
-        0 0 0 3px rgba(59, 130, 246, 0.10);
+        0 0 0 3px rgba(37, 99, 235, 0.1);
 }
 
 
-/* =========================================================
-   ROLE SECTION
-   ========================================================= */
+/* ROLE SELECT */
 
 .role-box {
 
-    background: #f7faff;
+    background: #eff6ff;
 
-    border: 1px solid #dbeafe;
+    border: 1px solid #bfdbfe;
 
-    border-radius: 10px;
+    border-radius: 12px;
 
     padding: 18px;
 }
@@ -263,14 +145,6 @@ body {
 .role-box label {
 
     color: #1e3a8a;
-
-    font-size: 13px;
-}
-
-
-.role-box select {
-
-    border-color: #bfdbfe;
 }
 
 
@@ -278,17 +152,13 @@ body {
 
     margin-top: 7px;
 
-    font-size: 11.5px;
+    font-size: 12px;
 
-    line-height: 1.5;
-
-    color: #718096;
+    color: #64748b;
 }
 
 
-/* =========================================================
-   FORM ACTIONS
-   ========================================================= */
+/* BUTTONS */
 
 .form-actions {
 
@@ -300,153 +170,72 @@ body {
 
     margin-top: 30px;
 
-    padding-top: 23px;
+    padding-top: 25px;
 
     border-top: 1px solid #e2e8f0;
 }
 
 
-/* =========================================================
-   BACK BUTTON
-   ========================================================= */
-
 .back-button {
 
-    display: inline-flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 7px;
-
-    min-height: 42px;
-
-    padding: 10px 18px;
+    padding: 11px 20px;
 
     background: #f1f5f9;
 
-    color: #475569;
+    color: #334155;
 
     text-decoration: none;
 
-    border: 1px solid #e2e8f0;
+    border-radius: 8px;
 
-    border-radius: 7px;
-
-    font-size: 13px;
+    font-size: 14px;
 
     font-weight: 600;
-
-    transition:
-        background 0.2s ease,
-        border-color 0.2s ease;
 }
 
-
-.back-button:hover {
-
-    background: #e2e8f0;
-
-    border-color: #cbd5e1;
-
-    color: #1e293b;
-}
-
-
-/* =========================================================
-   SUBMIT BUTTON
-   ========================================================= */
 
 .submit-button {
 
-    display: inline-flex;
-
-    align-items: center;
-
-    justify-content: center;
-
-    gap: 8px;
-
-    min-height: 42px;
-
     border: none;
 
-    padding: 10px 20px;
+    padding: 11px 22px;
 
     background: #2563eb;
 
     color: #ffffff;
 
-    border-radius: 7px;
+    border-radius: 8px;
 
-    font-size: 13px;
+    font-size: 14px;
 
     font-weight: 600;
 
     cursor: pointer;
-
-    transition:
-        background 0.2s ease,
-        transform 0.2s ease,
-        box-shadow 0.2s ease;
 }
 
 
 .submit-button:hover {
 
     background: #1d4ed8;
-
-    transform: translateY(-1px);
-
-    box-shadow:
-        0 4px 10px rgba(37, 99, 235, 0.20);
 }
 
 
-/* =========================================================
-   RESPONSIVE
-   ========================================================= */
-
-@media (max-width: 700px) {
-
-    .staff-container {
-
-        margin: 25px auto;
-
-        padding: 0 14px;
-    }
-
+@media (max-width: 650px) {
 
     .staff-card {
 
-        padding: 24px 19px;
+        padding: 25px 20px;
     }
-
-
-    .staff-header {
-
-        align-items: flex-start;
-    }
-
-
-    .staff-header h1 {
-
-        font-size: 21px;
-    }
-
 
     .form-grid {
 
         grid-template-columns: 1fr;
     }
 
-
     .form-group.full {
 
         grid-column: auto;
     }
-
 
     .form-actions {
 
@@ -456,7 +245,6 @@ body {
 
         align-items: stretch;
     }
-
 
     .back-button,
     .submit-button {
@@ -473,72 +261,30 @@ body {
 {% endblock %}
 
 
-
 {% block content %}
 
-
 <div class="staff-container">
-
 
     <div class="staff-card">
 
 
-        <!-- =================================================
-             HEADER
-             ================================================= -->
+        <!-- HEADER -->
 
         <div class="staff-header">
 
-            <div class="staff-header-icon">
+            <h1>
+                ➕ Add Staff
+            </h1>
 
-                <svg
-                    class="staff-icon"
-                    viewBox="0 0 24 24"
-                >
-
-                    <circle
-                        cx="9"
-                        cy="8"
-                        r="3.5"
-                    ></circle>
-
-                    <path
-                        d="M2.5 20a6 6 0 0 1 12 0"
-                    ></path>
-
-                    <path
-                        d="M18 8v7"
-                    ></path>
-
-                    <path
-                        d="M14.5 11.5h7"
-                    ></path>
-
-                </svg>
-
-            </div>
-
-
-            <div>
-
-                <h1>
-                    Add Staff
-                </h1>
-
-                <p>
-                    Create a login account for a Domain Expert,
-                    Guide or Panel Member.
-                </p>
-
-            </div>
+            <p>
+                Create a login account for a Domain Expert,
+                Guide or Panel Member.
+            </p>
 
         </div>
 
 
-
-        <!-- =================================================
-             FORM
-             ================================================= -->
+        <!-- FORM -->
 
         <form
             method="POST"
@@ -551,16 +297,12 @@ body {
             <div class="form-grid">
 
 
-                <!-- =================================================
-                     ROLE
-                     ================================================= -->
+                <!-- ROLE -->
 
                 <div class="form-group full role-box">
 
                     <label for="role">
-
                         Select Staff Type *
-
                     </label>
 
 
@@ -574,19 +316,16 @@ body {
                             -- Select Staff Type --
                         </option>
 
-
                         <option value="EXPERT">
-                            Domain Expert
+                            👨‍🏫 Domain Expert
                         </option>
-
 
                         <option value="GUIDE">
-                            Guide
+                            👨‍🏫 Guide
                         </option>
 
-
                         <option value="PANEL">
-                            Panel Member
+                            👥 Panel Member
                         </option>
 
                     </select>
@@ -602,17 +341,13 @@ body {
                 </div>
 
 
-
-                <!-- =================================================
-                     USERNAME
-                     ================================================= -->
+                <!-- USERNAME -->
 
                 <div class="form-group">
 
                     <label for="username">
                         Username *
                     </label>
-
 
                     <input
                         type="text"
@@ -625,17 +360,13 @@ body {
                 </div>
 
 
-
-                <!-- =================================================
-                     PASSWORD
-                     ================================================= -->
+                <!-- PASSWORD -->
 
                 <div class="form-group">
 
                     <label for="password">
                         Password *
                     </label>
-
 
                     <input
                         type="password"
@@ -648,17 +379,13 @@ body {
                 </div>
 
 
-
-                <!-- =================================================
-                     FIRST NAME
-                     ================================================= -->
+                <!-- FIRST NAME -->
 
                 <div class="form-group">
 
                     <label for="first_name">
                         First Name
                     </label>
-
 
                     <input
                         type="text"
@@ -670,17 +397,13 @@ body {
                 </div>
 
 
-
-                <!-- =================================================
-                     LAST NAME
-                     ================================================= -->
+                <!-- LAST NAME -->
 
                 <div class="form-group">
 
                     <label for="last_name">
                         Last Name
                     </label>
-
 
                     <input
                         type="text"
@@ -692,17 +415,13 @@ body {
                 </div>
 
 
-
-                <!-- =================================================
-                     EMAIL
-                     ================================================= -->
+                <!-- EMAIL -->
 
                 <div class="form-group">
 
                     <label for="email">
                         Email
                     </label>
-
 
                     <input
                         type="email"
@@ -714,17 +433,13 @@ body {
                 </div>
 
 
-
-                <!-- =================================================
-                     PHONE
-                     ================================================= -->
+                <!-- PHONE -->
 
                 <div class="form-group">
 
                     <label for="phone">
                         Phone
                     </label>
-
 
                     <input
                         type="text"
@@ -739,21 +454,15 @@ body {
             </div>
 
 
-
-            <!-- =================================================
-                 ACTIONS
-                 ================================================= -->
+            <!-- ACTIONS -->
 
             <div class="form-actions">
-
 
                 <a
                     href="{% url 'coordinator:dashboard' %}"
                     class="back-button"
                 >
-
-                    ← Back to Dashboard
-
+                    ← Back
                 </a>
 
 
@@ -761,9 +470,7 @@ body {
                     type="submit"
                     class="submit-button"
                 >
-
                     Create Staff Account
-
                 </button>
 
             </div>
@@ -771,9 +478,9 @@ body {
 
         </form>
 
+
     </div>
 
 </div>
-
 
 {% endblock %}

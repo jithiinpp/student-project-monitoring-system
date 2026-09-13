@@ -9,231 +9,237 @@ SPMS | Login
 
 <style>
 
-    /* =========================================================
+    /* ==============================
        LOGIN PAGE
-       ========================================================= */
+    ============================== */
 
     .auth-page {
         min-height: calc(100vh - 70px);
 
         display: flex;
-
         align-items: center;
-
         justify-content: center;
 
-        padding: 30px 20px;
+        padding: 40px 20px;
 
-        background: #f5f7fb;
+        background: #f4f7fb;
     }
 
 
-    /* =========================================================
+    /* ==============================
        LOGIN CARD
-       ========================================================= */
+    ============================== */
 
     .auth-card {
+
         width: 100%;
-
-        max-width: 420px;
-
-        padding: 38px;
+        max-width: 450px;
 
         background: #ffffff;
 
-        border: 1px solid #e5e7eb;
+        padding: 40px;
 
-        border-radius: 10px;
+        border-radius: 18px;
 
         box-shadow:
-            0 4px 15px rgba(15, 23, 42, 0.06);
+            0 10px 35px rgba(0, 0, 0, 0.08);
 
         text-align: center;
     }
 
 
-    /* =========================================================
+    /* ==============================
        LOGO
-       ========================================================= */
+    ============================== */
 
     .auth-logo {
-        width: 58px;
 
-        height: 58px;
+        width: 66px;
+        height: 66px;
 
-        margin: 0 auto 18px;
+        margin: 0 auto 20px;
 
         display: flex;
-
         align-items: center;
-
         justify-content: center;
 
         background: #2563eb;
 
         color: #ffffff;
 
-        border-radius: 10px;
+        border-radius: 15px;
 
-        font-size: 17px;
-
+        font-size: 20px;
         font-weight: 700;
 
         letter-spacing: 0.5px;
     }
 
 
-    /* =========================================================
+    /* ==============================
        HEADING
-       ========================================================= */
+    ============================== */
 
     .auth-card h1 {
+
         margin: 0;
 
-        color: #111827;
+        font-size: 30px;
 
-        font-size: 26px;
+        color: #111827;
 
         font-weight: 700;
     }
 
 
     .auth-subtitle {
-        margin: 8px 0 28px;
+
+        margin: 10px 0 30px;
 
         color: #64748b;
 
-        font-size: 13px;
-
-        line-height: 1.5;
+        font-size: 15px;
     }
 
 
-    /* =========================================================
+    /* ==============================
        FORM
-       ========================================================= */
+    ============================== */
 
     .auth-form {
+
         text-align: left;
     }
 
 
     .form-group {
-        margin-bottom: 18px;
+
+        margin-bottom: 20px;
     }
 
 
     .form-group label {
+
         display: block;
 
-        margin-bottom: 7px;
+        margin-bottom: 8px;
 
         color: #334155;
 
-        font-size: 13px;
+        font-size: 14px;
 
         font-weight: 600;
     }
 
 
     .form-group input {
+
         width: 100%;
 
         box-sizing: border-box;
 
-        padding: 12px 13px;
-
-        background: #ffffff;
+        padding: 13px 14px;
 
         border: 1px solid #d1d5db;
 
-        border-radius: 7px;
+        border-radius: 9px;
+
+        background: #ffffff;
 
         color: #111827;
 
-        font-size: 13px;
+        font-size: 14px;
 
         outline: none;
 
-        transition:
-            border-color 0.2s ease,
-            box-shadow 0.2s ease;
+        transition: 0.2s ease;
     }
 
 
     .form-group input::placeholder {
+
         color: #94a3b8;
     }
 
 
     .form-group input:focus {
+
         border-color: #2563eb;
 
         box-shadow:
-            0 0 0 3px rgba(37, 99, 235, 0.10);
+            0 0 0 3px rgba(37, 99, 235, 0.12);
     }
 
 
-    /* =========================================================
+    /* ==============================
        LOGIN BUTTON
-       ========================================================= */
+    ============================== */
 
     .auth-button {
+
         width: 100%;
 
-        padding: 12px 16px;
-
-        background: #2563eb;
+        padding: 13px 18px;
 
         border: none;
 
-        border-radius: 7px;
+        border-radius: 9px;
+
+        background: #2563eb;
 
         color: #ffffff;
 
-        font-size: 14px;
+        font-size: 15px;
 
         font-weight: 600;
 
         cursor: pointer;
 
-        transition: background 0.2s ease;
+        transition: 0.2s ease;
     }
 
 
     .auth-button:hover {
+
         background: #1d4ed8;
+
+        transform: translateY(-1px);
     }
 
 
-    /* =========================================================
-       REGISTER
-       ========================================================= */
+    .auth-button:active {
+
+        transform: translateY(0);
+    }
+
+
+    /* ==============================
+       FOOTER
+    ============================== */
 
     .auth-footer {
-        margin-top: 22px;
 
-        padding-top: 20px;
-
-        border-top: 1px solid #eef0f3;
+        margin-top: 25px;
 
         text-align: center;
     }
 
 
     .auth-footer p {
-        margin: 0 0 7px;
+
+        margin: 0 0 8px;
 
         color: #64748b;
 
-        font-size: 13px;
+        font-size: 14px;
     }
 
 
     .auth-footer a {
+
         color: #2563eb;
 
-        font-size: 13px;
+        font-size: 14px;
 
         font-weight: 600;
 
@@ -242,135 +248,132 @@ SPMS | Login
 
 
     .auth-footer a:hover {
+
         text-decoration: underline;
     }
 
 
-    /* =========================================================
-       MESSAGES
-       ========================================================= */
+    /* ==============================
+       LOGOUT SUCCESS POPUP
+    ============================== */
 
-    .message-container {
+    .logout-popup {
+
         position: fixed;
 
         top: 20px;
 
         right: 20px;
 
-        z-index: 9999;
+        z-index: 99999;
 
-        width: 320px;
-    }
+        width: 300px;
 
-
-    .message {
-        margin-bottom: 10px;
-
-        padding: 13px 15px;
+        padding: 14px 18px;
 
         background: #ffffff;
 
-        border: 1px solid #e5e7eb;
+        color: #1f2937;
 
-        border-left: 4px solid #2563eb;
+        border-left: 4px solid #16a34a;
 
-        border-radius: 7px;
+        border-radius: 8px;
 
         box-shadow:
-            0 5px 20px rgba(15, 23, 42, 0.08);
+            0 8px 25px rgba(0, 0, 0, 0.12);
 
-        color: #334155;
+        font-size: 14px;
 
-        font-size: 13px;
+        font-weight: 500;
 
-        line-height: 1.5;
+        text-align: left;
 
-        animation: messageIn 0.25s ease;
+        animation: popupIn 0.35s ease;
     }
 
 
-    .message.success {
+    /* Popup success */
+
+    .logout-popup.success {
+
         border-left-color: #16a34a;
     }
 
 
-    .message.error {
-        border-left-color: #dc2626;
-    }
+    /* Popup animation */
 
-
-    .message.warning {
-        border-left-color: #d97706;
-    }
-
-
-    /* =========================================================
-       MESSAGE ANIMATION
-       ========================================================= */
-
-    @keyframes messageIn {
+    @keyframes popupIn {
 
         from {
+
             opacity: 0;
 
-            transform: translateX(20px);
+            transform: translateX(30px);
         }
 
         to {
+
             opacity: 1;
 
             transform: translateX(0);
         }
-
     }
 
 
-    @keyframes messageOut {
+    /* Popup hide animation */
+
+    .logout-popup.hide {
+
+        animation: popupOut 0.4s ease forwards;
+    }
+
+
+    @keyframes popupOut {
 
         from {
+
             opacity: 1;
 
             transform: translateX(0);
         }
 
         to {
+
             opacity: 0;
 
-            transform: translateX(20px);
+            transform: translateX(30px);
         }
-
     }
 
 
-    .message.hide {
-        animation: messageOut 0.3s ease forwards;
-    }
-
-
-    /* =========================================================
+    /* ==============================
        MOBILE
-       ========================================================= */
+    ============================== */
 
     @media (max-width: 600px) {
 
         .auth-page {
-            padding: 20px 14px;
+
+            padding: 25px 15px;
         }
 
 
         .auth-card {
+
             padding: 30px 22px;
 
-            border-radius: 9px;
+            border-radius: 14px;
         }
 
 
         .auth-card h1 {
-            font-size: 23px;
+
+            font-size: 26px;
         }
 
 
-        .message-container {
+        .logout-popup {
+
             top: 15px;
 
             right: 15px;
@@ -387,37 +390,33 @@ SPMS | Login
 {% endblock %}
 
 
-
 {% block content %}
 
 
-<!-- =========================================================
-     MESSAGES
-     ========================================================= -->
+<!-- =================================
+     LOGOUT SUCCESS POPUP
+================================= -->
 
 {% if messages %}
 
-    <div class="message-container">
+    {% for message in messages %}
 
-        {% for message in messages %}
+        <div
+            class="logout-popup {{ message.tags }}"
+            id="logoutPopup"
+        >
+            {{ message }}
+        </div>
 
-            <div class="message {{ message.tags }}">
-
-                {{ message }}
-
-            </div>
-
-        {% endfor %}
-
-    </div>
+    {% endfor %}
 
 {% endif %}
 
 
 
-<!-- =========================================================
+<!-- =================================
      LOGIN PAGE
-     ========================================================= -->
+================================= -->
 
 <div class="auth-page">
 
@@ -431,7 +430,6 @@ SPMS | Login
         </div>
 
 
-
         <!-- TITLE -->
 
         <h1>
@@ -442,7 +440,6 @@ SPMS | Login
         <p class="auth-subtitle">
             Student Project Monitoring System
         </p>
-
 
 
         <!-- LOGIN FORM -->
@@ -475,7 +472,6 @@ SPMS | Login
             </div>
 
 
-
             <!-- PASSWORD -->
 
             <div class="form-group">
@@ -496,7 +492,6 @@ SPMS | Login
             </div>
 
 
-
             <!-- LOGIN BUTTON -->
 
             <button
@@ -507,7 +502,6 @@ SPMS | Login
             </button>
 
         </form>
-
 
 
         <!-- REGISTER -->
@@ -524,41 +518,37 @@ SPMS | Login
 
         </div>
 
-
     </div>
 
 </div>
 
 
 
-<!-- =========================================================
-     MESSAGE SCRIPT
-     ========================================================= -->
+<!-- =================================
+     POPUP SCRIPT
+================================= -->
 
 <script>
 
     document.addEventListener("DOMContentLoaded", function () {
 
-        const messages =
-            document.querySelectorAll(".message");
+        const popup = document.getElementById("logoutPopup");
 
-
-        messages.forEach(function (message) {
+        if (popup) {
 
             setTimeout(function () {
 
-                message.classList.add("hide");
-
+                popup.classList.add("hide");
 
                 setTimeout(function () {
 
-                    message.remove();
+                    popup.remove();
 
-                }, 300);
+                }, 400);
 
             }, 3000);
 
-        });
+        }
 
     });
 

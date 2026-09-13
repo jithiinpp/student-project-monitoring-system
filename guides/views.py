@@ -6,7 +6,13 @@ from django.shortcuts import (
     render,
 )
 
-from projects.models import ProjectProposal
+from projects.models import (
+    ProjectProposal,
+    ProjectProgress,
+)
+
+from .models import GuideEvaluation
+from .forms import GuideEvaluationForm
 
 
 # =========================================================
@@ -43,7 +49,11 @@ def dashboard(request):
         .filter(
             guide=request.user
         )
-        .select_related("student")
+        .select_related(
+            "student",
+            "domain_expert",
+            "guide",
+        )
         .order_by("-updated_at")
     )
 
@@ -75,6 +85,39 @@ def dashboard(request):
 
 
 # =========================================================
+# GUIDE ASSIGNED STUDENTS
+# =========================================================
+
+@guide_required
+def students(request):
+
+    assigned_projects = (
+        ProjectProposal.objects
+        .filter(
+            guide=request.user
+        )
+        .select_related(
+            "student",
+            "domain_expert",
+            "guide",
+        )
+        .order_by(
+            "student__first_name",
+            "student__last_name",
+            "-updated_at",
+        )
+    )
+
+    return render(
+        request,
+        "guides/students.html",
+        {
+            "assigned_projects": assigned_projects,
+        }
+    )
+
+
+# =========================================================
 # GUIDE PROJECT DETAIL
 # =========================================================
 
@@ -85,17 +128,141 @@ def project_detail(request, proposal_id):
         ProjectProposal.objects.select_related(
             "student",
             "domain_expert",
-            "guide"
+            "guide",
         ),
         id=proposal_id,
-        guide=request.user
+        guide=request.user,
+    )
+
+    # Get weekly progress reports
+    progress_reports = (
+        ProjectProgress.objects
+        .filter(
+            project=proposal,
+            student=proposal.student,
+        )
+        .order_by(
+            "-week_number",
+            "-submitted_at",
+        )
+    )
+
+    # Get existing evaluation
+    evaluation = (
+        GuideEvaluation.objects
+        .filter(
+            project=proposal,
+            guide=request.user,
+        )
+        .first()
+    )
+
+    if evaluation:
+        evaluation_form = GuideEvaluationForm(
+            instance=evaluation
+        )
+    else:
+        evaluation_form = GuideEvaluationForm()
+
+    return render(
+        request,
+        "guide/project_detail.html",
+        {
+            "proposal": proposal,
+            "project": proposal,
+            "progress_reports": progress_reports,
+            "evaluation": evaluation,
+            "evaluation_form": evaluation_form,
+        }
+    )
+
+
+# =========================================================
+# GUIDE EVALUATION / MARKS
+# =========================================================
+
+@guide_required
+def evaluate_project(request, proposal_id):
+
+    proposal = get_object_or_404(
+        ProjectProposal,
+        id=proposal_id,
+        guide=request.user,
+    )
+
+    # Only POST is allowed
+    if request.method != "POST":
+
+        return redirect(
+            "guides:project_detail",
+            proposal_id=proposal.id,
+        )
+
+    evaluation = (
+        GuideEvaluation.objects
+        .filter(
+            project=proposal,
+            guide=request.user,
+        )
+        .first()
+    )
+
+    if evaluation:
+
+        form = GuideEvaluationForm(
+            request.POST,
+            instance=evaluation,
+        )
+
+    else:
+
+        form = GuideEvaluationForm(
+            request.POST
+        )
+
+    if form.is_valid():
+
+        evaluation = form.save(
+            commit=False
+        )
+
+        evaluation.project = proposal
+        evaluation.guide = request.user
+
+        evaluation.save()
+
+        messages.success(
+            request,
+            "Student evaluation and marks have been saved successfully."
+        )
+
+        return redirect(
+            "guides:project_detail",
+            proposal_id=proposal.id,
+        )
+
+    # If validation fails, show the same page
+    progress_reports = (
+        ProjectProgress.objects
+        .filter(
+            project=proposal,
+            student=proposal.student,
+        )
+        .order_by(
+            "-week_number",
+            "-submitted_at",
+        )
     )
 
     return render(
         request,
         "guides/project_detail.html",
         {
-            "proposal": proposal
+            "proposal": proposal,
+            "project": proposal,
+            "progress_reports": progress_reports,
+            "evaluation": evaluation,
+            "evaluation_form": form,
         }
     )
 
@@ -110,7 +277,7 @@ def reject_project(request, proposal_id):
     proposal = get_object_or_404(
         ProjectProposal,
         id=proposal_id,
-        guide=request.user
+        guide=request.user,
     )
 
     # Only POST
@@ -118,7 +285,7 @@ def reject_project(request, proposal_id):
 
         return redirect(
             "guides:project_detail",
-            proposal_id=proposal.id
+            proposal_id=proposal.id,
         )
 
     # Guide can reject only assigned projects
@@ -131,7 +298,7 @@ def reject_project(request, proposal_id):
 
         return redirect(
             "guides:project_detail",
-            proposal_id=proposal.id
+            proposal_id=proposal.id,
         )
 
     proposal.status = "GUIDE_REJECTED"
@@ -139,7 +306,7 @@ def reject_project(request, proposal_id):
     proposal.save(
         update_fields=[
             "status",
-            "updated_at"
+            "updated_at",
         ]
     )
 
@@ -163,14 +330,14 @@ def start_project(request, proposal_id):
     proposal = get_object_or_404(
         ProjectProposal,
         id=proposal_id,
-        guide=request.user
+        guide=request.user,
     )
 
     if request.method != "POST":
 
         return redirect(
             "guides:project_detail",
-            proposal_id=proposal.id
+            proposal_id=proposal.id,
         )
 
     if proposal.status != "GUIDE_ASSIGNED":
@@ -182,7 +349,7 @@ def start_project(request, proposal_id):
 
         return redirect(
             "guides:project_detail",
-            proposal_id=proposal.id
+            proposal_id=proposal.id,
         )
 
     proposal.status = "IN_PROGRESS"
@@ -190,7 +357,7 @@ def start_project(request, proposal_id):
     proposal.save(
         update_fields=[
             "status",
-            "updated_at"
+            "updated_at",
         ]
     )
 
@@ -201,5 +368,5 @@ def start_project(request, proposal_id):
 
     return redirect(
         "guides:project_detail",
-        proposal_id=proposal.id
+        proposal_id=proposal.id,
     )

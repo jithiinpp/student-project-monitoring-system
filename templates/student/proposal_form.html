@@ -1,22 +1,18 @@
 {% extends "base.html" %}
 
-{% block title %}
-Submit Proposal | SPMS
-{% endblock %}
+{% block title %}Submit Proposal | SPMS{% endblock %}
 
 {% block content %}
 
 <style>
-
     * {
         box-sizing: border-box;
     }
 
     .proposal-page {
         min-height: 100vh;
-        padding: 30px;
         background: #f5f7fb;
-        font-family: Arial, Helvetica, sans-serif;
+        padding: 30px;
     }
 
     .proposal-container {
@@ -24,149 +20,82 @@ Submit Proposal | SPMS
         margin: 0 auto;
     }
 
-    /* =========================
-       PAGE HEADER
-    ========================= */
-
+    /* Header */
     .page-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-
-        gap: 20px;
         margin-bottom: 25px;
+        gap: 20px;
     }
 
     .page-header h1 {
         margin: 0;
-
-        color: #0f172a;
-        font-size: 28px;
-        font-weight: 700;
+        font-size: 30px;
+        color: #1f2937;
     }
 
     .page-header p {
         margin: 7px 0 0;
-
-        color: #64748b;
-        font-size: 14px;
+        color: #6b7280;
+        font-size: 15px;
     }
 
-    /* =========================
-       BACK BUTTON
-    ========================= */
-
     .back-btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 7px;
-
-        padding: 10px 16px;
-
-        background: #ffffff;
-        color: #475569;
-
-        border: 1px solid #cbd5e1;
-        border-radius: 8px;
-
         text-decoration: none;
-
-        font-size: 13px;
+        padding: 11px 18px;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #374151;
+        border: 1px solid #d1d5db;
+        font-size: 14px;
         font-weight: 600;
-
-        white-space: nowrap;
-
-        transition: background 0.2s ease;
+        transition: 0.2s;
     }
 
     .back-btn:hover {
-        background: #f8fafc;
-        color: #0f172a;
+        background: #f3f4f6;
     }
 
-    .back-btn svg {
-        width: 16px;
-        height: 16px;
-
-        fill: none;
-        stroke: currentColor;
-
-        stroke-width: 1.8;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-    }
-
-    /* =========================
-       PROPOSAL LIMIT
-    ========================= */
-
+    /* Proposal limit */
     .proposal-limit {
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 18px 22px;
+        margin-bottom: 22px;
         display: flex;
         justify-content: space-between;
         align-items: center;
-
-        gap: 20px;
-
-        padding: 17px 20px;
-        margin-bottom: 22px;
-
-        background: #ffffff;
-
-        border: 1px solid #e2e8f0;
-        border-radius: 10px;
-
-        box-shadow: 0 2px 7px rgba(15, 23, 42, 0.03);
+        gap: 15px;
     }
 
     .limit-title {
-        margin-bottom: 4px;
-
-        color: #334155;
-
-        font-size: 14px;
         font-weight: 700;
+        color: #374151;
+        margin-bottom: 5px;
     }
 
     .limit-text {
-        color: #64748b;
-        font-size: 13px;
+        color: #6b7280;
+        font-size: 14px;
     }
 
     .limit-count {
-        min-width: 60px;
-
-        padding: 8px 12px;
-
-        background: #eff6ff;
-        color: #2563eb;
-
-        border: 1px solid #dbeafe;
-        border-radius: 7px;
-
-        text-align: center;
-
-        font-size: 15px;
+        font-size: 18px;
         font-weight: 700;
+        color: #2563eb;
+        white-space: nowrap;
     }
 
-    /* =========================
-       FORM CARD
-    ========================= */
-
+    /* Form card */
     .form-card {
         background: #ffffff;
-
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-
+        border-radius: 14px;
+        border: 1px solid #e5e7eb;
         padding: 30px;
-
-        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
     }
-
-    /* =========================
-       FORM SECTION
-    ========================= */
 
     .form-section {
         margin-bottom: 30px;
@@ -177,44 +106,18 @@ Submit Proposal | SPMS
     }
 
     .section-title {
-        display: flex;
-        align-items: center;
-        gap: 9px;
-
-        margin: 0 0 20px;
-
-        padding-bottom: 11px;
-
-        color: #0f172a;
-
-        border-bottom: 1px solid #e5e7eb;
-
-        font-size: 17px;
+        font-size: 18px;
         font-weight: 700;
+        color: #1f2937;
+        margin: 0 0 18px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #e5e7eb;
     }
-
-    .section-title svg {
-        width: 19px;
-        height: 19px;
-
-        fill: none;
-        stroke: #2563eb;
-
-        stroke-width: 1.8;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-    }
-
-    /* =========================
-       FORM GRID
-    ========================= */
 
     .form-grid {
         display: grid;
-
         grid-template-columns: 1fr 1fr;
-
-        gap: 21px;
+        gap: 20px;
     }
 
     .form-group {
@@ -227,310 +130,157 @@ Submit Proposal | SPMS
     }
 
     .form-group label {
-        margin-bottom: 7px;
-
-        color: #334155;
-
-        font-size: 13px;
+        font-size: 14px;
         font-weight: 600;
+        color: #374151;
+        margin-bottom: 8px;
     }
 
     .required {
         color: #dc2626;
     }
 
-    /* =========================
-       INPUTS
-    ========================= */
-
     .form-group input,
     .form-group textarea,
     .form-group select {
         width: 100%;
-        box-sizing: border-box;
-
-        padding: 12px 13px;
-
-        background: #ffffff;
-        color: #0f172a;
-
-        border: 1px solid #cbd5e1;
+        padding: 12px 14px;
+        border: 1px solid #d1d5db;
         border-radius: 8px;
-
-        outline: none;
-
-        font-family: Arial, Helvetica, sans-serif;
         font-size: 14px;
-
-        transition:
-            border-color 0.2s ease,
-            box-shadow 0.2s ease;
-    }
-
-    .form-group textarea {
-        min-height: 135px;
-        resize: vertical;
-
-        line-height: 1.6;
+        font-family: inherit;
+        color: #1f2937;
+        background: #ffffff;
+        outline: none;
+        transition: 0.2s;
     }
 
     .form-group input:focus,
     .form-group textarea:focus,
     .form-group select:focus {
         border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+    }
 
-        box-shadow:
-            0 0 0 3px rgba(37, 99, 235, 0.10);
+    .form-group textarea {
+        min-height: 130px;
+        resize: vertical;
     }
 
     .form-help {
         margin-top: 6px;
-
-        color: #64748b;
-
         font-size: 12px;
+        color: #6b7280;
         line-height: 1.5;
     }
 
-    /* =========================
-       FILE UPLOAD
-    ========================= */
-
+    /* File upload */
     .file-box {
-        padding: 24px;
-
-        background: #f8fafc;
-
-        border: 1px dashed #cbd5e1;
+        border: 2px dashed #d1d5db;
         border-radius: 10px;
-
+        padding: 25px;
         text-align: center;
-
-        transition:
-            border-color 0.2s ease,
-            background 0.2s ease;
+        background: #fafafa;
+        transition: 0.2s;
     }
 
     .file-box:hover {
-        background: #f8fbff;
         border-color: #2563eb;
+        background: #f8fbff;
     }
 
-    .file-icon {
-        width: 42px;
-        height: 42px;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        margin: 0 auto 11px;
-
-        background: #eff6ff;
-        border: 1px solid #dbeafe;
-        border-radius: 8px;
-    }
-
-    .file-icon svg {
-        width: 21px;
-        height: 21px;
-
-        fill: none;
-        stroke: #2563eb;
-
-        stroke-width: 1.8;
-        stroke-linecap: round;
-        stroke-linejoin: round;
+    .file-box input {
+        border: none;
+        padding: 0;
+        box-shadow: none;
+        background: transparent;
     }
 
     .file-title {
-        margin-bottom: 5px;
-
-        color: #334155;
-
-        font-size: 14px;
-        font-weight: 700;
+        font-weight: 600;
+        color: #374151;
+        margin-bottom: 6px;
     }
 
     .file-description {
-        margin-bottom: 15px;
-
-        color: #64748b;
-
-        font-size: 12px;
-    }
-
-    .file-box input[type="file"] {
-        width: auto;
-
-        padding: 0;
-
-        border: none;
-        box-shadow: none;
-
-        background: transparent;
-
-        cursor: pointer;
-    }
-
-    /* =========================
-       ERRORS
-    ========================= */
-
-    .error-box {
-        margin-bottom: 20px;
-
-        padding: 13px 15px;
-
-        background: #fef2f2;
-        color: #b91c1c;
-
-        border: 1px solid #fecaca;
-        border-radius: 8px;
-
+        color: #6b7280;
         font-size: 13px;
-        line-height: 1.5;
+        margin-bottom: 15px;
+    }
+
+    /* Errors */
+    .error-box {
+        background: #fef2f2;
+        border: 1px solid #fecaca;
+        color: #b91c1c;
+        border-radius: 8px;
+        padding: 12px 15px;
+        margin-bottom: 20px;
+        font-size: 14px;
     }
 
     .field-error {
-        margin-top: 5px;
-
         color: #dc2626;
-
         font-size: 12px;
-    }
-
-    /* =========================
-       SUBMISSION NOTICE
-    ========================= */
-
-    .submission-notice {
-        display: flex;
-        align-items: flex-start;
-        gap: 10px;
-
         margin-top: 5px;
-        padding: 14px 16px;
-
-        background: #eff6ff;
-
-        border: 1px solid #dbeafe;
-        border-left: 4px solid #2563eb;
-
-        border-radius: 8px;
-
-        color: #475569;
-
-        font-size: 13px;
-        line-height: 1.6;
     }
 
-    .notice-icon {
-        width: 18px;
-        height: 18px;
-        min-width: 18px;
-
-        margin-top: 1px;
-    }
-
-    .notice-icon svg {
-        width: 18px;
-        height: 18px;
-
-        fill: none;
-        stroke: #2563eb;
-
-        stroke-width: 1.8;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-    }
-
-    .submission-notice strong {
-        color: #1e3a8a;
-    }
-
-    /* =========================
-       FORM ACTIONS
-    ========================= */
-
+    /* Buttons */
     .form-actions {
         display: flex;
         justify-content: flex-end;
-        align-items: center;
-
-        gap: 10px;
-
-        padding-top: 24px;
-        margin-top: 25px;
-
+        gap: 12px;
+        padding-top: 25px;
         border-top: 1px solid #e5e7eb;
     }
 
     .btn {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 7px;
-
-        min-height: 42px;
-
-        padding: 10px 18px;
-
-        border-radius: 8px;
-
-        font-size: 13px;
-        font-weight: 600;
-
-        cursor: pointer;
-
         text-decoration: none;
-
-        transition: background 0.2s ease;
-    }
-
-    .btn svg {
-        width: 16px;
-        height: 16px;
-
-        fill: none;
-        stroke: currentColor;
-
-        stroke-width: 1.8;
-        stroke-linecap: round;
-        stroke-linejoin: round;
+        border: none;
+        cursor: pointer;
+        padding: 12px 22px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        transition: 0.2s;
     }
 
     .btn-cancel {
-        background: #ffffff;
-        color: #475569;
-
-        border: 1px solid #cbd5e1;
+        background: #f3f4f6;
+        color: #374151;
+        border: 1px solid #d1d5db;
     }
 
     .btn-cancel:hover {
-        background: #f8fafc;
-        color: #0f172a;
+        background: #e5e7eb;
     }
 
     .btn-submit {
         background: #2563eb;
-        color: #ffffff;
-
-        border: 1px solid #2563eb;
+        color: white;
     }
 
     .btn-submit:hover {
         background: #1d4ed8;
     }
 
-    /* =========================
-       RESPONSIVE
-    ========================= */
+    /* Notice */
+    .submission-notice {
+        margin-top: 20px;
+        padding: 15px 18px;
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 9px;
+        color: #1e40af;
+        font-size: 13px;
+        line-height: 1.6;
+    }
 
-    @media (max-width: 750px) {
+    /* Responsive */
+    @media (max-width: 700px) {
 
         .proposal-page {
-            padding: 20px;
+            padding: 18px;
         }
 
         .page-header {
@@ -538,22 +288,13 @@ Submit Proposal | SPMS
             align-items: flex-start;
         }
 
-        .back-btn {
-            width: 100%;
-            justify-content: center;
-        }
-
         .proposal-limit {
             flex-direction: column;
             align-items: flex-start;
         }
 
-        .limit-count {
-            width: 100%;
-        }
-
         .form-card {
-            padding: 22px;
+            padding: 20px;
         }
 
         .form-grid {
@@ -563,36 +304,16 @@ Submit Proposal | SPMS
         .form-group.full {
             grid-column: auto;
         }
-    }
-
-    @media (max-width: 500px) {
-
-        .proposal-page {
-            padding: 15px;
-        }
-
-        .form-card {
-            padding: 18px;
-        }
-
-        .page-header h1 {
-            font-size: 24px;
-        }
-
-        .file-box {
-            padding: 20px 12px;
-        }
 
         .form-actions {
             flex-direction: column;
-            align-items: stretch;
         }
 
         .btn {
             width: 100%;
+            text-align: center;
         }
     }
-
 </style>
 
 
@@ -600,49 +321,28 @@ Submit Proposal | SPMS
 
     <div class="proposal-container">
 
-
-        <!-- =========================
-             PAGE HEADER
-        ========================== -->
-
+        <!-- PAGE HEADER -->
         <div class="page-header">
 
             <div>
-
-                <h1>
-                    Submit Project Proposal
-                </h1>
-
+                <h1>Submit Project Proposal</h1>
                 <p>
                     Submit your project idea for Domain Expert review.
                 </p>
-
             </div>
-
 
             <a href="{% url 'accounts:student_proposals' %}"
                class="back-btn">
-
-                <svg viewBox="0 0 24 24">
-                    <path d="M19 12H5"></path>
-                    <path d="m12 19-7-7 7-7"></path>
-                </svg>
-
-                Back to Proposals
-
+                ← Back to Proposals
             </a>
 
         </div>
 
 
-        <!-- =========================
-             PROPOSAL LIMIT
-        ========================== -->
-
+        <!-- PROPOSAL COUNT -->
         <div class="proposal-limit">
 
             <div>
-
                 <div class="limit-title">
                     Proposal Submission
                 </div>
@@ -650,36 +350,25 @@ Submit Proposal | SPMS
                 <div class="limit-text">
                     Each student can submit a maximum of 3 project proposals.
                 </div>
-
             </div>
 
-
             <div class="limit-count">
-
                 {{ proposal_count|default:"0" }} / 3
-
             </div>
 
         </div>
 
 
-        <!-- =========================
-             FORM CARD
-        ========================== -->
-
+        <!-- FORM CARD -->
         <div class="form-card">
 
-
             <!-- NON FIELD ERRORS -->
-
             {% if form.non_field_errors %}
 
                 <div class="error-box">
 
                     {% for error in form.non_field_errors %}
-
                         {{ error }}
-
                     {% endfor %}
 
                 </div>
@@ -693,62 +382,33 @@ Submit Proposal | SPMS
                 {% csrf_token %}
 
 
-                <!-- =========================
-                     PROJECT INFORMATION
-                ========================== -->
-
+                <!-- BASIC INFORMATION -->
                 <div class="form-section">
 
                     <h2 class="section-title">
-
-                        <svg viewBox="0 0 24 24">
-
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-
-                            <path d="M14 2v6h6"></path>
-
-                            <path d="M8 13h8"></path>
-
-                            <path d="M8 17h5"></path>
-
-                        </svg>
-
                         Project Information
-
                     </h2>
 
 
                     <div class="form-grid">
 
-
                         <!-- TITLE -->
-
                         <div class="form-group full">
 
                             <label for="{{ form.title.id_for_label }}">
-
                                 Project Title
-
                                 <span class="required">*</span>
-
                             </label>
-
 
                             {{ form.title }}
 
-
                             {% if form.title.errors %}
-
                                 {% for error in form.title.errors %}
-
                                     <div class="field-error">
                                         {{ error }}
                                     </div>
-
                                 {% endfor %}
-
                             {% endif %}
-
 
                             <div class="form-help">
                                 Enter a clear and meaningful title for your project.
@@ -758,64 +418,43 @@ Submit Proposal | SPMS
 
 
                         <!-- DOMAIN -->
-
                         <div class="form-group">
 
                             <label for="{{ form.domain.id_for_label }}">
-
                                 Project Domain
-
                                 <span class="required">*</span>
-
                             </label>
-
 
                             {{ form.domain }}
 
-
                             {% if form.domain.errors %}
-
                                 {% for error in form.domain.errors %}
-
                                     <div class="field-error">
                                         {{ error }}
                                     </div>
-
                                 {% endfor %}
-
                             {% endif %}
 
                         </div>
 
 
                         <!-- TECHNOLOGIES -->
-
                         <div class="form-group">
 
                             <label for="{{ form.technologies.id_for_label }}">
-
                                 Technologies
-
                                 <span class="required">*</span>
-
                             </label>
-
 
                             {{ form.technologies }}
 
-
                             {% if form.technologies.errors %}
-
                                 {% for error in form.technologies.errors %}
-
                                     <div class="field-error">
                                         {{ error }}
                                     </div>
-
                                 {% endfor %}
-
                             {% endif %}
-
 
                             <div class="form-help">
                                 Example: Python, Django, PostgreSQL, HTML, CSS.
@@ -825,33 +464,22 @@ Submit Proposal | SPMS
 
 
                         <!-- ABSTRACT -->
-
                         <div class="form-group full">
 
                             <label for="{{ form.abstract.id_for_label }}">
-
                                 Project Abstract
-
                                 <span class="required">*</span>
-
                             </label>
-
 
                             {{ form.abstract }}
 
-
                             {% if form.abstract.errors %}
-
                                 {% for error in form.abstract.errors %}
-
                                     <div class="field-error">
                                         {{ error }}
                                     </div>
-
                                 {% endfor %}
-
                             {% endif %}
-
 
                             <div class="form-help">
                                 Provide a short summary explaining the project,
@@ -862,33 +490,22 @@ Submit Proposal | SPMS
 
 
                         <!-- DESCRIPTION -->
-
                         <div class="form-group full">
 
                             <label for="{{ form.description.id_for_label }}">
-
                                 Project Description
-
                                 <span class="required">*</span>
-
                             </label>
-
 
                             {{ form.description }}
 
-
                             {% if form.description.errors %}
-
                                 {% for error in form.description.errors %}
-
                                     <div class="field-error">
                                         {{ error }}
                                     </div>
-
                                 {% endfor %}
-
                             {% endif %}
-
 
                             <div class="form-help">
                                 Explain the problem, proposed solution,
@@ -897,74 +514,37 @@ Submit Proposal | SPMS
 
                         </div>
 
-
                     </div>
 
                 </div>
 
 
-                <!-- =========================
-                     PROPOSAL DOCUMENT
-                ========================== -->
-
+                <!-- DOCUMENT -->
                 <div class="form-section">
 
                     <h2 class="section-title">
-
-                        <svg viewBox="0 0 24 24">
-
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-
-                            <path d="M14 2v6h6"></path>
-
-                        </svg>
-
                         Proposal Document
-
                     </h2>
 
 
                     <div class="form-group">
 
                         <label for="{{ form.proposal_document.id_for_label }}">
-
                             Upload Proposal PDF
-
                             <span class="required">*</span>
-
                         </label>
 
 
                         <div class="file-box">
 
-
-                            <div class="file-icon">
-
-                                <svg viewBox="0 0 24 24">
-
-                                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
-
-                                    <path d="M14 2v6h6"></path>
-
-                                    <path d="M12 11v6"></path>
-
-                                    <path d="m9 14 3 3 3-3"></path>
-
-                                </svg>
-
-                            </div>
-
-
                             <div class="file-title">
                                 Upload your project proposal
                             </div>
-
 
                             <div class="file-description">
                                 Only PDF files are accepted.
                                 Maximum file size: 10 MB.
                             </div>
-
 
                             {{ form.proposal_document }}
 
@@ -972,15 +552,11 @@ Submit Proposal | SPMS
 
 
                         {% if form.proposal_document.errors %}
-
                             {% for error in form.proposal_document.errors %}
-
                                 <div class="field-error">
                                     {{ error }}
                                 </div>
-
                             {% endfor %}
-
                         {% endif %}
 
                     </div>
@@ -988,79 +564,33 @@ Submit Proposal | SPMS
                 </div>
 
 
-                <!-- =========================
-                     SUBMISSION NOTICE
-                ========================== -->
-
+                <!-- NOTICE -->
                 <div class="submission-notice">
 
-                    <div class="notice-icon">
+                    <strong>Before submitting:</strong>
 
-                        <svg viewBox="0 0 24 24">
-
-                            <circle cx="12"
-                                    cy="12"
-                                    r="9">
-                            </circle>
-
-                            <path d="M12 10v6"></path>
-
-                            <path d="M12 7h.01"></path>
-
-                        </svg>
-
-                    </div>
-
-
-                    <div>
-
-                        <strong>
-                            Before submitting:
-                        </strong>
-
-                        Please make sure that all project information is correct.
-                        After submission, your proposal will be sent to the
-                        Domain Expert for review. You can submit a maximum of
-                        3 proposals.
-
-                    </div>
+                    Please make sure that all project information is correct.
+                    After submission, your proposal will be sent to the
+                    Domain Expert for review. You can submit a maximum of
+                    3 proposals.
 
                 </div>
 
 
-                <!-- =========================
-                     ACTIONS
-                ========================== -->
-
+                <!-- ACTIONS -->
                 <div class="form-actions">
-
 
                     <a href="{% url 'accounts:student_proposals' %}"
                        class="btn btn-cancel">
-
                         Cancel
-
                     </a>
-
 
                     <button type="submit"
                             class="btn btn-submit">
-
-                        <svg viewBox="0 0 24 24">
-
-                            <path d="M22 2 11 13"></path>
-
-                            <path d="m22 2-7 20-4-9-9-4z"></path>
-
-                        </svg>
-
                         Submit Proposal
-
                     </button>
 
-
                 </div>
-
 
             </form>
 

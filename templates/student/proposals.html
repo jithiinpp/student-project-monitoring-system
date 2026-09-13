@@ -9,7 +9,7 @@ My Proposals | SPMS
 <style>
 
 /* =========================================================
-   SPMS - MY PROPOSALS
+   SPMS - MY PROPOSALS PAGE
    ========================================================= */
 
 * {
@@ -18,7 +18,7 @@ My Proposals | SPMS
 
 body {
     margin: 0;
-    background: #f5f7fb;
+    background: #f4f7fb;
     font-family: Arial, Helvetica, sans-serif;
     color: #1e293b;
 }
@@ -39,9 +39,9 @@ body {
    ========================================================= */
 
 .spms-sidebar {
-    width: 250px;
+    width: 260px;
     min-height: 100vh;
-    background: #12161f;
+    background: #0f172a;
     color: #ffffff;
     position: fixed;
     left: 0;
@@ -50,14 +50,15 @@ body {
     display: flex;
     flex-direction: column;
     z-index: 1000;
+    box-shadow: 4px 0 20px rgba(15, 23, 42, 0.08);
 }
 
 
-/* BRAND */
+/* Brand */
 
 .sidebar-brand {
-    height: 82px;
-    padding: 18px 20px;
+    height: 90px;
+    padding: 20px;
     display: flex;
     align-items: center;
     gap: 12px;
@@ -65,51 +66,49 @@ body {
 }
 
 .brand-logo {
-    width: 42px;
-    height: 42px;
-    border-radius: 10px;
+    width: 45px;
+    height: 45px;
+    border-radius: 12px;
     background: #2563eb;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #ffffff;
-    font-size: 20px;
+    font-size: 22px;
     font-weight: 700;
 }
 
 .sidebar-brand h2 {
     margin: 0;
-    font-size: 19px;
+    font-size: 20px;
 }
 
 .sidebar-brand span {
     display: block;
     margin-top: 3px;
+    font-size: 12px;
     color: #94a3b8;
-    font-size: 11px;
 }
 
 
-/* NAVIGATION */
+/* Navigation */
 
 .sidebar-nav {
-    padding: 22px 14px;
+    padding: 25px 15px;
     flex: 1;
 }
 
 .sidebar-link {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 12px 14px;
-    margin-bottom: 6px;
+    gap: 13px;
+    padding: 13px 15px;
+    margin-bottom: 7px;
     color: #cbd5e1;
     text-decoration: none;
-    border-radius: 8px;
+    border-radius: 10px;
     font-size: 14px;
     font-weight: 500;
-    transition: background 0.2s ease,
-                color 0.2s ease;
+    transition: 0.2s ease;
 }
 
 .sidebar-link:hover {
@@ -120,19 +119,20 @@ body {
 .sidebar-link.active {
     background: #2563eb;
     color: #ffffff;
+    box-shadow: 0 5px 15px rgba(37,99,235,0.25);
 }
 
-.sidebar-icon {
-    width: 20px;
-    height: 20px;
-    flex-shrink: 0;
+.sidebar-link span:first-child {
+    width: 22px;
+    text-align: center;
+    font-size: 17px;
 }
 
 
-/* SIDEBAR BOTTOM */
+/* Sidebar bottom */
 
 .sidebar-bottom {
-    padding: 14px;
+    padding: 15px;
     border-top: 1px solid rgba(255,255,255,0.08);
 }
 
@@ -140,15 +140,15 @@ body {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 9px;
-    margin-bottom: 8px;
+    padding: 10px;
+    margin-bottom: 10px;
     background: rgba(255,255,255,0.05);
-    border-radius: 8px;
+    border-radius: 10px;
 }
 
 .profile-avatar {
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     flex-shrink: 0;
     border-radius: 50%;
     background: #2563eb;
@@ -156,7 +156,7 @@ body {
     align-items: center;
     justify-content: center;
     color: #ffffff;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 700;
 }
 
@@ -167,7 +167,7 @@ body {
 .profile-info strong {
     display: block;
     color: #ffffff;
-    font-size: 12px;
+    font-size: 13px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -175,9 +175,9 @@ body {
 
 .profile-info span {
     display: block;
-    margin-top: 3px;
     color: #94a3b8;
-    font-size: 10px;
+    font-size: 11px;
+    margin-top: 3px;
 }
 
 .sidebar-logout {
@@ -185,11 +185,12 @@ body {
     align-items: center;
     gap: 10px;
     width: 100%;
-    padding: 10px 11px;
+    padding: 11px 12px;
     color: #fca5a5;
     text-decoration: none;
-    border-radius: 8px;
+    border-radius: 9px;
     font-size: 13px;
+    transition: 0.2s ease;
 }
 
 .sidebar-logout:hover {
@@ -203,10 +204,10 @@ body {
    ========================================================= */
 
 .spms-main {
-    margin-left: 250px;
-    width: calc(100% - 250px);
+    margin-left: 260px;
+    width: calc(100% - 260px);
     min-height: 100vh;
-    padding: 30px;
+    padding: 30px 35px;
 }
 
 
@@ -218,18 +219,17 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 25px;
+    margin-bottom: 28px;
 }
 
 .topbar h1 {
     margin: 0;
+    font-size: 28px;
     color: #0f172a;
-    font-size: 27px;
-    font-weight: 700;
 }
 
 .topbar p {
-    margin: 6px 0 0;
+    margin: 7px 0 0;
     color: #64748b;
     font-size: 14px;
 }
@@ -240,60 +240,61 @@ body {
     gap: 10px;
 }
 
+.topbar-user strong {
+    display: block;
+    font-size: 13px;
+    color: #0f172a;
+}
+
+.topbar-user span {
+    display: block;
+    margin-top: 3px;
+    font-size: 11px;
+    color: #64748b;
+}
+
 .topbar-avatar {
-    width: 40px;
-    height: 40px;
+    width: 42px;
+    height: 42px;
     border-radius: 50%;
     background: #2563eb;
     color: #ffffff;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 14px;
     font-weight: 700;
-}
-
-.topbar-user strong {
-    display: block;
-    color: #0f172a;
-    font-size: 13px;
-}
-
-.topbar-user span {
-    display: block;
-    margin-top: 3px;
-    color: #64748b;
-    font-size: 11px;
 }
 
 
 /* =========================================================
-   SUMMARY
+   SUMMARY CARD
    ========================================================= */
 
 .proposal-summary-card {
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 20px 22px;
-    margin-bottom: 22px;
+    border-radius: 15px;
+    padding: 22px 25px;
+    margin-bottom: 25px;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 20px;
+
+    box-shadow: 0 6px 20px rgba(15,23,42,0.04);
 }
 
-.summary-label {
+.proposal-summary-card > div:first-child span {
     display: block;
     color: #64748b;
     font-size: 12px;
-    margin-bottom: 5px;
 }
 
 .proposal-summary-card h2 {
-    margin: 0;
+    margin: 5px 0 0;
     color: #0f172a;
-    font-size: 24px;
+    font-size: 25px;
 }
 
 
@@ -307,9 +308,9 @@ body {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 40px;
-    padding: 9px 16px;
-    border-radius: 8px;
+    min-height: 42px;
+    padding: 10px 17px;
+    border-radius: 9px;
     text-decoration: none;
     font-size: 13px;
     font-weight: 600;
@@ -325,6 +326,8 @@ body {
 .primary-button:hover {
     background: #1d4ed8;
     border-color: #1d4ed8;
+    color: #ffffff;
+    transform: translateY(-1px);
 }
 
 .secondary-button {
@@ -339,11 +342,13 @@ body {
 }
 
 
-/* LIMIT MESSAGE */
+/* =========================================================
+   LIMIT MESSAGE
+   ========================================================= */
 
 .limit-message {
-    padding: 9px 13px;
-    border-radius: 7px;
+    padding: 10px 14px;
+    border-radius: 9px;
     background: #fff7ed;
     border: 1px solid #fed7aa;
     color: #c2410c;
@@ -359,7 +364,7 @@ body {
 .proposal-list {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 18px;
 }
 
 
@@ -370,56 +375,59 @@ body {
 .proposal-card {
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 10px;
-    padding: 22px;
-    transition: border-color 0.2s ease,
-                box-shadow 0.2s ease;
+    border-radius: 15px;
+    padding: 24px;
+
+    box-shadow: 0 6px 20px rgba(15,23,42,0.04);
+
+    transition: 0.2s ease;
 }
 
 .proposal-card:hover {
+    transform: translateY(-3px);
     border-color: #bfdbfe;
-    box-shadow: 0 5px 18px rgba(15,23,42,0.06);
+    box-shadow: 0 12px 28px rgba(15,23,42,0.08);
 }
 
 
-/* CARD HEADER */
+/* Header */
 
 .proposal-card-header {
     display: flex;
     align-items: flex-start;
     justify-content: space-between;
     gap: 20px;
-    padding-bottom: 18px;
+    padding-bottom: 20px;
     border-bottom: 1px solid #e2e8f0;
 }
 
 .proposal-number {
     display: block;
-    margin-bottom: 6px;
+    margin-bottom: 7px;
     color: #2563eb;
-    font-size: 10px;
+    font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 0.7px;
+    letter-spacing: 0.8px;
 }
 
 .proposal-card-header h2 {
     margin: 0;
     color: #0f172a;
-    font-size: 18px;
+    font-size: 19px;
     line-height: 1.4;
 }
 
 
 /* =========================================================
-   STATUS
+   STATUS BADGE
    ========================================================= */
 
 .status-badge {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 6px 11px;
+    padding: 7px 13px;
     border-radius: 20px;
     font-size: 11px;
     font-weight: 700;
@@ -431,22 +439,12 @@ body {
     color: #1d4ed8;
 }
 
-.status-expert_assigned {
+.status-under_review {
     background: #fef3c7;
     color: #92400e;
 }
 
-.status-changes_requested {
-    background: #ffedd5;
-    color: #c2410c;
-}
-
-.status-changes_sent_to_student {
-    background: #ffedd5;
-    color: #c2410c;
-}
-
-.status-expert_approved {
+.status-expert_recommended {
     background: #dcfce7;
     color: #166534;
 }
@@ -456,29 +454,14 @@ body {
     color: #166534;
 }
 
-.status-guide_assigned {
-    background: #e0e7ff;
-    color: #3730a3;
-}
-
-.status-guide_rejected {
-    background: #fee2e2;
-    color: #b91c1c;
-}
-
-.status-in_progress {
-    background: #dbeafe;
-    color: #1d4ed8;
-}
-
-.status-completed {
-    background: #dcfce7;
-    color: #166534;
-}
-
 .status-rejected {
     background: #fee2e2;
     color: #b91c1c;
+}
+
+.status-returned {
+    background: #ffedd5;
+    color: #c2410c;
 }
 
 
@@ -490,7 +473,7 @@ body {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
-    padding: 19px 0;
+    padding: 20px 0;
 }
 
 .proposal-info > div {
@@ -501,7 +484,7 @@ body {
     display: block;
     margin-bottom: 6px;
     color: #64748b;
-    font-size: 10px;
+    font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
 }
@@ -516,18 +499,18 @@ body {
 
 
 /* =========================================================
-   FOOTER
+   CARD FOOTER
    ========================================================= */
 
 .proposal-card-footer {
-    padding-top: 17px;
+    padding-top: 18px;
     border-top: 1px solid #e2e8f0;
     display: flex;
     justify-content: flex-end;
 }
 
 .view-button {
-    min-height: 37px;
+    min-height: 38px;
     padding: 8px 14px;
     background: #eff6ff;
     border: 1px solid #bfdbfe;
@@ -548,37 +531,32 @@ body {
 .empty-state {
     background: #ffffff;
     border: 1px dashed #cbd5e1;
-    border-radius: 12px;
-    padding: 55px 25px;
+    border-radius: 16px;
+    padding: 60px 30px;
     text-align: center;
 }
 
 .empty-icon {
-    width: 64px;
-    height: 64px;
-    margin: 0 auto 16px;
-    border-radius: 14px;
+    width: 70px;
+    height: 70px;
+    margin: 0 auto 18px;
+    border-radius: 18px;
     background: #eff6ff;
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.empty-icon svg {
-    width: 30px;
-    height: 30px;
-    stroke: #2563eb;
+    font-size: 30px;
 }
 
 .empty-state h2 {
     margin: 0 0 8px;
     color: #0f172a;
-    font-size: 19px;
+    font-size: 20px;
 }
 
 .empty-state p {
-    max-width: 480px;
-    margin: 0 auto 20px;
+    max-width: 500px;
+    margin: 0 auto 22px;
     color: #64748b;
     font-size: 13px;
     line-height: 1.6;
@@ -604,14 +582,20 @@ body {
     .proposal-info {
         grid-template-columns: 1fr 1fr;
     }
+
 }
 
 
 @media (max-width: 700px) {
 
+    .proposal-info {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
     .proposal-summary-card {
-        flex-direction: column;
         align-items: flex-start;
+        flex-direction: column;
     }
 
     .proposal-summary-card .primary-button,
@@ -624,17 +608,13 @@ body {
         flex-direction: column;
     }
 
-    .proposal-info {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
 }
 
 
 @media (max-width: 600px) {
 
     .spms-sidebar {
-        width: 68px;
+        width: 70px;
     }
 
     .sidebar-brand {
@@ -645,22 +625,21 @@ body {
     .sidebar-brand > div:last-child,
     .sidebar-link span:last-child,
     .student-mini-profile .profile-info,
-    .sidebar-logout span:last-child {
+    .sidebar-logout {
         display: none;
     }
 
     .sidebar-nav {
-        padding: 20px 7px;
+        padding: 20px 8px;
     }
 
     .sidebar-link {
         justify-content: center;
-        padding: 12px 8px;
+        padding: 13px 8px;
     }
 
-    .sidebar-icon {
-        width: 19px;
-        height: 19px;
+    .sidebar-link span:first-child {
+        font-size: 19px;
     }
 
     .sidebar-bottom {
@@ -673,8 +652,8 @@ body {
     }
 
     .spms-main {
-        margin-left: 68px;
-        width: calc(100% - 68px);
+        margin-left: 70px;
+        width: calc(100% - 70px);
         padding: 18px;
     }
 
@@ -690,6 +669,10 @@ body {
         padding: 18px;
     }
 
+    .proposal-card-header h2 {
+        font-size: 17px;
+    }
+
     .proposal-card-footer {
         justify-content: stretch;
     }
@@ -697,6 +680,7 @@ body {
     .view-button {
         width: 100%;
     }
+
 }
 
 </style>
@@ -712,8 +696,6 @@ body {
     <aside class="spms-sidebar">
 
 
-        <!-- BRAND -->
-
         <div class="sidebar-brand">
 
             <div class="brand-logo">
@@ -721,127 +703,63 @@ body {
             </div>
 
             <div>
-                <h2>SPMS</h2>
-                <span>Student Portal</span>
+
+                <h2>
+                    SPMS
+                </h2>
+
+                <span>
+                    Student Portal
+                </span>
+
             </div>
 
         </div>
 
 
-        <!-- NAVIGATION -->
-
         <nav class="sidebar-nav">
 
 
-            <!-- DASHBOARD -->
+            <!-- Dashboard -->
 
             <a href="{% url 'accounts:student_dashboard' %}"
                class="sidebar-link">
 
-                <svg class="sidebar-icon"
-                     viewBox="0 0 24 24"
-                     fill="none"
-                     stroke="currentColor"
-                     stroke-width="1.8">
-
-                    <rect x="3" y="3" width="7" height="7" rx="1"></rect>
-                    <rect x="14" y="3" width="7" height="7" rx="1"></rect>
-                    <rect x="3" y="14" width="7" height="7" rx="1"></rect>
-                    <rect x="14" y="14" width="7" height="7" rx="1"></rect>
-
-                </svg>
-
+                <span>🏠</span>
                 <span>Dashboard</span>
 
             </a>
 
 
-            <!-- MY PROPOSALS -->
+            <!-- My Proposals -->
 
             <a href="{% url 'accounts:student_proposals' %}"
                class="sidebar-link active">
 
-                <svg class="sidebar-icon"
-                     viewBox="0 0 24 24"
-                     fill="none"
-                     stroke="currentColor"
-                     stroke-width="1.8">
-
-                    <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 0 4 22z"></path>
-                    <path d="M4 5.5V19"></path>
-                    <path d="M8 7h8"></path>
-                    <path d="M8 11h8"></path>
-
-                </svg>
-
+                <span>📁</span>
                 <span>My Proposals</span>
 
             </a>
 
 
-            <!-- SUBMIT PROPOSAL -->
+            <!-- Submit Proposal -->
 
             <a href="{% url 'accounts:add_proposal' %}"
                class="sidebar-link">
 
-                <svg class="sidebar-icon"
-                     viewBox="0 0 24 24"
-                     fill="none"
-                     stroke="currentColor"
-                     stroke-width="1.8">
-
-                    <circle cx="12" cy="12" r="9"></circle>
-                    <path d="M12 8v8"></path>
-                    <path d="M8 12h8"></path>
-
-                </svg>
-
+                <span>➕</span>
                 <span>Submit Proposal</span>
 
             </a>
 
 
-            <!-- PROJECT STATUS -->
+            <!-- Project Status -->
 
             <a href="{% url 'accounts:student_proposals' %}"
                class="sidebar-link">
 
-                <svg class="sidebar-icon"
-                     viewBox="0 0 24 24"
-                     fill="none"
-                     stroke="currentColor"
-                     stroke-width="1.8">
-
-                    <path d="M4 19V5"></path>
-                    <path d="M4 19h16"></path>
-                    <path d="M7 15l4-4 3 2 5-6"></path>
-
-                </svg>
-
+                <span>📊</span>
                 <span>Project Status</span>
-
-            </a>
-
-
-            <!-- WEEKLY PROGRESS -->
-
-            <a href="{% url 'accounts:student_progress' %}"
-               class="sidebar-link">
-
-                <svg class="sidebar-icon"
-                     viewBox="0 0 24 24"
-                     fill="none"
-                     stroke="currentColor"
-                     stroke-width="1.8">
-
-                    <path d="M5 3h14v18H5z"></path>
-                    <path d="M8 7h8"></path>
-                    <path d="M8 11h8"></path>
-                    <path d="M8 15h5"></path>
-
-                </svg>
-
-                <span>Weekly Progress</span>
 
             </a>
 
@@ -856,11 +774,13 @@ body {
 
             <div class="student-mini-profile">
 
+
                 <div class="profile-avatar">
 
                     {{ request.user.first_name|first|default:request.user.username|first|upper }}
 
                 </div>
+
 
                 <div class="profile-info">
 
@@ -874,32 +794,21 @@ body {
 
                 </div>
 
+
             </div>
 
-
-            <!-- LOGOUT -->
 
             <a href="{% url 'accounts:logout' %}"
                class="sidebar-logout">
 
-                <svg class="sidebar-icon"
-                     viewBox="0 0 24 24"
-                     fill="none"
-                     stroke="currentColor"
-                     stroke-width="1.8">
-
-                    <path d="M10 17l5-5-5-5"></path>
-                    <path d="M15 12H3"></path>
-                    <path d="M21 19V5a2 2 0 0 0-2-2h-5"></path>
-                    <path d="M14 21h5a2 2 0 0 0 2-2"></path>
-
-                </svg>
-
-                <span>Logout</span>
+                <span>🚪</span>
+                Logout
 
             </a>
 
+
         </div>
+
 
     </aside>
 
@@ -914,6 +823,7 @@ body {
         <!-- TOP BAR -->
 
         <header class="topbar">
+
 
             <div>
 
@@ -930,11 +840,13 @@ body {
 
             <div class="topbar-user">
 
+
                 <div class="topbar-avatar">
 
                     {{ request.user.first_name|first|default:request.user.username|first|upper }}
 
                 </div>
+
 
                 <div>
 
@@ -948,7 +860,9 @@ body {
 
                 </div>
 
+
             </div>
+
 
         </header>
 
@@ -959,9 +873,10 @@ body {
 
         <div class="proposal-summary-card">
 
+
             <div>
 
-                <span class="summary-label">
+                <span>
                     Total Submitted
                 </span>
 
@@ -991,6 +906,7 @@ body {
 
             {% endif %}
 
+
         </div>
 
 
@@ -1011,11 +927,15 @@ body {
 
                     <div class="proposal-card-header">
 
+
                         <div>
 
                             <span class="proposal-number">
+
                                 Proposal {{ forloop.counter }}
+
                             </span>
+
 
                             <h2>
                                 {{ proposal.title }}
@@ -1029,6 +949,7 @@ body {
                             {{ proposal.get_status_display }}
 
                         </span>
+
 
                     </div>
 
@@ -1045,7 +966,7 @@ body {
                             </span>
 
                             <strong>
-                                {{ proposal.domain|default:"Not specified" }}
+                                {{ proposal.domain }}
                             </strong>
 
                         </div>
@@ -1058,7 +979,7 @@ body {
                             </span>
 
                             <strong>
-                                {{ proposal.technologies|default:"Not specified" }}
+                                {{ proposal.technologies }}
                             </strong>
 
                         </div>
@@ -1084,12 +1005,14 @@ body {
 
                     <div class="proposal-card-footer">
 
+
                         <a href="{% url 'accounts:proposal_detail' proposal.id %}"
                            class="view-button">
 
                             View Details →
 
                         </a>
+
 
                     </div>
 
@@ -1106,19 +1029,7 @@ body {
 
 
                     <div class="empty-icon">
-
-                        <svg viewBox="0 0 24 24"
-                             fill="none"
-                             stroke="currentColor"
-                             stroke-width="1.7">
-
-                            <path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v17H6.5A2.5 2.5 0 0 0 4 22z"></path>
-                            <path d="M4 5.5V19"></path>
-                            <path d="M8 7h8"></path>
-                            <path d="M8 11h8"></path>
-
-                        </svg>
-
+                        📁
                     </div>
 
 
@@ -1141,6 +1052,7 @@ body {
                         + Submit First Proposal
 
                     </a>
+
 
                 </div>
 

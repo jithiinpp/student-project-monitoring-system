@@ -1,451 +1,169 @@
 {% extends "base.html" %}
 
-{% block title %}
-Proposal Details | Expert
-{% endblock %}
-
+{% block title %}Proposal Details | Expert{% endblock %}
 
 {% block extra_css %}
 
 <style>
 
-    /* =====================================================
-       PAGE
-    ===================================================== */
-
     .proposal-page {
-        min-height: 100vh;
-
-        background: #f5f7fb;
-
+        max-width: 1100px;
+        margin: auto;
         padding: 30px;
     }
 
-
-    .proposal-container {
-        max-width: 1100px;
-
-        margin: 0 auto;
-    }
-
-
-    /* =====================================================
-       PAGE HEADER
-    ===================================================== */
-
     .page-header {
-        margin-bottom: 22px;
+        margin-bottom: 25px;
     }
-
 
     .page-header h1 {
         margin: 0;
-
-        color: #111827;
-
-        font-size: 25px;
-
-        font-weight: 700;
+        color: #1f2937;
     }
-
 
     .page-header p {
-        margin: 6px 0 0;
-
-        color: #64748b;
-
-        font-size: 13px;
+        color: #6b7280;
     }
-
-
-    /* =====================================================
-       CARD
-    ===================================================== */
 
     .card {
-        margin-bottom: 18px;
-
-        padding: 20px;
-
-        background: #ffffff;
-
-        border: 1px solid #e5e7eb;
-
-        border-radius: 10px;
-
-        box-shadow:
-            0 1px 2px rgba(15, 23, 42, 0.03);
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.07);
     }
-
 
     .card h2 {
-        margin: 0 0 17px;
-
-        padding-bottom: 12px;
-
+        margin-top: 0;
+        color: #1f2937;
         border-bottom: 1px solid #e5e7eb;
-
-        color: #111827;
-
-        font-size: 16px;
-
-        font-weight: 600;
+        padding-bottom: 12px;
     }
-
-
-    /* =====================================================
-       INFORMATION GRID
-    ===================================================== */
 
     .info-grid {
         display: grid;
-
         grid-template-columns: repeat(2, 1fr);
-
-        gap: 12px;
+        gap: 20px;
     }
-
 
     .info-item {
-        padding: 13px 14px;
-
-        background: #f8fafc;
-
-        border: 1px solid #eef0f3;
-
-        border-radius: 7px;
-    }
-
-
-    .label {
-        margin-bottom: 5px;
-
-        color: #64748b;
-
-        font-size: 10px;
-
-        font-weight: 600;
-
-        text-transform: uppercase;
-
-        letter-spacing: 0.3px;
-    }
-
-
-    .value {
-        color: #111827;
-
-        font-size: 13px;
-
-        font-weight: 600;
-
-        line-height: 1.5;
-    }
-
-
-    /* =====================================================
-       TEXT CONTENT
-    ===================================================== */
-
-    .text-content {
-        color: #374151;
-
-        font-size: 13px;
-
-        line-height: 1.7;
-
-        white-space: pre-line;
-    }
-
-
-    /* =====================================================
-       STATUS
-    ===================================================== */
-
-    .status {
-        display: inline-flex;
-
-        align-items: center;
-
-        padding: 5px 9px;
-
-        background: #eff6ff;
-
-        border: 1px solid #dbeafe;
-
-        border-radius: 6px;
-
-        color: #1d4ed8;
-
-        font-size: 10px;
-
-        font-weight: 600;
-    }
-
-
-    /* =====================================================
-       DOCUMENT
-    ===================================================== */
-
-    .document-link {
-        display: inline-flex;
-
-        align-items: center;
-
-        padding: 9px 13px;
-
-        background: #2563eb;
-
-        border-radius: 6px;
-
-        color: #ffffff;
-
-        text-decoration: none;
-
-        font-size: 12px;
-
-        font-weight: 600;
-    }
-
-
-    .document-link:hover {
-        background: #1d4ed8;
-
-        color: #ffffff;
-    }
-
-
-    /* =====================================================
-       EXPERT COMMENT
-    ===================================================== */
-
-    .expert-comment {
-        padding: 13px 15px;
-
-        background: #fff7ed;
-
-        border: 1px solid #fed7aa;
-
-        border-left: 4px solid #f59e0b;
-
-        border-radius: 6px;
-
-        color: #374151;
-
-        font-size: 13px;
-
-        line-height: 1.7;
-
-        white-space: pre-line;
-    }
-
-
-    /* =====================================================
-       REVIEW BOX
-    ===================================================== */
-
-    .review-box {
-        padding: 18px;
-
-        background: #f8fafc;
-
-        border: 1px solid #e5e7eb;
-
+        background: #f9fafb;
+        padding: 15px;
         border-radius: 8px;
     }
 
+    .label {
+        font-size: 12px;
+        color: #6b7280;
+        margin-bottom: 5px;
+    }
 
-    .review-label {
-        display: block;
-
-        margin-bottom: 8px;
-
-        color: #334155;
-
-        font-size: 13px;
-
+    .value {
+        color: #111827;
         font-weight: 600;
     }
 
+    .text-content {
+        color: #374151;
+        line-height: 1.7;
+        white-space: pre-line;
+    }
 
-    .review-box textarea {
-        width: 100%;
-
-        min-height: 140px;
-
-        box-sizing: border-box;
-
-        padding: 11px 12px;
-
-        background: #ffffff;
-
-        border: 1px solid #d1d5db;
-
-        border-radius: 7px;
-
-        color: #111827;
-
-        font-family: Arial, Helvetica, sans-serif;
-
+    .status {
+        display: inline-block;
+        padding: 7px 13px;
+        border-radius: 20px;
         font-size: 13px;
+        font-weight: 600;
+        background: #eff6ff;
+        color: #1d4ed8;
+    }
 
-        line-height: 1.6;
+    .document-link {
+        display: inline-block;
+        margin-top: 10px;
+        padding: 10px 15px;
+        background: #1d72f3;
+        color: white;
+        text-decoration: none;
+        border-radius: 7px;
+    }
 
+    .review-box {
+        background: #f8fafc;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 25px;
+    }
+
+    textarea {
+        width: 100%;
+        min-height: 150px;
+        padding: 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 7px;
         resize: vertical;
+        font-family: inherit;
+        box-sizing: border-box;
+    }
 
+    textarea:focus {
         outline: none;
-
-        transition:
-            border-color 0.2s ease,
-            box-shadow 0.2s ease;
+        border-color: #1d72f3;
     }
-
-
-    .review-box textarea::placeholder {
-        color: #94a3b8;
-    }
-
-
-    .review-box textarea:focus {
-        border-color: #2563eb;
-
-        box-shadow:
-            0 0 0 3px rgba(37, 99, 235, 0.10);
-    }
-
-
-    /* =====================================================
-       REVIEW BUTTONS
-    ===================================================== */
 
     .review-buttons {
         display: flex;
-
-        gap: 9px;
-
-        margin-top: 13px;
+        gap: 12px;
+        margin-top: 15px;
     }
-
 
     .btn {
-        display: inline-flex;
-
-        align-items: center;
-
-        justify-content: center;
-
-        padding: 9px 14px;
-
-        border: none;
-
-        border-radius: 6px;
-
+        display: inline-block;
+        padding: 11px 18px;
+        border-radius: 7px;
         text-decoration: none;
-
-        font-size: 12px;
-
-        font-weight: 600;
-
+        border: none;
         cursor: pointer;
-
-        transition: background 0.2s ease;
+        font-weight: 600;
+        font-size: 14px;
     }
-
-
-    /* APPROVE */
 
     .btn-success {
         background: #16a34a;
-
-        color: #ffffff;
+        color: white;
     }
-
-
-    .btn-success:hover {
-        background: #15803d;
-
-        color: #ffffff;
-    }
-
-
-    /* CHANGES */
 
     .btn-warning {
         background: #f59e0b;
-
-        color: #ffffff;
+        color: white;
     }
-
-
-    .btn-warning:hover {
-        background: #d97706;
-
-        color: #ffffff;
-    }
-
-
-    /* BACK */
 
     .btn-dark {
         background: #12161f;
-
-        color: #ffffff;
+        color: white;
     }
 
-
-    .btn-dark:hover {
-        background: #1f2937;
-
-        color: #ffffff;
+    .expert-comment {
+        background: #fff7ed;
+        border-left: 4px solid #f59e0b;
+        padding: 15px;
+        margin-top: 15px;
+        color: #374151;
     }
-
-
-    /* =====================================================
-       APPROVED MESSAGE
-    ===================================================== */
-
-    .approved-message {
-        padding: 14px 16px;
-
-        background: #ecfdf5;
-
-        border: 1px solid #bbf7d0;
-
-        border-left: 4px solid #16a34a;
-
-        border-radius: 7px;
-
-        color: #166534;
-
-        font-size: 13px;
-
-        line-height: 1.6;
-    }
-
-
-    /* =====================================================
-       RESPONSIVE
-    ===================================================== */
 
     @media (max-width: 700px) {
 
         .proposal-page {
-            padding: 20px 14px;
+            padding: 15px;
         }
-
 
         .info-grid {
             grid-template-columns: 1fr;
         }
 
-
         .review-buttons {
             flex-direction: column;
-        }
-
-
-        .review-buttons .btn {
-            width: 100%;
         }
 
     }
@@ -455,364 +173,316 @@ Proposal Details | Expert
 {% endblock %}
 
 
-
 {% block content %}
 
 <div class="proposal-page">
 
-    <div class="proposal-container">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <div class="page-header">
+
+        <h1>
+            Proposal Details
+        </h1>
+
+        <p>
+            Review the project proposal submitted by the student.
+        </p>
+
+    </div>
 
 
-        <!-- =================================================
-             HEADER
-        ================================================= -->
+    <!-- =====================================================
+         BASIC INFORMATION
+    ====================================================== -->
 
-        <div class="page-header">
+    <div class="card">
 
-            <h1>
-                Proposal Details
-            </h1>
+        <h2>
+            Project Information
+        </h2>
 
-            <p>
-                Review the project proposal submitted by the student.
-            </p>
+        <div class="info-grid">
 
-        </div>
+            <div class="info-item">
 
+                <div class="label">
+                    Project Title
+                </div>
 
+                <div class="value">
+                    {{ proposal.title }}
+                </div>
 
-        <!-- =================================================
-             PROJECT INFORMATION
-        ================================================= -->
-
-        <div class="card">
-
-            <h2>
-                Project Information
-            </h2>
+            </div>
 
 
-            <div class="info-grid">
+            <div class="info-item">
 
+                <div class="label">
+                    Student
+                </div>
 
-                <!-- PROJECT TITLE -->
+                <div class="value">
 
-                <div class="info-item">
-
-                    <div class="label">
-                        Project Title
-                    </div>
-
-                    <div class="value">
-                        {{ proposal.title }}
-                    </div>
+                    {{ proposal.student.get_full_name|default:proposal.student.username }}
 
                 </div>
 
+            </div>
 
 
-                <!-- STUDENT -->
+            <div class="info-item">
 
-                <div class="info-item">
-
-                    <div class="label">
-                        Student
-                    </div>
-
-                    <div class="value">
-
-                        {{ proposal.student.get_full_name|default:proposal.student.username }}
-
-                    </div>
-
+                <div class="label">
+                    Username
                 </div>
 
-
-
-                <!-- USERNAME -->
-
-                <div class="info-item">
-
-                    <div class="label">
-                        Username
-                    </div>
-
-                    <div class="value">
-                        {{ proposal.student.username }}
-                    </div>
-
+                <div class="value">
+                    {{ proposal.student.username }}
                 </div>
 
+            </div>
 
 
-                <!-- DOMAIN -->
+            <div class="info-item">
 
-                <div class="info-item">
-
-                    <div class="label">
-                        Domain
-                    </div>
-
-                    <div class="value">
-                        {{ proposal.domain|default:"Not specified" }}
-                    </div>
-
+                <div class="label">
+                    Domain
                 </div>
 
-
-
-                <!-- TECHNOLOGIES -->
-
-                <div class="info-item">
-
-                    <div class="label">
-                        Technologies
-                    </div>
-
-                    <div class="value">
-                        {{ proposal.technologies|default:"Not specified" }}
-                    </div>
-
+                <div class="value">
+                    {{ proposal.domain|default:"Not specified" }}
                 </div>
 
+            </div>
 
 
-                <!-- STATUS -->
+            <div class="info-item">
 
-                <div class="info-item">
-
-                    <div class="label">
-                        Status
-                    </div>
-
-                    <div class="value">
-
-                        <span class="status">
-                            {{ proposal.get_status_display }}
-                        </span>
-
-                    </div>
-
+                <div class="label">
+                    Technologies
                 </div>
 
+                <div class="value">
+                    {{ proposal.technologies|default:"Not specified" }}
+                </div>
+
+            </div>
+
+
+            <div class="info-item">
+
+                <div class="label">
+                    Status
+                </div>
+
+                <div class="value">
+
+                    <span class="status">
+                        {{ proposal.get_status_display }}
+                    </span>
+
+                </div>
 
             </div>
 
         </div>
 
+    </div>
 
 
-        <!-- =================================================
-             ABSTRACT
-        ================================================= -->
+    <!-- =====================================================
+         ABSTRACT
+    ====================================================== -->
 
-        <div class="card">
+    <div class="card">
 
-            <h2>
-                Abstract
-            </h2>
+        <h2>
+            Abstract
+        </h2>
 
-            <div class="text-content">
+        <div class="text-content">
 
-                {{ proposal.abstract|default:"No abstract provided." }}
-
-            </div>
-
-        </div>
-
-
-
-        <!-- =================================================
-             PROJECT DESCRIPTION
-        ================================================= -->
-
-        <div class="card">
-
-            <h2>
-                Project Description
-            </h2>
-
-            <div class="text-content">
-
-                {{ proposal.description|default:"No project description provided." }}
-
-            </div>
+            {{ proposal.abstract|default:"No abstract provided." }}
 
         </div>
 
+    </div>
 
 
-        <!-- =================================================
-             PROPOSAL DOCUMENT
-        ================================================= -->
+    <!-- =====================================================
+         DESCRIPTION
+    ====================================================== -->
 
-        {% if proposal.proposal_document %}
+    <div class="card">
 
-            <div class="card">
+        <h2>
+            Project Description
+        </h2>
 
-                <h2>
-                    Proposal Document
-                </h2>
+        <div class="text-content">
 
-                <a
-                    href="{{ proposal.proposal_document.url }}"
-                    target="_blank"
-                    class="document-link"
-                >
-                    View Proposal PDF
-                </a>
+            {{ proposal.description|default:"No project description provided." }}
 
-            </div>
+        </div>
 
-        {% endif %}
+    </div>
 
 
+    <!-- =====================================================
+         DOCUMENT
+    ====================================================== -->
 
-        <!-- =================================================
-             PREVIOUS EXPERT COMMENTS
-        ================================================= -->
+    {% if proposal.proposal_document %}
 
-        {% if proposal.expert_comments %}
+    <div class="card">
 
-            <div class="card">
+        <h2>
+            Proposal Document
+        </h2>
 
-                <h2>
-                    Expert Comments
-                </h2>
+        <a
+            href="{{ proposal.proposal_document.url }}"
+            target="_blank"
+            class="document-link"
+        >
+            View Proposal PDF
+        </a>
 
-                <div class="expert-comment">
+    </div>
 
-                    {{ proposal.expert_comments }}
+    {% endif %}
 
-                </div>
 
-            </div>
+    <!-- =====================================================
+         PREVIOUS EXPERT COMMENT
+    ====================================================== -->
 
-        {% endif %}
+    {% if proposal.expert_comments %}
 
+    <div class="card">
 
+        <h2>
+            Expert Comments
+        </h2>
 
-        <!-- =================================================
-             REVIEW SECTION
-        ================================================= -->
+        <div class="expert-comment">
 
-        {% if proposal.status == "EXPERT_ASSIGNED" or proposal.status == "SUBMITTED" or proposal.status == "CHANGES_REQUESTED" %}
+            {{ proposal.expert_comments }}
 
-            <div class="card">
+        </div>
 
-                <h2>
-                    Review Proposal
-                </h2>
+    </div>
 
+    {% endif %}
 
-                <div class="review-box">
 
-                    <form
-                        method="POST"
-                        action="{% url 'experts:review_proposal' proposal.id %}"
-                    >
+    <!-- =====================================================
+         REVIEW SECTION
+    ====================================================== -->
 
-                        {% csrf_token %}
+    {% if proposal.status == "EXPERT_ASSIGNED" or proposal.status == "SUBMITTED" or proposal.status == "CHANGES_REQUESTED" %}
 
+    <div class="card">
 
-                        <label
-                            for="comments"
-                            class="review-label"
-                        >
-                            Comments / Feedback
-                        </label>
+        <h2>
+            Review Proposal
+        </h2>
 
+        <div class="review-box">
 
-                        <textarea
-                            id="comments"
-                            name="comments"
-                            placeholder="Enter your review comments or changes required..."
-                        ></textarea>
-
-
-
-                        <div class="review-buttons">
-
-
-                            <!-- APPROVE -->
-
-                            <button
-                                type="submit"
-                                name="decision"
-                                value="approve"
-                                class="btn btn-success"
-                            >
-                                Approve Proposal
-                            </button>
-
-
-
-                            <!-- CHANGES -->
-
-                            <button
-                                type="submit"
-                                name="decision"
-                                value="changes"
-                                class="btn btn-warning"
-                            >
-                                Request Changes
-                            </button>
-
-
-                        </div>
-
-                    </form>
-
-                </div>
-
-            </div>
-
-        {% endif %}
-
-
-
-        <!-- =================================================
-             ALREADY APPROVED
-        ================================================= -->
-
-        {% if proposal.status == "EXPERT_APPROVED" %}
-
-            <div class="card">
-
-                <h2>
-                    Review Status
-                </h2>
-
-
-                <div class="approved-message">
-
-                    This proposal has already been approved by you
-                    and has been sent back to the Coordinator for
-                    final approval.
-
-                </div>
-
-            </div>
-
-        {% endif %}
-
-
-
-        <!-- =================================================
-             BACK BUTTON
-        ================================================= -->
-
-        <div>
-
-            <a
-                href="{% url 'experts:dashboard' %}"
-                class="btn btn-dark"
+            <form
+                method="POST"
+                action="{% url 'experts:review_proposal' proposal.id %}"
             >
-                Back to Dashboard
-            </a>
+
+                {% csrf_token %}
+
+                <label>
+                    <strong>
+                        Comments / Feedback
+                    </strong>
+                </label>
+
+                <br><br>
+
+                <textarea
+                    name="comments"
+                    placeholder="Enter your review comments or changes required..."
+                ></textarea>
+
+
+                <div class="review-buttons">
+
+                    <button
+                        type="submit"
+                        name="decision"
+                        value="approve"
+                        class="btn btn-success"
+                    >
+                        ✓ Approve Proposal
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        name="decision"
+                        value="changes"
+                        class="btn btn-warning"
+                    >
+                        Request Changes
+                    </button>
+
+                </div>
+
+            </form>
 
         </div>
 
+    </div>
+
+    {% endif %}
+
+
+    <!-- =====================================================
+         ALREADY APPROVED
+    ====================================================== -->
+
+    {% if proposal.status == "EXPERT_APPROVED" %}
+
+    <div class="card">
+
+        <h2>
+            Review Status
+        </h2>
+
+        <p>
+            This proposal has already been approved by you
+            and has been sent back to the Coordinator for
+            final approval.
+        </p>
+
+    </div>
+
+    {% endif %}
+
+
+    <!-- =====================================================
+         BACK BUTTON
+    ====================================================== -->
+
+    <div>
+
+        <a
+            href="{% url 'experts:dashboard' %}"
+            class="btn btn-dark"
+        >
+            ← Back to Dashboard
+        </a>
 
     </div>
 

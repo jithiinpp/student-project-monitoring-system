@@ -4,1151 +4,362 @@
 Proposal Details | Coordinator
 {% endblock %}
 
-
 {% block extra_css %}
-
 <style>
+* {
+    box-sizing: border-box;
+}
 
-    /* =========================================================
-       BASE
-       ========================================================= */
+.proposal-page {
+    min-height: 100vh;
+    background: #f4f6f9;
+    padding: 35px;
+}
 
-    * {
-        box-sizing: border-box;
-    }
+.proposal-container {
+    max-width: 1150px;
+    margin: 0 auto;
+}
 
-    body {
-        margin: 0;
-        background: #f5f7fb;
-        font-family: Arial, Helvetica, sans-serif;
-        color: #1f2937;
-    }
+.page-header {
+    margin-bottom: 25px;
+}
 
+.page-header h1 {
+    margin: 0;
+    font-size: 28px;
+    color: #111827;
+}
 
-    /* =========================================================
-       PROPOSAL PAGE
-       ========================================================= */
+.page-header p {
+    margin: 7px 0 0;
+    color: #64748b;
+}
 
+.card,
+.action-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 28px;
+    margin-bottom: 25px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.proposal-title {
+    font-size: 27px;
+    font-weight: 700;
+    color: #111827;
+    margin-bottom: 12px;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 8px 15px;
+    border-radius: 20px;
+    background: #eef2ff;
+    color: #3730a3;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px;
+    margin-top: 25px;
+}
+
+.info-box {
+    background: #f8fafc;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 17px;
+}
+
+.info-label {
+    color: #64748b;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.info-value {
+    color: #111827;
+    font-weight: 600;
+    word-break: break-word;
+}
+
+.text-section {
+    margin-top: 28px;
+}
+
+.text-section h3 {
+    margin-bottom: 10px;
+    color: #111827;
+    font-size: 18px;
+}
+
+.text-section p {
+    margin: 0;
+    color: #475569;
+    line-height: 1.7;
+    white-space: pre-line;
+}
+
+.action-card h3 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    color: #111827;
+    font-size: 19px;
+}
+
+.action-description {
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 18px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.form-select {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #111827;
+    font-size: 14px;
+}
+
+.form-select:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+.btn {
+    display: inline-block;
+    padding: 11px 18px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+.btn-primary:hover {
+    background: #1d4ed8;
+}
+
+.btn-success {
+    background: #16a34a;
+    color: #ffffff;
+}
+
+.btn-success:hover {
+    background: #15803d;
+}
+
+.btn-secondary {
+    background: #64748b;
+    color: #ffffff;
+}
+
+.btn-secondary:hover {
+    background: #475569;
+}
+
+.success-box {
+    padding: 16px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 9px;
+    color: #166534;
+    line-height: 1.6;
+}
+
+.warning-box {
+    padding: 16px;
+    background: #fff7ed;
+    border: 1px solid #fed7aa;
+    border-radius: 9px;
+    color: #9a3412;
+    line-height: 1.6;
+}
+
+.danger-box {
+    padding: 16px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 9px;
+    color: #991b1b;
+    line-height: 1.6;
+}
+
+.document-area {
+    margin-top: 25px;
+}
+
+.back-buttons {
+    margin-top: 10px;
+    margin-bottom: 30px;
+}
+
+@media (max-width: 700px) {
     .proposal-page {
-        min-height: 100vh;
-        background: #f5f7fb;
-        padding: 30px;
+        padding: 20px;
     }
 
-    .proposal-container {
-        max-width: 1150px;
-        margin: 0 auto;
+    .info-grid {
+        grid-template-columns: 1fr;
     }
-
-
-    /* =========================================================
-       PAGE HEADER
-       ========================================================= */
-
-    .page-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        margin-bottom: 22px;
-    }
-
-    .page-header h1 {
-        margin: 0;
-
-        font-size: 25px;
-        line-height: 1.3;
-
-        color: #111827;
-        font-weight: 700;
-    }
-
-    .page-header p {
-        margin: 6px 0 0;
-
-        color: #64748b;
-
-        font-size: 13px;
-    }
-
-
-    /* =========================================================
-       MAIN CARDS
-       ========================================================= */
 
     .card,
     .action-card {
-        background: #ffffff;
-
-        border: 1px solid #e5e7eb;
-
-        border-radius: 10px;
-
-        padding: 24px;
-
-        margin-bottom: 20px;
-
-        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
+        padding: 20px;
     }
-
-
-    /* =========================================================
-       PROPOSAL TITLE
-       ========================================================= */
 
     .proposal-title {
+        font-size: 23px;
+    }
+
+    .page-header h1 {
         font-size: 24px;
-
-        font-weight: 700;
-
-        color: #111827;
-
-        margin-bottom: 12px;
-
-        line-height: 1.4;
     }
-
-
-    /* =========================================================
-       STATUS BADGE
-       ========================================================= */
-
-    .status-badge {
-        display: inline-flex;
-
-        align-items: center;
-
-        padding: 6px 10px;
-
-        border-radius: 6px;
-
-        background: #eff6ff;
-
-        border: 1px solid #dbeafe;
-
-        color: #2563eb;
-
-        font-size: 12px;
-
-        font-weight: 600;
-    }
-
-
-    /* =========================================================
-       INFORMATION GRID
-       ========================================================= */
-
-    .info-grid {
-        display: grid;
-
-        grid-template-columns: repeat(2, 1fr);
-
-        gap: 15px;
-
-        margin-top: 22px;
-    }
-
-
-    .info-box {
-        background: #f8fafc;
-
-        border: 1px solid #e5e7eb;
-
-        border-radius: 8px;
-
-        padding: 15px;
-    }
-
-
-    .info-label {
-        color: #64748b;
-
-        font-size: 12px;
-
-        margin-bottom: 6px;
-
-        font-weight: 500;
-    }
-
-
-    .info-value {
-        color: #111827;
-
-        font-size: 13px;
-
-        font-weight: 600;
-
-        line-height: 1.5;
-
-        word-break: break-word;
-    }
-
-
-    /* =========================================================
-       TEXT SECTIONS
-       ========================================================= */
-
-    .text-section {
-        margin-top: 25px;
-
-        padding-top: 20px;
-
-        border-top: 1px solid #eef0f3;
-    }
-
-
-    .text-section h3 {
-        margin: 0 0 9px;
-
-        color: #111827;
-
-        font-size: 16px;
-
-        font-weight: 700;
-    }
-
-
-    .text-section p {
-        margin: 0;
-
-        color: #475569;
-
-        font-size: 13px;
-
-        line-height: 1.7;
-
-        white-space: pre-line;
-    }
-
-
-    /* =========================================================
-       DOCUMENT
-       ========================================================= */
-
-    .document-area {
-        margin-top: 22px;
-
-        padding-top: 20px;
-
-        border-top: 1px solid #eef0f3;
-    }
-
-
-    /* =========================================================
-       ACTION CARD
-       ========================================================= */
-
-    .action-card h3 {
-        margin: 0 0 8px;
-
-        color: #111827;
-
-        font-size: 17px;
-
-        font-weight: 700;
-    }
-
-
-    .action-description {
-        color: #64748b;
-
-        font-size: 13px;
-
-        line-height: 1.6;
-
-        margin: 0 0 18px;
-    }
-
-
-    /* =========================================================
-       FORM
-       ========================================================= */
-
-    .form-group {
-        margin-bottom: 16px;
-    }
-
-
-    .form-label {
-        display: block;
-
-        margin-bottom: 7px;
-
-        color: #374151;
-
-        font-size: 13px;
-
-        font-weight: 600;
-    }
-
-
-    .form-select {
-        width: 100%;
-
-        padding: 11px 13px;
-
-        border: 1px solid #d1d5db;
-
-        border-radius: 7px;
-
-        background: #ffffff;
-
-        color: #111827;
-
-        font-family: inherit;
-
-        font-size: 13px;
-
-        outline: none;
-
-        transition: border-color 0.2s ease,
-                    box-shadow 0.2s ease;
-    }
-
-
-    .form-select:focus {
-        border-color: #2563eb;
-
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
-    }
-
-
-    /* =========================================================
-       BUTTONS
-       ========================================================= */
-
-    .btn {
-        display: inline-flex;
-
-        align-items: center;
-        justify-content: center;
-
-        padding: 10px 16px;
-
-        border: none;
-
-        border-radius: 7px;
-
-        font-size: 13px;
-
-        font-weight: 600;
-
-        text-decoration: none;
-
-        cursor: pointer;
-
-        transition: background 0.2s ease,
-                    border-color 0.2s ease;
-    }
-
-
-    .btn-primary {
-        background: #2563eb;
-
-        color: #ffffff;
-    }
-
-
-    .btn-primary:hover {
-        background: #1d4ed8;
-    }
-
-
-    .btn-success {
-        background: #16a34a;
-
-        color: #ffffff;
-    }
-
-
-    .btn-success:hover {
-        background: #15803d;
-    }
-
-
-    .btn-secondary {
-        background: #f1f5f9;
-
-        color: #334155;
-
-        border: 1px solid #dbe2ea;
-    }
-
-
-    .btn-secondary:hover {
-        background: #e2e8f0;
-    }
-
-
-    /* =========================================================
-       MESSAGE BOXES
-       ========================================================= */
-
-    .success-box {
-        padding: 15px 16px;
-
-        background: #f0fdf4;
-
-        border: 1px solid #bbf7d0;
-
-        border-radius: 8px;
-
-        color: #166534;
-
-        font-size: 13px;
-
-        line-height: 1.6;
-    }
-
-
-    .warning-box {
-        padding: 15px 16px;
-
-        background: #fff7ed;
-
-        border: 1px solid #fed7aa;
-
-        border-radius: 8px;
-
-        color: #9a3412;
-
-        font-size: 13px;
-
-        line-height: 1.6;
-    }
-
-
-    .danger-box {
-        padding: 15px 16px;
-
-        background: #fef2f2;
-
-        border: 1px solid #fecaca;
-
-        border-radius: 8px;
-
-        color: #991b1b;
-
-        font-size: 13px;
-
-        line-height: 1.6;
-    }
-
-
-    /* =========================================================
-       BACK BUTTON AREA
-       ========================================================= */
-
-    .back-buttons {
-        margin-top: 5px;
-
-        margin-bottom: 25px;
-    }
-
-
-    /* =========================================================
-       RESPONSIVE
-       ========================================================= */
-
-    @media (max-width: 800px) {
-
-        .proposal-page {
-            padding: 22px 18px;
-        }
-
-
-        .page-header {
-            flex-direction: column;
-
-            align-items: flex-start;
-
-            gap: 14px;
-        }
-
-
-        .info-grid {
-            grid-template-columns: 1fr;
-        }
-
-    }
-
-
-    @media (max-width: 600px) {
-
-        .proposal-page {
-            padding: 18px 14px;
-        }
-
-
-        .card,
-        .action-card {
-            padding: 18px;
-        }
-
-
-        .proposal-title {
-            font-size: 21px;
-        }
-
-
-        .page-header h1 {
-            font-size: 22px;
-        }
-
-
-        .btn {
-            width: 100%;
-        }
-
-
-        .back-buttons .btn {
-            width: 100%;
-        }
-
-    }
-
+}
 </style>
-
 {% endblock %}
-
 
 
 {% block content %}
 
 <div class="proposal-page">
 
-    <div class="proposal-container">
+<div class="proposal-container">
+
+    <!-- HEADER -->
+    <div class="page-header">
+        <h1>Proposal Details</h1>
+
+        <p>
+            Review and manage the student project proposal.
+        </p>
+    </div>
 
 
-        <!-- =====================================================
-             HEADER
-             ===================================================== -->
+    <!-- =====================================================
+         PROPOSAL DETAILS
+         ===================================================== -->
 
-        <div class="page-header">
+    <div class="card">
 
-            <div>
-
-                <h1>
-                    Proposal Details
-                </h1>
-
-                <p>
-                    Review and manage the student project proposal.
-                </p>
-
-            </div>
-
+        <div class="proposal-title">
+            {{ proposal.title }}
         </div>
 
+        <span class="status-badge">
+            {{ proposal.get_status_display }}
+        </span>
 
 
-        <!-- =====================================================
-             PROPOSAL DETAILS
-             ===================================================== -->
+        <!-- INFORMATION -->
 
-        <div class="card">
+        <div class="info-grid">
 
-            <div class="proposal-title">
-                {{ proposal.title }}
+            <div class="info-box">
+                <div class="info-label">
+                    Student
+                </div>
+
+                <div class="info-value">
+                    {{ proposal.student.get_full_name|default:proposal.student.username }}
+                </div>
             </div>
 
 
-            <span class="status-badge">
-                {{ proposal.get_status_display }}
-            </span>
-
-
-
-            <!-- INFORMATION -->
-
-            <div class="info-grid">
-
-
-                <div class="info-box">
-
-                    <div class="info-label">
-                        Student
-                    </div>
-
-                    <div class="info-value">
-
-                        {{ proposal.student.get_full_name|default:proposal.student.username }}
-
-                    </div>
-
+            <div class="info-box">
+                <div class="info-label">
+                    Username
                 </div>
 
-
-
-                <div class="info-box">
-
-                    <div class="info-label">
-                        Username
-                    </div>
-
-                    <div class="info-value">
-
-                        {{ proposal.student.username }}
-
-                    </div>
-
+                <div class="info-value">
+                    {{ proposal.student.username }}
                 </div>
-
-
-
-                <div class="info-box">
-
-                    <div class="info-label">
-                        Domain
-                    </div>
-
-                    <div class="info-value">
-
-                        {% if proposal.domain %}
-
-                            {{ proposal.domain }}
-
-                        {% else %}
-
-                            Not specified
-
-                        {% endif %}
-
-                    </div>
-
-                </div>
-
-
-
-                <div class="info-box">
-
-                    <div class="info-label">
-                        Technologies
-                    </div>
-
-                    <div class="info-value">
-
-                        {% if proposal.technologies %}
-
-                            {{ proposal.technologies }}
-
-                        {% else %}
-
-                            Not specified
-
-                        {% endif %}
-
-                    </div>
-
-                </div>
-
-
-
-                <div class="info-box">
-
-                    <div class="info-label">
-                        Domain Expert
-                    </div>
-
-                    <div class="info-value">
-
-                        {% if proposal.domain_expert %}
-
-                            {{ proposal.domain_expert.get_full_name|default:proposal.domain_expert.username }}
-
-                        {% else %}
-
-                            Not Assigned
-
-                        {% endif %}
-
-                    </div>
-
-                </div>
-
-
-
-                <div class="info-box">
-
-                    <div class="info-label">
-                        Project Guide
-                    </div>
-
-                    <div class="info-value">
-
-                        {% if proposal.guide %}
-
-                            {{ proposal.guide.get_full_name|default:proposal.guide.username }}
-
-                        {% else %}
-
-                            Not Assigned
-
-                        {% endif %}
-
-                    </div>
-
-                </div>
-
-
-
-                <div class="info-box">
-
-                    <div class="info-label">
-                        Submitted At
-                    </div>
-
-                    <div class="info-value">
-
-                        {{ proposal.submitted_at|date:"d M Y, h:i A" }}
-
-                    </div>
-
-                </div>
-
-
-
-                <div class="info-box">
-
-                    <div class="info-label">
-                        Last Updated
-                    </div>
-
-                    <div class="info-value">
-
-                        {{ proposal.updated_at|date:"d M Y, h:i A" }}
-
-                    </div>
-
-                </div>
-
-
             </div>
 
 
-
-            <!-- ABSTRACT -->
-
-            <div class="text-section">
-
-                <h3>
-                    Abstract
-                </h3>
-
-
-                {% if proposal.abstract %}
-
-                    <p>
-                        {{ proposal.abstract }}
-                    </p>
-
-                {% else %}
-
-                    <p>
-                        No abstract provided.
-                    </p>
-
-                {% endif %}
-
-            </div>
-
-
-
-            <!-- DESCRIPTION -->
-
-            <div class="text-section">
-
-                <h3>
-                    Project Description
-                </h3>
-
-
-                {% if proposal.description %}
-
-                    <p>
-                        {{ proposal.description }}
-                    </p>
-
-                {% else %}
-
-                    <p>
-                        No project description provided.
-                    </p>
-
-                {% endif %}
-
-            </div>
-
-
-
-            <!-- DOCUMENT -->
-
-            {% if proposal.proposal_document %}
-
-                <div class="document-area">
-
-                    <a
-                        href="{{ proposal.proposal_document.url }}"
-                        target="_blank"
-                        class="btn btn-secondary"
-                    >
-                        View Proposal Document
-                    </a>
-
+            <div class="info-box">
+                <div class="info-label">
+                    Domain
                 </div>
 
-            {% endif %}
-
-        </div>
-
-
-
-        <!-- =====================================================
-             DOMAIN EXPERT
-             ===================================================== -->
-
-        <div class="action-card">
-
-            <h3>
-                Assign Domain Expert
-            </h3>
+                <div class="info-value">
+                    {% if proposal.domain %}
+                        {{ proposal.domain }}
+                    {% else %}
+                        Not specified
+                    {% endif %}
+                </div>
+            </div>
 
 
-            {% if proposal.status == "SUBMITTED" or proposal.status == "EXPERT_ASSIGNED" or proposal.status == "CHANGES_REQUESTED" %}
+            <div class="info-box">
+                <div class="info-label">
+                    Technologies
+                </div>
+
+                <div class="info-value">
+                    {% if proposal.technologies %}
+                        {{ proposal.technologies }}
+                    {% else %}
+                        Not specified
+                    {% endif %}
+                </div>
+            </div>
 
 
-                <p class="action-description">
+            <div class="info-box">
+                <div class="info-label">
+                    Domain Expert
+                </div>
 
-                    Select a Domain Expert to review this project proposal.
+                <div class="info-value">
 
-                </p>
+                    {% if proposal.domain_expert %}
 
-
-                <form
-                    method="POST"
-                    action="{% url 'coordinator:assign_expert' proposal.id %}"
-                >
-
-                    {% csrf_token %}
-
-
-                    <div class="form-group">
-
-                        <label class="form-label">
-                            Domain Expert
-                        </label>
-
-
-                        <select
-                            name="expert"
-                            class="form-select"
-                            required
-                        >
-
-                            <option value="">
-                                -- Select Domain Expert --
-                            </option>
-
-
-                            {% for expert in experts %}
-
-                                <option
-                                    value="{{ expert.id }}"
-                                    {% if proposal.domain_expert_id == expert.id %}
-                                        selected
-                                    {% endif %}
-                                >
-
-                                    {{ expert.get_full_name|default:expert.username }}
-
-                                </option>
-
-                            {% empty %}
-
-                                <option value="" disabled>
-                                    No active Domain Experts available
-                                </option>
-
-                            {% endfor %}
-
-                        </select>
-
-                    </div>
-
-
-                    <button
-                        type="submit"
-                        class="btn btn-primary"
-                    >
-                        Assign Expert
-                    </button>
-
-                </form>
-
-
-            {% elif proposal.domain_expert %}
-
-
-                <div class="success-box">
-
-                    <strong>
-                        Domain Expert Assigned
-                    </strong>
-
-                    <br><br>
-
-                    Assigned Expert:
-
-                    <strong>
                         {{ proposal.domain_expert.get_full_name|default:proposal.domain_expert.username }}
-                    </strong>
+
+                    {% else %}
+
+                        Not Assigned
+
+                    {% endif %}
 
                 </div>
-
-
-            {% else %}
-
-
-                <div class="warning-box">
-
-                    Expert assignment is not available for the
-                    current proposal status.
-
-                    <br><br>
-
-                    Current Status:
-
-                    <strong>
-                        {{ proposal.get_status_display }}
-                    </strong>
-
-                </div>
-
-
-            {% endif %}
-
-        </div>
-
-
-
-        <!-- =====================================================
-             EXPERT APPROVAL
-             ===================================================== -->
-
-        {% if proposal.status == "EXPERT_APPROVED" %}
-
-            <div class="action-card">
-
-                <h3>
-                    Domain Expert Review
-                </h3>
-
-
-                <div class="success-box">
-
-                    <strong>
-                        Expert Approved
-                    </strong>
-
-                    <br><br>
-
-                    The Domain Expert has approved this proposal.
-
-                    <br><br>
-
-                    The proposal is now ready for
-                    Coordinator final approval.
-
-                </div>
-
             </div>
 
-        {% endif %}
 
-
-
-        <!-- =====================================================
-             CHANGES REQUESTED
-             ===================================================== -->
-
-        {% if proposal.status == "CHANGES_REQUESTED" %}
-
-            <div class="action-card">
-
-                <h3>
-                    Changes Requested
-                </h3>
-
-
-                <div class="warning-box">
-
-                    <strong>
-                        Changes are required.
-                    </strong>
-
-                    <br><br>
-
-                    The Domain Expert has requested changes
-                    to this proposal.
-
-                    <br><br>
-
-                    The student must update and resubmit
-                    the proposal.
-
+            <div class="info-box">
+                <div class="info-label">
+                    Project Guide
                 </div>
 
-            </div>
-
-        {% endif %}
-
-
-
-        <!-- =====================================================
-             COORDINATOR FINAL APPROVAL
-             ===================================================== -->
-
-        <div class="action-card">
-
-            <h3>
-                Coordinator Final Approval
-            </h3>
-
-
-            {% if proposal.status == "EXPERT_APPROVED" %}
-
-
-                <p class="action-description">
-
-                    The Domain Expert has approved this proposal.
-                    You can now give the final Coordinator approval.
-
-                </p>
-
-
-                <form
-                    method="POST"
-                    action="{% url 'coordinator:approve_project' proposal.id %}"
-                >
-
-                    {% csrf_token %}
-
-
-                    <button
-                        type="submit"
-                        class="btn btn-success"
-                    >
-                        Final Approve Project
-                    </button>
-
-                </form>
-
-
-            {% elif proposal.status == "COORDINATOR_APPROVED" %}
-
-
-                <div class="success-box">
-
-                    <strong>
-                        Project Finally Approved
-                    </strong>
-
-                    <br><br>
-
-                    This project has been finally approved
-                    by the Coordinator.
-
-                    <br><br>
-
-                    You can now assign a Guide.
-
-                </div>
-
-
-            {% elif proposal.status == "GUIDE_ASSIGNED" %}
-
-
-                <div class="success-box">
-
-                    <strong>
-                        Project Finally Approved
-                    </strong>
-
-                    <br><br>
-
-                    Coordinator final approval has already
-                    been completed.
-
-                </div>
-
-
-            {% elif proposal.status == "GUIDE_REJECTED" %}
-
-
-                <div class="danger-box">
-
-                    <strong>
-                        Guide Rejected This Project
-                    </strong>
-
-                    <br><br>
-
-                    Coordinator final approval was already completed,
-                    but the assigned Guide rejected the project.
-
-                </div>
-
-
-            {% else %}
-
-
-                <div class="warning-box">
-
-                    <strong>
-                        Final approval is not available.
-                    </strong>
-
-                    <br><br>
-
-                    The Domain Expert must approve the proposal
-                    before the Coordinator can give final approval.
-
-                    <br><br>
-
-                    Current Status:
-
-                    <strong>
-                        {{ proposal.get_status_display }}
-                    </strong>
-
-                </div>
-
-
-            {% endif %}
-
-        </div>
-
-
-
-        <!-- =====================================================
-             GUIDE REJECTION INFORMATION
-             ===================================================== -->
-
-        {% if proposal.status == "GUIDE_REJECTED" %}
-
-            <div class="action-card">
-
-                <h3>
-                    Guide Rejection
-                </h3>
-
-
-                <div class="danger-box">
-
-                    <strong>
-                        Guide:
-                    </strong>
-
+                <div class="info-value">
 
                     {% if proposal.guide %}
 
@@ -1156,276 +367,695 @@ Proposal Details | Coordinator
 
                     {% else %}
 
-                        Unknown
-
-                    {% endif %}
-
-
-                    <br><br>
-
-
-                    <strong>
-                        Reason:
-                    </strong>
-
-                    <br>
-
-
-                    {% if proposal.guide_rejection_reason %}
-
-                        {{ proposal.guide_rejection_reason }}
-
-                    {% else %}
-
-                        No rejection reason was provided.
-
-                    {% endif %}
-
-
-                    {% if proposal.guide_rejected_at %}
-
-                        <br><br>
-
-                        <strong>
-                            Rejected At:
-                        </strong>
-
-                        {{ proposal.guide_rejected_at|date:"d M Y, h:i A" }}
+                        Not Assigned
 
                     {% endif %}
 
                 </div>
-
             </div>
 
-        {% endif %}
 
-
-
-        <!-- =====================================================
-             ASSIGN GUIDE
-             ===================================================== -->
-
-        <div class="action-card">
-
-            <h3>
-                Assign Project Guide
-            </h3>
-
-
-            {% if proposal.status == "COORDINATOR_APPROVED" %}
-
-
-                <p class="action-description">
-
-                    The project has received Coordinator final approval.
-                    You can now assign a Guide to the student.
-
-                </p>
-
-
-                <form
-                    method="POST"
-                    action="{% url 'coordinator:assign_guide' proposal.id %}"
-                >
-
-                    {% csrf_token %}
-
-
-                    <div class="form-group">
-
-                        <label class="form-label">
-                            Select Guide
-                        </label>
-
-
-                        <select
-                            name="guide"
-                            class="form-select"
-                            required
-                        >
-
-                            <option value="">
-                                -- Select Guide --
-                            </option>
-
-
-                            {% for guide in guides %}
-
-                                <option value="{{ guide.id }}">
-
-                                    {{ guide.get_full_name|default:guide.username }}
-
-                                </option>
-
-                            {% empty %}
-
-                                <option value="" disabled>
-                                    No active Guides available
-                                </option>
-
-                            {% endfor %}
-
-                        </select>
-
-                    </div>
-
-
-                    <button
-                        type="submit"
-                        class="btn btn-primary"
-                    >
-                        Assign Guide
-                    </button>
-
-                </form>
-
-
-            {% elif proposal.status == "GUIDE_REJECTED" %}
-
-
-                <p class="action-description">
-
-                    The previous Guide rejected this project.
-                    You can assign a different Guide.
-
-                </p>
-
-
-                <form
-                    method="POST"
-                    action="{% url 'coordinator:assign_guide' proposal.id %}"
-                >
-
-                    {% csrf_token %}
-
-
-                    <div class="form-group">
-
-                        <label class="form-label">
-                            Select New Guide
-                        </label>
-
-
-                        <select
-                            name="guide"
-                            class="form-select"
-                            required
-                        >
-
-                            <option value="">
-                                -- Select New Guide --
-                            </option>
-
-
-                            {% for guide in guides %}
-
-                                <option value="{{ guide.id }}">
-
-                                    {{ guide.get_full_name|default:guide.username }}
-
-                                </option>
-
-                            {% empty %}
-
-                                <option value="" disabled>
-                                    No active Guides available
-                                </option>
-
-                            {% endfor %}
-
-                        </select>
-
-                    </div>
-
-
-                    <button
-                        type="submit"
-                        class="btn btn-primary"
-                    >
-                        Assign New Guide
-                    </button>
-
-                </form>
-
-
-            {% elif proposal.status == "GUIDE_ASSIGNED" %}
-
-
-                <div class="success-box">
-
-                    <strong>
-                        Guide Assigned Successfully
-                    </strong>
-
-                    <br><br>
-
-                    Assigned Guide:
-
-                    {% if proposal.guide %}
-
-                        <strong>
-                            {{ proposal.guide.get_full_name|default:proposal.guide.username }}
-                        </strong>
-
-                    {% else %}
-
-                        <strong>
-                            Not Available
-                        </strong>
-
-                    {% endif %}
-
-                    <br><br>
-
-                    The assigned Guide can now review
-                    and manage the project.
-
+            <div class="info-box">
+                <div class="info-label">
+                    Submitted At
                 </div>
 
+                <div class="info-value">
+                    {{ proposal.submitted_at|date:"d M Y, h:i A" }}
+                </div>
+            </div>
+
+
+            <div class="info-box">
+                <div class="info-label">
+                    Last Updated
+                </div>
+
+                <div class="info-value">
+                    {{ proposal.updated_at|date:"d M Y, h:i A" }}
+                </div>
+            </div>
+
+        </div>
+
+
+        <!-- ABSTRACT -->
+
+        <div class="text-section">
+
+            <h3>
+                Abstract
+            </h3>
+
+            {% if proposal.abstract %}
+
+                <p>
+                    {{ proposal.abstract }}
+                </p>
 
             {% else %}
 
-
-                <div class="warning-box">
-
-                    Guide assignment is available only after
-                    Coordinator final approval.
-
-                    <br><br>
-
-                    Current Status:
-
-                    <strong>
-                        {{ proposal.get_status_display }}
-                    </strong>
-
-                </div>
-
+                <p>
+                    No abstract provided.
+                </p>
 
             {% endif %}
 
         </div>
 
 
+        <!-- DESCRIPTION -->
 
-        <!-- =====================================================
-             BACK TO DASHBOARD
-             ===================================================== -->
+        <div class="text-section">
 
-        <div class="back-buttons">
+            <h3>
+                Project Description
+            </h3>
 
-            <a
-                href="{% url 'coordinator:dashboard' %}"
-                class="btn btn-primary"
-            >
-                ← Back to Dashboard
-            </a>
+            {% if proposal.description %}
+
+                <p>
+                    {{ proposal.description }}
+                </p>
+
+            {% else %}
+
+                <p>
+                    No project description provided.
+                </p>
+
+            {% endif %}
 
         </div>
 
 
+        <!-- DOCUMENT -->
+
+        {% if proposal.proposal_document %}
+
+            <div class="document-area">
+
+                <a
+                    href="{{ proposal.proposal_document.url }}"
+                    target="_blank"
+                    class="btn btn-secondary"
+                >
+                    View Proposal Document
+                </a>
+
+            </div>
+
+        {% endif %}
+
     </div>
+
+
+    <!-- =====================================================
+         DOMAIN EXPERT
+         ===================================================== -->
+
+    <div class="action-card">
+
+        <h3>
+            Assign Domain Expert
+        </h3>
+
+
+        {% if proposal.status == "SUBMITTED" or proposal.status == "EXPERT_ASSIGNED" or proposal.status == "CHANGES_REQUESTED" %}
+
+            <p class="action-description">
+                Select a Domain Expert to review this project proposal.
+            </p>
+
+
+            <form
+                method="POST"
+                action="{% url 'coordinator:assign_expert' proposal.id %}"
+            >
+
+                {% csrf_token %}
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Domain Expert
+                    </label>
+
+                    <select
+                        name="expert"
+                        class="form-select"
+                        required
+                    >
+
+                        <option value="">
+                            -- Select Domain Expert --
+                        </option>
+
+
+                        {% for expert in experts %}
+
+                            <option
+                                value="{{ expert.id }}"
+                                {% if proposal.domain_expert_id == expert.id %}
+                                    selected
+                                {% endif %}
+                            >
+
+                                {{ expert.get_full_name|default:expert.username }}
+
+                            </option>
+
+                        {% empty %}
+
+                            <option value="" disabled>
+                                No active Domain Experts available
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Assign Expert
+                </button>
+
+            </form>
+
+
+        {% elif proposal.domain_expert %}
+
+            <div class="success-box">
+
+                <strong>
+                    Domain Expert Assigned
+                </strong>
+
+                <br><br>
+
+                Assigned Expert:
+
+                <strong>
+                    {{ proposal.domain_expert.get_full_name|default:proposal.domain_expert.username }}
+                </strong>
+
+            </div>
+
+
+        {% else %}
+
+            <div class="warning-box">
+
+                Expert assignment is not available for the
+                current proposal status.
+
+                <br><br>
+
+                Current Status:
+
+                <strong>
+                    {{ proposal.get_status_display }}
+                </strong>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =====================================================
+         EXPERT APPROVAL
+         ===================================================== -->
+
+    {% if proposal.status == "EXPERT_APPROVED" %}
+
+        <div class="action-card">
+
+            <h3>
+                Domain Expert Review
+            </h3>
+
+            <div class="success-box">
+
+                <strong>
+                    Expert Approved
+                </strong>
+
+                <br><br>
+
+                The Domain Expert has approved this proposal.
+
+                <br><br>
+
+                The proposal is now ready for
+                Coordinator final approval.
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- =====================================================
+         CHANGES REQUESTED
+         ===================================================== -->
+
+    {% if proposal.status == "CHANGES_REQUESTED" %}
+
+        <div class="action-card">
+
+            <h3>
+                Changes Requested
+            </h3>
+
+            <div class="warning-box">
+
+                <strong>
+                    Changes are required.
+                </strong>
+
+                <br><br>
+
+                The Domain Expert has requested changes
+                to this proposal.
+
+                <br><br>
+
+                The student must update and resubmit
+                the proposal.
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- =====================================================
+         COORDINATOR FINAL APPROVAL
+         ===================================================== -->
+
+    <div class="action-card">
+
+        <h3>
+            Coordinator Final Approval
+        </h3>
+
+
+        {% if proposal.status == "EXPERT_APPROVED" %}
+
+            <p class="action-description">
+
+                The Domain Expert has approved this proposal.
+
+                You can now give the final Coordinator approval.
+
+            </p>
+
+
+            <form
+                method="POST"
+                action="{% url 'coordinator:approve_project' proposal.id %}"
+            >
+
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="btn btn-success"
+                >
+                    Final Approve Project
+                </button>
+
+            </form>
+
+
+        {% elif proposal.status == "COORDINATOR_APPROVED" %}
+
+            <div class="success-box">
+
+                <strong>
+                    Project Finally Approved
+                </strong>
+
+                <br><br>
+
+                This project has been finally approved
+                by the Coordinator.
+
+                <br><br>
+
+                You can now assign a Guide.
+
+            </div>
+
+
+        {% elif proposal.status == "GUIDE_ASSIGNED" %}
+
+            <div class="success-box">
+
+                <strong>
+                    Project Finally Approved
+                </strong>
+
+                <br><br>
+
+                Coordinator final approval has already
+                been completed.
+
+            </div>
+
+
+        {% elif proposal.status == "GUIDE_REJECTED" %}
+
+            <div class="danger-box">
+
+                <strong>
+                    Guide Rejected This Project
+                </strong>
+
+                <br><br>
+
+                Coordinator final approval was already completed,
+                but the assigned Guide rejected the project.
+
+            </div>
+
+
+        {% else %}
+
+            <div class="warning-box">
+
+                <strong>
+                    Final approval is not available.
+                </strong>
+
+                <br><br>
+
+                The Domain Expert must approve the proposal
+                before the Coordinator can give final approval.
+
+                <br><br>
+
+                Current Status:
+
+                <strong>
+                    {{ proposal.get_status_display }}
+                </strong>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =====================================================
+         GUIDE REJECTION INFORMATION
+         ===================================================== -->
+
+    {% if proposal.status == "GUIDE_REJECTED" %}
+
+        <div class="action-card">
+
+            <h3>
+                Guide Rejection
+            </h3>
+
+            <div class="danger-box">
+
+                <strong>
+                    Guide:
+                </strong>
+
+                {% if proposal.guide %}
+
+                    {{ proposal.guide.get_full_name|default:proposal.guide.username }}
+
+                {% else %}
+
+                    Unknown
+
+                {% endif %}
+
+                <br><br>
+
+
+                <strong>
+                    Reason:
+                </strong>
+
+                <br>
+
+                {% if proposal.guide_rejection_reason %}
+
+                    {{ proposal.guide_rejection_reason }}
+
+                {% else %}
+
+                    No rejection reason was provided.
+
+                {% endif %}
+
+                {% if proposal.guide_rejected_at %}
+
+                    <br><br>
+
+                    <strong>
+                        Rejected At:
+                    </strong>
+
+                    {{ proposal.guide_rejected_at|date:"d M Y, h:i A" }}
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- =====================================================
+         ASSIGN GUIDE
+         ===================================================== -->
+
+    <div class="action-card">
+
+        <h3>
+            Assign Project Guide
+        </h3>
+
+
+        {% if proposal.status == "COORDINATOR_APPROVED" %}
+
+            <p class="action-description">
+
+                The project has received Coordinator final approval.
+                You can now assign a Guide to the student.
+
+            </p>
+
+
+            <form
+                method="POST"
+                action="{% url 'coordinator:assign_guide' proposal.id %}"
+            >
+
+                {% csrf_token %}
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Select Guide
+                    </label>
+
+                    <select
+                        name="guide"
+                        class="form-select"
+                        required
+                    >
+
+                        <option value="">
+                            -- Select Guide --
+                        </option>
+
+
+                        {% for guide in guides %}
+
+                            <option value="{{ guide.id }}">
+
+                                {{ guide.get_full_name|default:guide.username }}
+
+                            </option>
+
+                        {% empty %}
+
+                            <option value="" disabled>
+                                No active Guides available
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Assign Guide
+                </button>
+
+            </form>
+
+
+        {% elif proposal.status == "GUIDE_REJECTED" %}
+
+            <p class="action-description">
+
+                The previous Guide rejected this project.
+                You can assign a different Guide.
+
+            </p>
+
+
+            <form
+                method="POST"
+                action="{% url 'coordinator:assign_guide' proposal.id %}"
+            >
+
+                {% csrf_token %}
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Select New Guide
+                    </label>
+
+                    <select
+                        name="guide"
+                        class="form-select"
+                        required
+                    >
+
+                        <option value="">
+                            -- Select New Guide --
+                        </option>
+
+
+                        {% for guide in guides %}
+
+                            <option value="{{ guide.id }}">
+
+                                {{ guide.get_full_name|default:guide.username }}
+
+                            </option>
+
+                        {% empty %}
+
+                            <option value="" disabled>
+                                No active Guides available
+                            </option>
+
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Assign New Guide
+                </button>
+
+            </form>
+
+
+        {% elif proposal.status == "GUIDE_ASSIGNED" %}
+
+            <div class="success-box">
+
+                <strong>
+                    Guide Assigned Successfully
+                </strong>
+
+                <br><br>
+
+                Assigned Guide:
+
+                {% if proposal.guide %}
+
+                    <strong>
+                        {{ proposal.guide.get_full_name|default:proposal.guide.username }}
+                    </strong>
+
+                {% else %}
+
+                    <strong>
+                        Not Available
+                    </strong>
+
+                {% endif %}
+
+                <br><br>
+
+                The assigned Guide can now review
+                and manage the project.
+
+            </div>
+
+
+        {% else %}
+
+            <div class="warning-box">
+
+                Guide assignment is available only after
+                Coordinator final approval.
+
+                <br><br>
+
+                Current Status:
+
+                <strong>
+                    {{ proposal.get_status_display }}
+                </strong>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =====================================================
+         BACK TO DASHBOARD
+         ===================================================== -->
+
+    <div class="back-buttons">
+
+        <a
+            href="{% url 'coordinator:dashboard' %}"
+            class="btn btn-primary"
+        >
+            ← Back to Dashboard
+        </a>
+
+    </div>
+
+</div>
 
 </div>
 

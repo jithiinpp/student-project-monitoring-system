@@ -7,314 +7,140 @@ Upload Weekly Progress | SPMS
 {% block content %}
 
 <style>
-    .progress-form-page {
-        min-height: 100vh;
-        padding: 30px;
-        background: #f5f7fb;
-    }
-
-    .form-container {
-        max-width: 900px;
-        margin: 0 auto;
-    }
-
-    /* =========================
-       HEADER
-    ========================= */
-
-    .form-header {
-        margin-bottom: 24px;
-    }
-
-    .form-header h1 {
-        margin: 0;
-        color: #0f172a;
-        font-size: 28px;
-        font-weight: 700;
-    }
-
-    .form-header p {
-        margin: 7px 0 0;
-        color: #64748b;
-        font-size: 14px;
-    }
-
-    /* =========================
-       FORM CARD
-    ========================= */
-
-    .form-card {
-        background: #ffffff;
-        border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        padding: 30px;
-        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
-    }
-
-    /* =========================
-       PROJECT INFO
-    ========================= */
-
-    .project-info {
-        display: flex;
-        align-items: flex-start;
-        gap: 14px;
-
-        background: #eff6ff;
-        border: 1px solid #dbeafe;
-        border-left: 4px solid #2563eb;
-
-        padding: 16px;
-        border-radius: 8px;
-        margin-bottom: 28px;
-    }
-
-    .project-icon {
-        width: 38px;
-        height: 38px;
-        min-width: 38px;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        background: #ffffff;
-        border: 1px solid #dbeafe;
-        border-radius: 8px;
-    }
-
-    .project-icon svg {
-        width: 20px;
-        height: 20px;
-        stroke: #2563eb;
-        fill: none;
-        stroke-width: 1.8;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-    }
-
-    .project-info-content strong {
-        display: block;
-        margin-bottom: 4px;
-
-        color: #1e3a8a;
-        font-size: 13px;
-        font-weight: 700;
-    }
-
-    .project-info-content p {
-        margin: 0;
-        color: #475569;
-        font-size: 14px;
-        line-height: 1.5;
-    }
-
-    /* =========================
-       FORM GROUP
-    ========================= */
-
-    .form-group {
-        margin-bottom: 22px;
-    }
-
-    .form-group label {
-        display: block;
-        margin-bottom: 7px;
-
-        color: #334155;
-        font-size: 14px;
-        font-weight: 600;
-    }
-
-    .form-control,
-    .form-group input,
-    .form-group textarea,
-    .form-group select {
-        width: 100%;
-        box-sizing: border-box;
-
-        padding: 12px 13px;
 
-        border: 1px solid #cbd5e1;
-        border-radius: 8px;
+.progress-form-page {
+    padding: 30px;
+    background: #f4f7fb;
+    min-height: 100vh;
+}
+
+.form-container {
+    max-width: 850px;
+    margin: 0 auto;
+}
+
+.form-header {
+    margin-bottom: 25px;
+}
+
+.form-header h1 {
+    margin: 0;
+    color: #0f172a;
+    font-size: 28px;
+}
+
+.form-header p {
+    margin-top: 7px;
+    color: #64748b;
+    font-size: 14px;
+}
+
+.form-card {
+    background: white;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    padding: 30px;
+}
+
+.project-info {
+    background: #eff6ff;
+    border-left: 4px solid #2563eb;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+.project-info strong {
+    color: #1e3a8a;
+}
+
+.project-info p {
+    margin: 5px 0 0;
+    color: #475569;
+    font-size: 14px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: 600;
+    color: #334155;
+    font-size: 14px;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 13px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 14px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+}
+
+.form-help {
+    margin-top: 6px;
+    color: #64748b;
+    font-size: 12px;
+}
+
+.errorlist {
+    margin: 5px 0;
+    padding: 0;
+    list-style: none;
+    color: #dc2626;
+    font-size: 12px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 25px;
+}
+
+.btn-submit {
+    border: none;
+    background: #2563eb;
+    color: white;
+    padding: 12px 22px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.btn-submit:hover {
+    background: #1d4ed8;
+}
+
+.btn-cancel {
+    background: #f1f5f9;
+    color: #475569;
+    padding: 12px 22px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.btn-cancel:hover {
+    background: #e2e8f0;
+}
 
-        background: #ffffff;
-        color: #0f172a;
-
-        font-family: Arial, Helvetica, sans-serif;
-        font-size: 14px;
-
-        transition: border-color 0.2s ease,
-                    box-shadow 0.2s ease;
-    }
-
-    .form-group textarea {
-        min-height: 150px;
-        resize: vertical;
-        line-height: 1.6;
-    }
-
-    .form-group input[type="file"] {
-        padding: 10px;
-        cursor: pointer;
-    }
-
-    .form-control:focus,
-    .form-group input:focus,
-    .form-group textarea:focus,
-    .form-group select:focus {
-        outline: none;
-        border-color: #2563eb;
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
-    }
-
-    .form-help {
-        margin-top: 6px;
-
-        color: #64748b;
-        font-size: 12px;
-        line-height: 1.5;
-    }
-
-    /* =========================
-       ERRORS
-    ========================= */
-
-    .errorlist {
-        margin: 6px 0 0;
-        padding: 0;
-
-        list-style: none;
-
-        color: #dc2626;
-        font-size: 12px;
-    }
-
-    /* =========================
-       FORM ACTIONS
-    ========================= */
-
-    .form-actions {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-
-        margin-top: 28px;
-        padding-top: 22px;
-
-        border-top: 1px solid #e5e7eb;
-    }
-
-    .btn-submit {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        gap: 8px;
-
-        border: none;
-        background: #2563eb;
-        color: #ffffff;
-
-        padding: 12px 20px;
-        border-radius: 8px;
-
-        cursor: pointer;
-
-        font-size: 14px;
-        font-weight: 600;
-
-        transition: background 0.2s ease;
-    }
-
-    .btn-submit:hover {
-        background: #1d4ed8;
-    }
-
-    .btn-submit svg {
-        width: 17px;
-        height: 17px;
-
-        stroke: currentColor;
-        fill: none;
-
-        stroke-width: 1.8;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-    }
-
-    .btn-cancel {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-
-        background: #f1f5f9;
-        color: #475569;
-
-        padding: 12px 20px;
-        border-radius: 8px;
-
-        text-decoration: none;
-
-        font-size: 14px;
-        font-weight: 600;
-
-        transition: background 0.2s ease;
-    }
-
-    .btn-cancel:hover {
-        background: #e2e8f0;
-    }
-
-    /* =========================
-       RESPONSIVE
-    ========================= */
-
-    @media (max-width: 768px) {
-
-        .progress-form-page {
-            padding: 20px;
-        }
-
-        .form-card {
-            padding: 22px;
-        }
-
-        .form-header h1 {
-            font-size: 24px;
-        }
-    }
-
-    @media (max-width: 480px) {
-
-        .progress-form-page {
-            padding: 15px;
-        }
-
-        .form-card {
-            padding: 18px;
-        }
-
-        .form-actions {
-            flex-direction: column;
-            align-items: stretch;
-        }
-
-        .btn-submit,
-        .btn-cancel {
-            width: 100%;
-            box-sizing: border-box;
-        }
-    }
 </style>
 
 
 <div class="progress-form-page">
 
     <div class="form-container">
-
-        <!-- =========================
-             PAGE HEADER
-        ========================== -->
 
         <div class="form-header">
 
@@ -329,10 +155,6 @@ Upload Weekly Progress | SPMS
         </div>
 
 
-        <!-- =========================
-             FORM CARD
-        ========================== -->
-
         <div class="form-card">
 
 
@@ -340,33 +162,18 @@ Upload Weekly Progress | SPMS
 
             <div class="project-info">
 
-                <div class="project-icon">
+                <strong>
+                    Current Project
+                </strong>
 
-                    <svg viewBox="0 0 24 24">
-                        <path d="M3 7h6l2 2h10v10H3z"></path>
-                        <path d="M3 7V5h6l2 2"></path>
-                    </svg>
-
-                </div>
-
-                <div class="project-info-content">
-
-                    <strong>
-                        Current Project
-                    </strong>
-
-                    <p>
-                        {{ project.title }}
-                    </p>
-
-                </div>
+                <p>
+                    {{ project.title }}
+                </p>
 
             </div>
 
 
-            <!-- =========================
-                 FORM
-            ========================== -->
+            <!-- FORM -->
 
             <form method="POST"
                   enctype="multipart/form-data">
@@ -374,7 +181,7 @@ Upload Weekly Progress | SPMS
                 {% csrf_token %}
 
 
-                <!-- WEEK NUMBER -->
+                <!-- WEEK -->
 
                 <div class="form-group">
 
@@ -389,14 +196,13 @@ Upload Weekly Progress | SPMS
                     {% endif %}
 
                     <div class="form-help">
-                        Enter the week number for this progress report.
-                        Example: 1, 2, 3...
+                        Example: Week 1, Week 2, Week 3...
                     </div>
 
                 </div>
 
 
-                <!-- PROGRESS TITLE -->
+                <!-- TITLE -->
 
                 <div class="form-group">
 
@@ -411,7 +217,7 @@ Upload Weekly Progress | SPMS
                     {% endif %}
 
                     <div class="form-help">
-                        Give a short and clear title for this week's work.
+                        Give a short title for this week's work.
                     </div>
 
                 </div>
@@ -432,14 +238,14 @@ Upload Weekly Progress | SPMS
                     {% endif %}
 
                     <div class="form-help">
-                        Explain the work completed, problems faced,
-                        and the work planned for the next week.
+                        Explain what you completed this week,
+                        problems faced, and what you plan to do next.
                     </div>
 
                 </div>
 
 
-                <!-- SUPPORTING DOCUMENT -->
+                <!-- DOCUMENT -->
 
                 <div class="form-group">
 
@@ -454,28 +260,20 @@ Upload Weekly Progress | SPMS
                     {% endif %}
 
                     <div class="form-help">
-                        Optional. Supported formats: PDF, DOC, DOCX.
+                        Optional: PDF, DOC or DOCX.
                     </div>
 
                 </div>
 
 
-                <!-- =========================
-                     ACTION BUTTONS
-                ========================== -->
+                <!-- BUTTONS -->
 
                 <div class="form-actions">
 
                     <button type="submit"
                             class="btn-submit">
 
-                        <svg viewBox="0 0 24 24">
-                            <path d="M12 3v12"></path>
-                            <path d="m7 10 5 5 5-5"></path>
-                            <path d="M5 21h14"></path>
-                        </svg>
-
-                        Submit Progress
+                        📤 Submit Progress
 
                     </button>
 
