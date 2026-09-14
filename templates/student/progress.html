@@ -1,190 +1,191 @@
 {% extends "base.html" %}
 
-{% block title %}
-Weekly Progress | SPMS
-{% endblock %}
+{% block title %}Project Progress - SPMS{% endblock %}
 
 {% block content %}
 
 <style>
 
 .progress-page {
-    padding: 30px;
-    background: #f4f7fb;
-    min-height: 100vh;
+    max-width: 1100px;
+    margin: 35px auto;
+    padding: 0 20px;
 }
 
-.progress-header {
+.page-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 15px;
     margin-bottom: 25px;
 }
 
-.progress-header h1 {
+.page-header h1 {
     margin: 0;
-    color: #0f172a;
-    font-size: 28px;
+    color: #111827;
 }
 
-.progress-header p {
+.page-header p {
     margin: 7px 0 0;
-    color: #64748b;
-    font-size: 14px;
+    color: #6b7280;
 }
 
-.add-progress-btn {
+.add-btn {
     background: #2563eb;
     color: white;
-    padding: 12px 18px;
-    border-radius: 9px;
+    padding: 11px 17px;
+    border-radius: 8px;
     text-decoration: none;
-    font-size: 14px;
     font-weight: 600;
 }
 
-.add-progress-btn:hover {
-    background: #1d4ed8;
-}
-
-
-/* PROJECT CARD */
-
-.project-card {
+.project-card,
+.report-card,
+.mark-card {
     background: white;
-    border: 1px solid #e2e8f0;
-    border-radius: 16px;
-    padding: 25px;
-    margin-bottom: 25px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 22px;
+    margin-bottom: 20px;
 }
 
 .project-card h2 {
-    margin: 0 0 8px;
-    color: #0f172a;
-    font-size: 21px;
+    margin-top: 0;
+    color: #111827;
 }
 
-.project-card p {
-    margin: 5px 0;
-    color: #64748b;
+.project-info {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+}
+
+.info-box {
+    background: #f9fafb;
+    padding: 14px;
+    border-radius: 8px;
+}
+
+.info-box span {
+    display: block;
+    color: #6b7280;
     font-size: 13px;
+    margin-bottom: 5px;
 }
 
-
-/* PROGRESS LIST */
-
-.progress-list {
-    margin-top: 25px;
+.info-box strong {
+    color: #111827;
 }
 
-.progress-item {
-    border: 1px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 15px;
-    background: #f8fafc;
+.report-card {
+    position: relative;
 }
 
-.progress-top {
+.report-title {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
+    gap: 15px;
 }
 
-.week-badge {
-    background: #2563eb;
-    color: white;
-    padding: 6px 12px;
+.report-title h3 {
+    margin: 0;
+    color: #111827;
+}
+
+.status {
+    display: inline-block;
+    padding: 5px 10px;
     border-radius: 20px;
     font-size: 12px;
     font-weight: 600;
 }
 
-.status-badge {
-    padding: 6px 12px;
-    border-radius: 20px;
-    background: #fef3c7;
-    color: #92400e;
-    font-size: 12px;
-    font-weight: 600;
+.status-submitted {
+    background: #eff6ff;
+    color: #1d4ed8;
 }
 
-.progress-item h3 {
-    margin: 10px 0;
-    color: #0f172a;
-    font-size: 17px;
+.status-reviewed {
+    background: #ecfdf5;
+    color: #047857;
 }
 
-.progress-description {
-    color: #475569;
-    font-size: 14px;
+.status-changes {
+    background: #fff7ed;
+    color: #c2410c;
+}
+
+.report-description {
+    margin: 15px 0;
+    color: #4b5563;
     line-height: 1.6;
 }
 
-.progress-document {
-    margin-top: 15px;
-}
-
-.progress-document a {
+.document-link {
     color: #2563eb;
     text-decoration: none;
-    font-size: 13px;
     font-weight: 600;
 }
 
-.feedback-box {
+.feedback {
     margin-top: 15px;
-    padding: 15px;
-    background: #eff6ff;
+    padding: 14px;
+    background: #f9fafb;
+    border-radius: 8px;
+}
+
+.feedback strong {
+    color: #374151;
+}
+
+.feedback p {
+    margin-bottom: 0;
+    color: #4b5563;
+}
+
+.mark-card {
     border-left: 4px solid #2563eb;
-    border-radius: 7px;
 }
 
-.feedback-box strong {
-    display: block;
-    margin-bottom: 5px;
-    color: #1e3a8a;
+.mark-card h2 {
+    margin-top: 0;
 }
 
-.feedback-box p {
-    margin: 0;
-    color: #475569;
-    font-size: 13px;
+.final-mark {
+    font-size: 38px;
+    font-weight: 700;
+    color: #2563eb;
+    margin: 15px 0;
 }
 
-.empty-box {
+.no-mark {
+    color: #6b7280;
+}
+
+.empty {
     background: white;
-    border: 1px dashed #cbd5e1;
-    border-radius: 14px;
-    padding: 50px 25px;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 40px;
     text-align: center;
+    color: #6b7280;
 }
 
-.empty-box .icon {
-    font-size: 45px;
-}
+@media (max-width: 700px) {
 
-.empty-box h3 {
-    margin: 15px 0 8px;
-    color: #0f172a;
-}
-
-.empty-box p {
-    color: #64748b;
-    font-size: 14px;
-}
-
-@media (max-width: 768px) {
-
-    .progress-page {
-        padding: 20px;
-    }
-
-    .progress-header {
+    .page-header {
         flex-direction: column;
         align-items: flex-start;
-        gap: 15px;
+    }
+
+    .project-info {
+        grid-template-columns: 1fr;
+    }
+
+    .report-title {
+        flex-direction: column;
+        align-items: flex-start;
     }
 
 }
@@ -194,38 +195,36 @@ Weekly Progress | SPMS
 
 <div class="progress-page">
 
-    <!-- HEADER -->
 
-    <div class="progress-header">
+    <div class="page-header">
 
         <div>
 
-            <h1>
-                Weekly Project Progress
-            </h1>
+            <h1>Project Progress</h1>
 
             <p>
-                Submit and monitor your weekly project development.
+                Track your progress reports and final evaluation.
             </p>
 
         </div>
 
+        {% if project and project.status == "IN_PROGRESS" %}
 
-        {% if project %}
+            {% if progress_reports|length < 4 %}
 
-            <a href="{% url 'accounts:add_progress' %}"
-               class="add-progress-btn">
+                <a
+                    href="{% url 'accounts:add_progress' %}"
+                    class="add-btn"
+                >
+                    Upload Next Report
+                </a>
 
-                + Upload Weekly Progress
-
-            </a>
+            {% endif %}
 
         {% endif %}
 
     </div>
 
-
-    <!-- PROJECT -->
 
     {% if project %}
 
@@ -235,144 +234,199 @@ Weekly Progress | SPMS
                 {{ project.title }}
             </h2>
 
-            <p>
-                <strong>Domain:</strong>
-                {{ project.domain }}
-            </p>
+            <div class="project-info">
 
-            <p>
-                <strong>Technologies:</strong>
-                {{ project.technologies }}
-            </p>
+                <div class="info-box">
 
-            <p>
-                <strong>Status:</strong>
-                {{ project.get_status_display }}
-            </p>
+                    <span>Domain</span>
+
+                    <strong>
+                        {{ project.domain|default:"Not specified" }}
+                    </strong>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <span>Technologies</span>
+
+                    <strong>
+                        {{ project.technologies|default:"Not specified" }}
+                    </strong>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <span>Status</span>
+
+                    <strong>
+                        {{ project.get_status_display }}
+                    </strong>
+
+                </div>
+
+            </div>
 
         </div>
 
 
-        <!-- PROGRESS REPORTS -->
+        {% for report in progress_reports %}
 
-        <div class="progress-list">
+            <div class="report-card">
 
-            {% if progress_reports %}
+                <div class="report-title">
 
-                {% for progress in progress_reports %}
-
-                    <div class="progress-item">
-
-                        <div class="progress-top">
-
-                            <span class="week-badge">
-                                Week {{ progress.week_number }}
-                            </span>
-
-                            <span class="status-badge">
-                                {{ progress.get_status_display }}
-                            </span>
-
-                        </div>
+                    <h3>
+                        {{ report.get_report_type_display }}
+                    </h3>
 
 
-                        <h3>
-                            {{ progress.title }}
-                        </h3>
+                    {% if report.status == "SUBMITTED" %}
+
+                        <span class="status status-submitted">
+                            Submitted
+                        </span>
+
+                    {% elif report.status == "REVIEWED" %}
+
+                        <span class="status status-reviewed">
+                            Reviewed
+                        </span>
+
+                    {% elif report.status == "CHANGES_REQUIRED" %}
+
+                        <span class="status status-changes">
+                            Changes Required
+                        </span>
+
+                    {% else %}
+
+                        <span class="status">
+                            {{ report.get_status_display }}
+                        </span>
+
+                    {% endif %}
+
+                </div>
 
 
-                        <div class="progress-description">
-
-                            {{ progress.description|linebreaks }}
-
-                        </div>
+                <h4>
+                    {{ report.title }}
+                </h4>
 
 
-                        {% if progress.document %}
+                <div class="report-description">
 
-                            <div class="progress-document">
+                    {{ report.description|linebreaks }}
 
-                                📎
-
-                                <a href="{{ progress.document.url }}"
-                                   target="_blank">
-
-                                    View Uploaded Document
-
-                                </a>
-
-                            </div>
-
-                        {% endif %}
+                </div>
 
 
-                        {% if progress.guide_feedback %}
+                {% if report.document %}
 
-                            <div class="feedback-box">
+                    <a
+                        href="{{ report.document.url }}"
+                        target="_blank"
+                        class="document-link"
+                    >
+                        View Report Document
+                    </a>
 
-                                <strong>
-                                    👨‍🏫 Guide Feedback
-                                </strong>
+                {% endif %}
 
-                                <p>
-                                    {{ progress.guide_feedback }}
-                                </p>
 
-                            </div>
+                {% if report.guide_feedback %}
 
-                        {% endif %}
+                    <div class="feedback">
+
+                        <strong>
+                            Guide Feedback
+                        </strong>
+
+                        <p>
+                            {{ report.guide_feedback|linebreaks }}
+                        </p>
 
                     </div>
 
-                {% endfor %}
+                {% endif %}
+
+            </div>
+
+        {% empty %}
+
+            <div class="empty">
+
+                <h3>
+                    No reports submitted yet
+                </h3>
+
+                <p>
+                    Start by uploading Progress Report 1.
+                </p>
+
+            </div>
+
+        {% endfor %}
+
+
+        <!-- FINAL MARK -->
+
+        <div class="mark-card">
+
+            <h2>
+                Final Evaluation
+            </h2>
+
+            {% if guide_evaluation %}
+
+                <div class="final-mark">
+
+                    {{ guide_evaluation.marks }}/100
+
+                </div>
+
+
+                {% if guide_evaluation.feedback %}
+
+                    <div class="feedback">
+
+                        <strong>
+                            Guide Final Feedback
+                        </strong>
+
+                        <p>
+                            {{ guide_evaluation.feedback|linebreaks }}
+                        </p>
+
+                    </div>
+
+                {% endif %}
 
             {% else %}
 
-                <div class="empty-box">
-
-                    <div class="icon">
-                        📝
-                    </div>
-
-                    <h3>
-                        No Weekly Progress Yet
-                    </h3>
-
-                    <p>
-                        Start documenting your project development
-                        by uploading your first weekly progress report.
-                    </p>
-
-                    <br>
-
-                    <a href="{% url 'accounts:add_progress' %}"
-                       class="add-progress-btn">
-
-                        Upload Week 1 Progress
-
-                    </a>
-
-                </div>
+                <p class="no-mark">
+                    Final mark has not been entered by the Guide yet.
+                </p>
 
             {% endif %}
 
         </div>
 
+
     {% else %}
 
-        <div class="empty-box">
-
-            <div class="icon">
-                🎓
-            </div>
+        <div class="empty">
 
             <h3>
-                Project Not Ready
+                Project not available
             </h3>
 
             <p>
-                Weekly progress submission will become available
-                after your project is approved and a guide is assigned.
+                Your project has not been assigned or started yet.
             </p>
 
         </div>

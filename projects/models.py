@@ -2,21 +2,29 @@ from django.conf import settings
 from django.db import models
 
 
+# =========================================================
+# PROJECT PROPOSAL
+# =========================================================
+
 class ProjectProposal(models.Model):
 
     STATUS_CHOICES = [
-    ("SUBMITTED", "Submitted"),
-    ("EXPERT_ASSIGNED", "Expert Assigned"),
-    ("CHANGES_REQUESTED", "Changes Requested"),
-    ("CHANGES_SENT_TO_STUDENT", "Changes Sent To Student"),
-    ("EXPERT_APPROVED", "Expert Approved"),
-    ("COORDINATOR_APPROVED", "Coordinator Approved"),
-    ("GUIDE_ASSIGNED", "Guide Assigned"),
-    ("GUIDE_REJECTED", "Guide Rejected"),
-    ("IN_PROGRESS", "In Progress"),
-    ("COMPLETED", "Completed"),
-    ("REJECTED", "Rejected"),
-]
+        ("SUBMITTED", "Submitted"),
+        ("EXPERT_ASSIGNED", "Expert Assigned"),
+        ("CHANGES_REQUESTED", "Changes Requested"),
+        ("CHANGES_SENT_TO_STUDENT", "Changes Sent To Student"),
+        ("EXPERT_APPROVED", "Expert Approved"),
+        ("COORDINATOR_APPROVED", "Coordinator Approved"),
+        ("GUIDE_ASSIGNED", "Guide Assigned"),
+        ("GUIDE_REJECTED", "Guide Rejected"),
+        ("IN_PROGRESS", "In Progress"),
+        ("COMPLETED", "Completed"),
+        ("REJECTED", "Rejected"),
+    ]
+
+    # -----------------------------------------------------
+    # STUDENT
+    # -----------------------------------------------------
 
     student = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -25,9 +33,17 @@ class ProjectProposal(models.Model):
         limit_choices_to={"role": "STUDENT"},
     )
 
-    title = models.CharField(max_length=255)
+    # -----------------------------------------------------
+    # PROJECT INFORMATION
+    # -----------------------------------------------------
 
-    abstract = models.TextField(blank=True)
+    title = models.CharField(
+        max_length=255
+    )
+
+    abstract = models.TextField(
+        blank=True
+    )
 
     domain = models.CharField(
         max_length=255,
@@ -48,24 +64,9 @@ class ProjectProposal(models.Model):
         null=True
     )
 
-    expert_comments = models.TextField(
-        blank=True,
-        null=True
-    )
-
-    status = models.CharField(
-        max_length=30,
-        choices=STATUS_CHOICES,
-        default="SUBMITTED"
-    )
-
-    submitted_at = models.DateTimeField(
-        auto_now_add=True
-    )
-
-    updated_at = models.DateTimeField(
-        auto_now=True
-    )
+    # -----------------------------------------------------
+    # DOMAIN EXPERT
+    # -----------------------------------------------------
 
     domain_expert = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -75,6 +76,25 @@ class ProjectProposal(models.Model):
         related_name="expert_proposals",
         limit_choices_to={"role": "EXPERT"},
     )
+
+    expert_comments = models.TextField(
+        blank=True,
+        null=True
+    )
+
+    # -----------------------------------------------------
+    # PROJECT STATUS
+    # -----------------------------------------------------
+
+    status = models.CharField(
+        max_length=40,
+        choices=STATUS_CHOICES,
+        default="SUBMITTED"
+    )
+
+    # -----------------------------------------------------
+    # GUIDE
+    # -----------------------------------------------------
 
     guide = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -95,15 +115,38 @@ class ProjectProposal(models.Model):
         null=True
     )
 
+    # -----------------------------------------------------
+    # TIMESTAMPS
+    # -----------------------------------------------------
+
+    submitted_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    # -----------------------------------------------------
+    # STRING REPRESENTATION
+    # -----------------------------------------------------
+
     def __str__(self):
         return self.title
 
 
 # =========================================================
-# WEEKLY PROJECT PROGRESS
+# PROJECT PROGRESS / FINAL REPORT
 # =========================================================
 
 class ProjectProgress(models.Model):
+
+    REPORT_CHOICES = [
+        ("PROGRESS_1", "Progress Report 1"),
+        ("PROGRESS_2", "Progress Report 2"),
+        ("PROGRESS_3", "Progress Report 3"),
+        ("FINAL_REPORT", "Final Report"),
+    ]
 
     STATUS_CHOICES = [
         ("SUBMITTED", "Submitted"),
@@ -111,22 +154,43 @@ class ProjectProgress(models.Model):
         ("CHANGES_REQUIRED", "Changes Required"),
     ]
 
+    # -----------------------------------------------------
+    # PROJECT
+    # -----------------------------------------------------
+
     project = models.ForeignKey(
         ProjectProposal,
         on_delete=models.CASCADE,
         related_name="progress_reports"
     )
 
+    # -----------------------------------------------------
+    # STUDENT
+    # -----------------------------------------------------
+
     student = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="progress_reports",
-        limit_choices_to={"role": "STUDENT"},
+        limit_choices_to={"role": "STUDENT"}
     )
 
-    week_number = models.PositiveIntegerField()
+    # -----------------------------------------------------
+    # REPORT TYPE
+    # -----------------------------------------------------
 
-    title = models.CharField(max_length=200)
+    report_type = models.CharField(
+        max_length=30,
+        choices=REPORT_CHOICES
+    )
+
+    # -----------------------------------------------------
+    # REPORT DETAILS
+    # -----------------------------------------------------
+
+    title = models.CharField(
+        max_length=200
+    )
 
     description = models.TextField()
 
@@ -135,6 +199,10 @@ class ProjectProgress(models.Model):
         blank=True,
         null=True
     )
+
+    # -----------------------------------------------------
+    # GUIDE REVIEW STATUS
+    # -----------------------------------------------------
 
     status = models.CharField(
         max_length=30,
@@ -147,6 +215,10 @@ class ProjectProgress(models.Model):
         null=True
     )
 
+    # -----------------------------------------------------
+    # TIMESTAMPS
+    # -----------------------------------------------------
+
     submitted_at = models.DateTimeField(
         auto_now_add=True
     )
@@ -156,16 +228,35 @@ class ProjectProgress(models.Model):
         null=True
     )
 
+    # -----------------------------------------------------
+    # PREVENT DUPLICATE REPORTS
+    # -----------------------------------------------------
+
     class Meta:
+
         constraints = [
             models.UniqueConstraint(
-                fields=["project", "week_number"],
-                name="unique_project_week_progress"
+                fields=[
+                    "project",
+                    "report_type"
+                ],
+                name="unique_project_report_type"
             )
         ]
 
+        ordering = [
+            "submitted_at"
+        ]
+
+    # -----------------------------------------------------
+    # STRING REPRESENTATION
+    # -----------------------------------------------------
+
     def __str__(self):
-        return f"{self.project.title} - Week {self.week_number}"
+        return (
+            f"{self.project.title} - "
+            f"{self.get_report_type_display()}"
+        )
 
 
 # =========================================================
@@ -181,11 +272,19 @@ class ProposalChangeRequest(models.Model):
         ("CLOSED", "Closed"),
     ]
 
+    # -----------------------------------------------------
+    # PROPOSAL
+    # -----------------------------------------------------
+
     proposal = models.ForeignKey(
         ProjectProposal,
         on_delete=models.CASCADE,
         related_name="change_requests"
     )
+
+    # -----------------------------------------------------
+    # DOMAIN EXPERT
+    # -----------------------------------------------------
 
     expert = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -196,6 +295,10 @@ class ProposalChangeRequest(models.Model):
         limit_choices_to={"role": "EXPERT"}
     )
 
+    # -----------------------------------------------------
+    # COORDINATOR
+    # -----------------------------------------------------
+
     coordinator = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
@@ -205,13 +308,25 @@ class ProposalChangeRequest(models.Model):
         limit_choices_to={"role": "COORDINATOR"}
     )
 
+    # -----------------------------------------------------
+    # CHANGE REQUEST MESSAGE
+    # -----------------------------------------------------
+
     message = models.TextField()
+
+    # -----------------------------------------------------
+    # STATUS
+    # -----------------------------------------------------
 
     status = models.CharField(
         max_length=30,
         choices=STATUS_CHOICES,
         default="PENDING"
     )
+
+    # -----------------------------------------------------
+    # TIMESTAMPS
+    # -----------------------------------------------------
 
     created_at = models.DateTimeField(
         auto_now_add=True
@@ -227,5 +342,12 @@ class ProposalChangeRequest(models.Model):
         null=True
     )
 
+    # -----------------------------------------------------
+    # STRING REPRESENTATION
+    # -----------------------------------------------------
+
     def __str__(self):
-        return f"Change Request - {self.proposal.title}"
+        return (
+            f"Change Request - "
+            f"{self.proposal.title}"
+        )

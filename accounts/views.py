@@ -18,6 +18,18 @@ from projects.models import (
 
 
 # ============================================================
+# REPORT SEQUENCE
+# ============================================================
+
+REPORT_ORDER = [
+    "PROGRESS_1",
+    "PROGRESS_2",
+    "PROGRESS_3",
+    "FINAL_REPORT",
+]
+
+
+# ============================================================
 # LOGIN
 # ============================================================
 
@@ -216,24 +228,38 @@ def dashboard_view(request):
 @login_required
 def student_dashboard(request):
 
-    # Superuser → Coordinator
+    # --------------------------------------------------------
+    # SUPERUSER → COORDINATOR
+    # --------------------------------------------------------
+
     if request.user.is_superuser:
 
         return redirect(
             "accounts:coordinator_dashboard"
         )
 
-    # Only students
+    # --------------------------------------------------------
+    # ONLY STUDENTS
+    # --------------------------------------------------------
+
     if request.user.role != "STUDENT":
 
         return redirect(
             "accounts:dashboard"
         )
 
+    # --------------------------------------------------------
+    # GET STUDENT PROPOSALS
+    # --------------------------------------------------------
+
     proposals = (
         ProjectProposal.objects
         .filter(
             student=request.user
+        )
+        .select_related(
+            "guide",
+            "domain_expert"
         )
         .order_by("-id")
     )
@@ -266,11 +292,62 @@ def student_dashboard(request):
         ]
     ).count()
 
+    # ========================================================
+    # ACTIVE PROJECT
+    # ========================================================
+
+    project = (
+        ProjectProposal.objects
+        .filter(
+            student=request.user,
+            status__in=[
+                "COORDINATOR_APPROVED",
+                "GUIDE_ASSIGNED",
+                "IN_PROGRESS",
+                "COMPLETED",
+            ]
+        )
+        .select_related(
+            "guide",
+            "domain_expert"
+        )
+        .order_by("-updated_at")
+        .first()
+    )
+
+    # ========================================================
+    # FINAL EVALUATION / FINAL MARK
+    # ========================================================
+
+    evaluation = None
+
+    if project:
+
+        evaluation = getattr(
+            project,
+            "guide_evaluation",
+            None
+        )
+
+    # ========================================================
+    # CONTEXT
+    # ========================================================
+
     context = {
+
         "proposals": proposals,
+
         "proposal_count": proposal_count,
+
         "pending_count": pending_count,
+
         "approved_count": approved_count,
+
+        # Active project
+        "project": project,
+
+        # Guide final evaluation
+        "evaluation": evaluation,
     }
 
     return render(
@@ -287,14 +364,20 @@ def student_dashboard(request):
 @login_required
 def student_proposals(request):
 
-    # Superuser → Coordinator
+    # --------------------------------------------------------
+    # SUPERUSER → COORDINATOR
+    # --------------------------------------------------------
+
     if request.user.is_superuser:
 
         return redirect(
             "accounts:coordinator_dashboard"
         )
 
-    # Only students
+    # --------------------------------------------------------
+    # ONLY STUDENTS
+    # --------------------------------------------------------
+
     if request.user.role != "STUDENT":
 
         return redirect(
@@ -312,7 +395,9 @@ def student_proposals(request):
     proposal_count = proposals.count()
 
     context = {
+
         "proposals": proposals,
+
         "proposal_count": proposal_count,
     }
 
@@ -330,7 +415,10 @@ def student_proposals(request):
 @login_required
 def add_proposal(request):
 
-    # Only students
+    # --------------------------------------------------------
+    # ONLY STUDENTS
+    # --------------------------------------------------------
+
     if request.user.role != "STUDENT":
 
         return redirect(
@@ -345,7 +433,10 @@ def add_proposal(request):
         .count()
     )
 
-    # Maximum 3 proposals
+    # --------------------------------------------------------
+    # MAXIMUM 3 PROPOSALS
+    # --------------------------------------------------------
+
     if proposal_count >= 3:
 
         messages.error(
@@ -356,6 +447,10 @@ def add_proposal(request):
         return redirect(
             "accounts:student_proposals"
         )
+
+    # --------------------------------------------------------
+    # POST
+    # --------------------------------------------------------
 
     if request.method == "POST":
 
@@ -371,6 +466,7 @@ def add_proposal(request):
             )
 
             proposal.student = request.user
+
             proposal.status = "SUBMITTED"
 
             proposal.save()
@@ -384,17 +480,10 @@ def add_proposal(request):
                 "accounts:student_proposals"
             )
 
-        else:
-
-            messages.error(
-                request,
-                "Please correct the errors in the form."
-            )
-
-            print("====================================")
-            print("PROPOSAL FORM ERRORS:")
-            print(form.errors)
-            print("====================================")
+        messages.error(
+            request,
+            "Please correct the errors in the form."
+        )
 
     else:
 
@@ -417,14 +506,20 @@ def add_proposal(request):
 @login_required
 def proposal_detail(request, proposal_id):
 
-    # Superuser → Coordinator
+    # --------------------------------------------------------
+    # SUPERUSER → COORDINATOR
+    # --------------------------------------------------------
+
     if request.user.is_superuser:
 
         return redirect(
             "accounts:coordinator_dashboard"
         )
 
-    # Only students
+    # --------------------------------------------------------
+    # ONLY STUDENTS
+    # --------------------------------------------------------
+
     if request.user.role != "STUDENT":
 
         return redirect(
@@ -447,17 +542,31 @@ def proposal_detail(request, proposal_id):
 
 
 # ============================================================
-# EDIT / RESUBMIT PROJECT PROPOSAL AFTER CHANGES REQUESTED
+# EDIT / RESUBMIT PROJECT PROPOSAL
 # ============================================================
 
 @login_required
 def edit_proposal(request, proposal_id):
 
+    # --------------------------------------------------------
+    # SUPERUSER
+    # --------------------------------------------------------
+
     if request.user.is_superuser:
-        return redirect("accounts:coordinator_dashboard")
+
+        return redirect(
+            "accounts:coordinator_dashboard"
+        )
+
+    # --------------------------------------------------------
+    # ONLY STUDENTS
+    # --------------------------------------------------------
 
     if request.user.role != "STUDENT":
-        return redirect("accounts:dashboard")
+
+        return redirect(
+            "accounts:dashboard"
+        )
 
     proposal = get_object_or_404(
         ProjectProposal,
@@ -465,14 +574,31 @@ def edit_proposal(request, proposal_id):
         student=request.user
     )
 
-    if proposal.status not in ["SUBMITTED", "CHANGES_REQUESTED"]:
+    # --------------------------------------------------------
+    # CHECK STATUS
+    # --------------------------------------------------------
+
+    if proposal.status not in [
+        "SUBMITTED",
+        "CHANGES_REQUESTED",
+    ]:
+
         messages.error(
             request,
             "This proposal cannot be edited in its current status."
         )
-        return redirect("accounts:proposal_detail", proposal_id=proposal.id)
+
+        return redirect(
+            "accounts:proposal_detail",
+            proposal_id=proposal.id
+        )
+
+    # --------------------------------------------------------
+    # POST
+    # --------------------------------------------------------
 
     if request.method == "POST":
+
         form = ProjectProposalForm(
             request.POST,
             request.FILES,
@@ -480,9 +606,15 @@ def edit_proposal(request, proposal_id):
         )
 
         if form.is_valid():
-            updated_proposal = form.save(commit=False)
+
+            updated_proposal = form.save(
+                commit=False
+            )
+
             updated_proposal.status = "SUBMITTED"
+
             updated_proposal.expert_comments = ""
+
             updated_proposal.save()
 
             messages.success(
@@ -501,22 +633,34 @@ def edit_proposal(request, proposal_id):
         )
 
     else:
-        form = ProjectProposalForm(instance=proposal)
+
+        form = ProjectProposalForm(
+            instance=proposal
+        )
 
     return render(
         request,
         "student/proposal_form.html",
         {
             "form": form,
+
             "proposal": proposal,
-            "proposal_count": ProjectProposal.objects.filter(student=request.user).count(),
+
+            "proposal_count": (
+                ProjectProposal.objects
+                .filter(
+                    student=request.user
+                )
+                .count()
+            ),
+
             "is_edit_mode": True,
         },
     )
 
 
 # ============================================================
-# STUDENT WEEKLY PROGRESS
+# STUDENT PROGRESS
 # ============================================================
 
 @login_required
@@ -543,7 +687,7 @@ def student_progress(request):
         )
 
     # --------------------------------------------------------
-    # FIND STUDENT'S APPROVED / ACTIVE PROJECT
+    # FIND ACTIVE PROJECT
     # --------------------------------------------------------
 
     project = (
@@ -558,37 +702,149 @@ def student_progress(request):
             ]
         )
         .select_related(
-            "guide"
+            "guide",
+            "domain_expert"
         )
         .order_by("-updated_at")
         .first()
     )
 
     # --------------------------------------------------------
-    # GET PROGRESS REPORTS
+    # NO PROJECT
     # --------------------------------------------------------
 
-    if project:
+    if not project:
 
-        progress_reports = (
-            ProjectProgress.objects
-            .filter(
-                project=project,
-                student=request.user
-            )
-            .order_by(
-                "-week_number",
-                "-submitted_at"
-            )
+        return render(
+            request,
+            "student/progress.html",
+            {
+                "project": None,
+                "progress_reports": [],
+                "evaluation": None,
+                "can_upload": False,
+                "next_report": None,
+            }
         )
 
-    else:
+    # --------------------------------------------------------
+    # GET REPORTS
+    # --------------------------------------------------------
 
-        progress_reports = ProjectProgress.objects.none()
+    progress_reports = (
+        ProjectProgress.objects
+        .filter(
+            project=project,
+            student=request.user
+        )
+        .order_by("submitted_at")
+    )
+
+    # --------------------------------------------------------
+    # GET FINAL EVALUATION
+    # --------------------------------------------------------
+
+    evaluation = getattr(
+        project,
+        "guide_evaluation",
+        None
+    )
+
+    # --------------------------------------------------------
+    # REPORT MAP
+    # --------------------------------------------------------
+
+    report_map = {
+        report.report_type: report
+        for report in progress_reports
+    }
+
+    # --------------------------------------------------------
+    # DETERMINE NEXT REPORT
+    # --------------------------------------------------------
+
+    next_report = None
+
+    can_upload = False
+
+    # --------------------------------------------------------
+    # CHANGES REQUIRED HAS FIRST PRIORITY
+    # --------------------------------------------------------
+
+    for report_type in REPORT_ORDER:
+
+        report = report_map.get(
+            report_type
+        )
+
+        if report and report.status == "CHANGES_REQUIRED":
+
+            next_report = report_type
+
+            can_upload = True
+
+            break
+
+    # --------------------------------------------------------
+    # NORMAL REPORT SEQUENCE
+    # --------------------------------------------------------
+
+    if next_report is None:
+
+        for index, report_type in enumerate(
+            REPORT_ORDER
+        ):
+
+            # ------------------------------------------------
+            # REPORT DOES NOT EXIST
+            # ------------------------------------------------
+
+            if report_type not in report_map:
+
+                # First report
+                if index == 0:
+
+                    next_report = report_type
+
+                    can_upload = True
+
+                else:
+
+                    previous_type = REPORT_ORDER[
+                        index - 1
+                    ]
+
+                    previous_report = report_map.get(
+                        previous_type
+                    )
+
+                    # Previous report must be reviewed
+                    if (
+                        previous_report
+                        and previous_report.status == "REVIEWED"
+                    ):
+
+                        next_report = report_type
+
+                        can_upload = True
+
+                break
+
+    # --------------------------------------------------------
+    # CONTEXT
+    # --------------------------------------------------------
 
     context = {
+
         "project": project,
+
         "progress_reports": progress_reports,
+
+        "evaluation": evaluation,
+
+        "next_report": next_report,
+
+        "can_upload": can_upload,
     }
 
     return render(
@@ -599,7 +855,7 @@ def student_progress(request):
 
 
 # ============================================================
-# ADD WEEKLY PROGRESS
+# ADD / RESUBMIT PROGRESS REPORT
 # ============================================================
 
 @login_required
@@ -626,7 +882,7 @@ def add_progress(request):
         )
 
     # --------------------------------------------------------
-    # FIND APPROVED / ACTIVE PROJECT
+    # FIND ACTIVE PROJECT
     # --------------------------------------------------------
 
     project = (
@@ -634,9 +890,9 @@ def add_progress(request):
         .filter(
             student=request.user,
             status__in=[
-                "COORDINATOR_APPROVED",
                 "GUIDE_ASSIGNED",
                 "IN_PROGRESS",
+                "COMPLETED",
             ]
         )
         .select_related(
@@ -647,15 +903,15 @@ def add_progress(request):
     )
 
     # --------------------------------------------------------
-    # PROJECT NOT APPROVED
+    # PROJECT NOT FOUND
     # --------------------------------------------------------
 
     if not project:
 
         messages.error(
             request,
-            "You cannot upload weekly progress yet. "
-            "Your project must be approved first."
+            "You cannot upload progress yet. "
+            "Your project must be approved and assigned to a guide."
         )
 
         return redirect(
@@ -670,7 +926,134 @@ def add_progress(request):
 
         messages.error(
             request,
-            "You cannot upload weekly progress until a guide is assigned."
+            "You cannot upload progress until a guide is assigned."
+        )
+
+        return redirect(
+            "accounts:student_progress"
+        )
+
+    # --------------------------------------------------------
+    # PROJECT MUST BE IN PROGRESS
+    # --------------------------------------------------------
+
+    if project.status != "IN_PROGRESS":
+
+        messages.warning(
+            request,
+            "Your Guide must start the project before you can upload progress."
+        )
+
+        return redirect(
+            "accounts:student_progress"
+        )
+
+    # --------------------------------------------------------
+    # GET EXISTING REPORTS
+    # --------------------------------------------------------
+
+    reports = list(
+        ProjectProgress.objects
+        .filter(
+            project=project,
+            student=request.user
+        )
+        .order_by("submitted_at")
+    )
+
+    report_map = {
+        report.report_type: report
+        for report in reports
+    }
+
+    # --------------------------------------------------------
+    # TARGET REPORT
+    # --------------------------------------------------------
+
+    target_report_type = None
+
+    target_instance = None
+
+    # --------------------------------------------------------
+    # CHANGES REQUIRED FIRST
+    # --------------------------------------------------------
+
+    for report_type in REPORT_ORDER:
+
+        report = report_map.get(
+            report_type
+        )
+
+        if report and report.status == "CHANGES_REQUIRED":
+
+            target_report_type = report_type
+
+            target_instance = report
+
+            break
+
+    # --------------------------------------------------------
+    # NORMAL SEQUENCE
+    # --------------------------------------------------------
+
+    if target_report_type is None:
+
+        for index, report_type in enumerate(
+            REPORT_ORDER
+        ):
+
+            # ------------------------------------------------
+            # FIRST MISSING REPORT
+            # ------------------------------------------------
+
+            if report_type not in report_map:
+
+                # First report
+                if index == 0:
+
+                    target_report_type = report_type
+
+                else:
+
+                    previous_type = REPORT_ORDER[
+                        index - 1
+                    ]
+
+                    previous_report = report_map.get(
+                        previous_type
+                    )
+
+                    # Previous report must be reviewed
+                    if (
+                        previous_report
+                        and previous_report.status == "REVIEWED"
+                    ):
+
+                        target_report_type = report_type
+
+                    else:
+
+                        messages.warning(
+                            request,
+                            "You must wait until the previous report "
+                            "is reviewed by the Guide."
+                        )
+
+                        return redirect(
+                            "accounts:student_progress"
+                        )
+
+                break
+
+    # --------------------------------------------------------
+    # ALL REPORTS COMPLETED
+    # --------------------------------------------------------
+
+    if target_report_type is None:
+
+        messages.info(
+            request,
+            "All four project reports have already been submitted."
         )
 
         return redirect(
@@ -685,7 +1068,8 @@ def add_progress(request):
 
         form = ProjectProgressForm(
             request.POST,
-            request.FILES
+            request.FILES,
+            instance=target_instance
         )
 
         if form.is_valid():
@@ -700,70 +1084,79 @@ def add_progress(request):
             # Automatically assign student
             progress.student = request.user
 
-            # New report starts as submitted
+            # Backend controls report type
+            progress.report_type = target_report_type
+
+            # Every submission starts as SUBMITTED
             progress.status = "SUBMITTED"
+
+            # Clear old review timestamp
+            progress.reviewed_at = None
 
             progress.save()
 
-            messages.success(
-                request,
-                f"Week {progress.week_number} progress submitted successfully."
+            report_name = dict(
+                ProjectProgress.REPORT_CHOICES
+            ).get(
+                target_report_type,
+                target_report_type
             )
+
+            if target_instance:
+
+                messages.success(
+                    request,
+                    f"{report_name} resubmitted successfully."
+                )
+
+            else:
+
+                messages.success(
+                    request,
+                    f"{report_name} submitted successfully."
+                )
 
             return redirect(
                 "accounts:student_progress"
             )
 
-        else:
-
-            messages.error(
-                request,
-                "Please correct the errors in the form."
-            )
-
-            print("====================================")
-            print("PROGRESS FORM ERRORS:")
-            print(form.errors)
-            print("====================================")
-
-    # --------------------------------------------------------
-    # GET
-    # --------------------------------------------------------
+        messages.error(
+            request,
+            "Please correct the errors in the form."
+        )
 
     else:
 
-        # Find latest submitted week
-        last_progress = (
-            ProjectProgress.objects
-            .filter(
-                project=project,
-                student=request.user
-            )
-            .order_by("-week_number")
-            .first()
-        )
-
-        # First progress = Week 1
-        next_week = 1
-
-        if last_progress:
-
-            next_week = (
-                last_progress.week_number + 1
-            )
-
         form = ProjectProgressForm(
-            initial={
-                "week_number": next_week
-            }
+            instance=target_instance
         )
+
+    # --------------------------------------------------------
+    # REPORT NAME
+    # --------------------------------------------------------
+
+    report_name = dict(
+        ProjectProgress.REPORT_CHOICES
+    ).get(
+        target_report_type,
+        target_report_type
+    )
 
     return render(
         request,
         "student/progress_form.html",
         {
             "form": form,
+
             "project": project,
+
+            "report_type": target_report_type,
+
+            "report_name": report_name,
+
+            "is_resubmission": (
+                target_instance is not None
+            ),
         }
     )
 
@@ -809,6 +1202,10 @@ def coordinator_dashboard(request):
         )
         .order_by("-submitted_at")
     )
+
+    # --------------------------------------------------------
+    # CONTEXT
+    # --------------------------------------------------------
 
     context = {
 
@@ -863,14 +1260,20 @@ def coordinator_dashboard(request):
 @login_required
 def expert_dashboard(request):
 
-    # Superuser → Coordinator
+    # --------------------------------------------------------
+    # SUPERUSER → COORDINATOR
+    # --------------------------------------------------------
+
     if request.user.is_superuser:
 
         return redirect(
             "accounts:coordinator_dashboard"
         )
 
-    # Only experts
+    # --------------------------------------------------------
+    # ONLY EXPERTS
+    # --------------------------------------------------------
+
     if request.user.role != "EXPERT":
 
         return redirect(
@@ -909,14 +1312,20 @@ def expert_dashboard(request):
 @login_required
 def guide_dashboard(request):
 
-    # Superuser → Coordinator
+    # --------------------------------------------------------
+    # SUPERUSER → COORDINATOR
+    # --------------------------------------------------------
+
     if request.user.is_superuser:
 
         return redirect(
             "accounts:coordinator_dashboard"
         )
 
-    # Only guides
+    # --------------------------------------------------------
+    # ONLY GUIDES
+    # --------------------------------------------------------
+
     if request.user.role != "GUIDE":
 
         return redirect(
@@ -961,7 +1370,7 @@ def guide_dashboard(request):
     project_count = assigned_projects.count()
 
     # --------------------------------------------------------
-    # WEEKLY PROGRESS
+    # PROGRESS REVIEW COUNTS
     # --------------------------------------------------------
 
     pending_reviews = (
@@ -1020,14 +1429,20 @@ def guide_dashboard(request):
 @login_required
 def guide_students(request):
 
-    # Superuser → Coordinator
+    # --------------------------------------------------------
+    # SUPERUSER → COORDINATOR
+    # --------------------------------------------------------
+
     if request.user.is_superuser:
 
         return redirect(
             "accounts:coordinator_dashboard"
         )
 
-    # Only guides
+    # --------------------------------------------------------
+    # ONLY GUIDES
+    # --------------------------------------------------------
+
     if request.user.role != "GUIDE":
 
         return redirect(
@@ -1064,14 +1479,20 @@ def guide_students(request):
 @login_required
 def panel_dashboard(request):
 
-    # Superuser → Coordinator
+    # --------------------------------------------------------
+    # SUPERUSER → COORDINATOR
+    # --------------------------------------------------------
+
     if request.user.is_superuser:
 
         return redirect(
             "accounts:coordinator_dashboard"
         )
 
-    # Only panel members
+    # --------------------------------------------------------
+    # ONLY PANEL MEMBERS
+    # --------------------------------------------------------
+
     if request.user.role != "PANEL":
 
         return redirect(

@@ -1,0 +1,237 @@
+{% extends "base.html" %}
+
+{% block title %}Upload Progress - SPMS{% endblock %}
+
+{% block content %}
+
+<style>
+
+.progress-page {
+    max-width: 850px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.progress-header {
+    margin-bottom: 25px;
+}
+
+.progress-header h1 {
+    margin: 0;
+    font-size: 28px;
+    color: #111827;
+}
+
+.progress-header p {
+    margin-top: 8px;
+    color: #6b7280;
+}
+
+.project-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 22px;
+}
+
+.project-card h3 {
+    margin: 0 0 8px;
+    color: #111827;
+}
+
+.project-card p {
+    margin: 5px 0;
+    color: #6b7280;
+}
+
+.form-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 25px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #374151;
+}
+
+.form-control {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 13px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #2563eb;
+}
+
+.report-info {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 8px;
+    padding: 14px;
+    margin-bottom: 22px;
+    color: #1e40af;
+}
+
+.errorlist {
+    color: #dc2626;
+    padding-left: 20px;
+}
+
+.button-row {
+    display: flex;
+    gap: 12px;
+}
+
+.btn {
+    padding: 11px 18px;
+    border-radius: 8px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background: #2563eb;
+    color: white;
+}
+
+.btn-secondary {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+@media (max-width: 600px) {
+
+    .progress-page {
+        margin: 20px auto;
+    }
+
+    .button-row {
+        flex-direction: column;
+    }
+
+}
+
+</style>
+
+
+<div class="progress-page">
+
+    <div class="progress-header">
+
+        <h1>Upload Project Report</h1>
+
+        <p>
+            Submit your project progress reports and final report.
+        </p>
+
+    </div>
+
+
+    <div class="project-card">
+
+        <h3>
+            {{ project.title }}
+        </h3>
+
+        <p>
+            <strong>Domain:</strong>
+            {{ project.domain }}
+        </p>
+
+        <p>
+            <strong>Guide:</strong>
+
+            {% if project.guide %}
+                {{ project.guide.get_full_name|default:project.guide.username }}
+            {% else %}
+                Not Assigned
+            {% endif %}
+
+        </p>
+
+    </div>
+
+
+    <div class="form-card">
+
+        <div class="report-info">
+
+            <strong>
+                Next Report:
+            </strong>
+
+            {% if next_report == "PROGRESS_1" %}
+                Progress Report 1
+            {% elif next_report == "PROGRESS_2" %}
+                Progress Report 2
+            {% elif next_report == "PROGRESS_3" %}
+                Progress Report 3
+            {% elif next_report == "FINAL_REPORT" %}
+                Final Report
+            {% endif %}
+
+        </div>
+
+
+        <form method="POST" enctype="multipart/form-data">
+
+            {% csrf_token %}
+
+            {% for field in form %}
+
+                <div class="form-group">
+
+                    {{ field.label_tag }}
+
+                    {{ field }}
+
+                    {% if field.errors %}
+                        {{ field.errors }}
+                    {% endif %}
+
+                </div>
+
+            {% endfor %}
+
+
+            <div class="button-row">
+
+                <a
+                    href="{% url 'accounts:student_progress' %}"
+                    class="btn btn-secondary"
+                >
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Submit Report
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

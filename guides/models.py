@@ -1,16 +1,11 @@
 from django.conf import settings
 from django.db import models
 
-from projects.models import ProjectProposal
-
 
 class GuideEvaluation(models.Model):
-    """
-    Evaluation/marks given by the Guide for an assigned project.
-    """
 
     project = models.OneToOneField(
-        ProjectProposal,
+        "projects.ProjectProposal",
         on_delete=models.CASCADE,
         related_name="guide_evaluation"
     )
@@ -29,17 +24,16 @@ class GuideEvaluation(models.Model):
     )
 
     feedback = models.TextField(
-        blank=True,
-        null=True
-    )
-
-    evaluated_at = models.DateTimeField(
-        auto_now=True
+        blank=True
     )
 
     created_at = models.DateTimeField(
         auto_now_add=True
     )
 
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
     def __str__(self):
-        return f"{self.project.title} - {self.marks} marks"
+        return f"{self.project.title} - {self.marks}/100"

@@ -1,25 +1,18 @@
 from django import forms
-
 from .models import GuideEvaluation
 
 
 class GuideEvaluationForm(forms.ModelForm):
 
     class Meta:
-
         model = GuideEvaluation
-
-        fields = [
-            "marks",
-            "feedback",
-        ]
+        fields = ["marks", "feedback"]
 
         widgets = {
-
             "marks": forms.NumberInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Enter marks out of 100",
+                    "placeholder": "Enter final mark",
                     "min": "0",
                     "max": "100",
                     "step": "0.01",
@@ -29,20 +22,26 @@ class GuideEvaluationForm(forms.ModelForm):
             "feedback": forms.Textarea(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Enter evaluation feedback...",
-                    "rows": 6,
+                    "placeholder": "Enter final feedback",
+                    "rows": 5,
                 }
             ),
         }
 
-    def clean_marks(self):
+        labels = {
+            "marks": "Final Mark",
+            "feedback": "Final Feedback",
+        }
 
-        marks = self.cleaned_data["marks"]
+    def clean_marks(self):
+        marks = self.cleaned_data.get("marks")
+
+        if marks is None:
+            raise forms.ValidationError("Please enter the final mark.")
 
         if marks < 0 or marks > 100:
-
             raise forms.ValidationError(
-                "Marks must be between 0 and 100."
+                "Final mark must be between 0 and 100."
             )
 
         return marks

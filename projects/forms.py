@@ -1,29 +1,26 @@
 from django import forms
-
 from .models import ProjectProposal, ProjectProgress
 
 
-# ============================================================
+# =========================================================
 # PROJECT PROPOSAL FORM
-# ============================================================
+# =========================================================
 
 class ProjectProposalForm(forms.ModelForm):
 
     class Meta:
-
         model = ProjectProposal
 
         fields = [
             "title",
+            "abstract",
             "domain",
             "technologies",
-            "abstract",
             "description",
             "proposal_document",
         ]
 
         widgets = {
-
             "title": forms.TextInput(
                 attrs={
                     "class": "form-control",
@@ -31,86 +28,73 @@ class ProjectProposalForm(forms.ModelForm):
                 }
             ),
 
+            "abstract": forms.Textarea(
+                attrs={
+                    "class": "form-control",
+                    "rows": 5,
+                    "placeholder": "Enter project abstract",
+                }
+            ),
+
             "domain": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Example: Artificial Intelligence",
+                    "placeholder": "Enter project domain",
                 }
             ),
 
             "technologies": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Example: Python, Django, PostgreSQL",
-                }
-            ),
-
-            "abstract": forms.Textarea(
-                attrs={
-                    "class": "form-control",
-                    "placeholder": "Enter project abstract",
-                    "rows": 5,
+                    "placeholder": "Python, Django, HTML, CSS, JavaScript",
                 }
             ),
 
             "description": forms.Textarea(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Describe your project",
-                    "rows": 8,
+                    "rows": 6,
+                    "placeholder": "Enter project description",
                 }
             ),
 
             "proposal_document": forms.ClearableFileInput(
                 attrs={
                     "class": "form-control",
-                    "accept": "application/pdf",
+                    "accept": ".pdf,.doc,.docx",
                 }
             ),
         }
 
 
-# ============================================================
-# WEEKLY PROJECT PROGRESS FORM
-# ============================================================
+# =========================================================
+# PROJECT PROGRESS FORM
+# =========================================================
 
 class ProjectProgressForm(forms.ModelForm):
 
     class Meta:
-
         model = ProjectProgress
 
         fields = [
-            "week_number",
             "title",
             "description",
             "document",
         ]
 
         widgets = {
-
-            "week_number": forms.NumberInput(
-                attrs={
-                    "class": "form-control",
-                    "placeholder": "Example: 1",
-                    "min": 1,
-                }
-            ),
-
             "title": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Example: Database Design Completed",
+                    "placeholder": "Enter report title",
                 }
             ),
 
             "description": forms.Textarea(
                 attrs={
                     "class": "form-control",
-                    "placeholder": (
-                        "Describe the work completed this week..."
-                    ),
                     "rows": 7,
+                    "placeholder": "Describe your project progress...",
                 }
             ),
 
@@ -121,14 +105,3 @@ class ProjectProgressForm(forms.ModelForm):
                 }
             ),
         }
-
-    def clean_week_number(self):
-
-        week_number = self.cleaned_data.get("week_number")
-
-        if week_number is not None and week_number < 1:
-            raise forms.ValidationError(
-                "Week number must be at least 1."
-            )
-
-        return week_number
