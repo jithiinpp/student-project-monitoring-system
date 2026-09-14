@@ -3,7 +3,10 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
-from projects.models import ProjectProposal, ProjectProgress
+from projects.models import (
+    ProjectProposal,
+    ProjectProgress,
+)
 
 from .models import GuideEvaluation
 from .forms import GuideEvaluationForm
@@ -18,16 +21,22 @@ def guide_required(view_func):
     @login_required
     def wrapper(request, *args, **kwargs):
 
-        # Only Guide users can access Guide pages
-        if request.user.role == "GUIDE":
-            return view_func(request, *args, **kwargs)
+        if request.user.role != "GUIDE":
 
-        messages.error(
+            messages.error(
+                request,
+                "You are not authorized to access Guide pages."
+            )
+
+            return redirect(
+                "accounts:dashboard"
+            )
+
+        return view_func(
             request,
-            "You are not authorized to access the Guide page."
+            *args,
+            **kwargs
         )
-
-        return redirect("accounts:dashboard")
 
     return wrapper
 
@@ -39,233 +48,208 @@ def guide_required(view_func):
 @guide_required
 def dashboard(request):
 
-    assigned_projects = (
-        ProjectProposal.objects
-        .filter(
-            guide=request.user
-        )
-        .select_related(
-            "student",
-            "domain_expert",
-            "guide",
-        )
-        .order_by("-updated_at")
+    projects = ProjectProposal.objects.filter(
+        guide=request.user
+    ).select_related(
+        "student"
+    ).order_by(
+        "-updated_at"
     )
 
-    # Total assigned projects
-    assigned_count = assigned_projects.count()
+    assigned_count = projects.count()
 
-    # Guide rejected projects
-    guide_rejected_count = assigned_projects.filter(
+    rejected_count = projects.filter(
         status="GUIDE_REJECTED"
     ).count()
 
-    # Projects currently in progress
-    in_progress_count = assigned_projects.filter(
+    in_progress_count = projects.filter(
         status="IN_PROGRESS"
     ).count()
 
-    # Completed projects
-    completed_count = assigned_projects.filter(
+    completed_count = projects.filter(
         status="COMPLETED"
     ).count()
 
-    # Final reports waiting for Guide review
-    final_report_pending_count = ProjectProgress.objects.filter(
+    # -----------------------------------------------------
+    # FINAL REPORTS WAITING FOR REVIEW
+    # -----------------------------------------------------
+
+    final_reports_pending = ProjectProgress.objects.filter(
         project__guide=request.user,
         report_type="FINAL_REPORT",
-        status="SUBMITTED",
+        status="SUBMITTED"
     ).count()
 
-    # Reports waiting for Guide review
-    pending_reports_count = ProjectProgress.objects.filter(
+    # -----------------------------------------------------
+    # ALL REPORTS WAITING FOR REVIEW
+    # -----------------------------------------------------
+
+    reports_pending = ProjectProgress.objects.filter(
         project__guide=request.user,
-        status="SUBMITTED",
+        status="SUBMITTED"
     ).count()
 
     return render(
         request,
         "guide/dashboard.html",
         {
-            "assigned_projects": assigned_projects,
+            "projects": projects,
+
             "assigned_count": assigned_count,
-            "guide_rejected_count": guide_rejected_count,
+            "rejected_count": rejected_count,
             "in_progress_count": in_progress_count,
             "completed_count": completed_count,
-            "final_report_pending_count": final_report_pending_count,
-            "pending_reports_count": pending_reports_count,
+
+            "final_reports_pending": final_reports_pending,
+            "reports_pending": reports_pending,
         }
     )
 
 
 # =========================================================
-# GUIDE ASSIGNED STUDENTS
+# GUIDE STUDENTS
 # =========================================================
 
 @guide_required
 def students(request):
 
-    assigned_projects = (
-        ProjectProposal.objects
-        .filter(
-            guide=request.user
-        )
-        .select_related(
-            "student",
-            "domain_expert",
-            "guide",
-        )
-        .order_by(
-            "student__first_name",
-            "student__last_name",
-            "-updated_at",
-        )
+    projects = ProjectProposal.objects.filter(
+        guide=request.user
+    ).select_related(
+        "student"
+    ).order_by(
+        "-updated_at"
     )
 
     return render(
         request,
         "guide/students.html",
         {
-            "assigned_projects": assigned_projects,
+            "projects": projects
         }
     )
 
 
 # =========================================================
-# GUIDE PROJECT DETAIL
+# PROJECT DETAIL
 # =========================================================
 
 @guide_required
 def project_detail(request, proposal_id):
 
-    proposal = get_object_or_404(
-        ProjectProposal.objects.select_related(
-            "student",
-            "domain_expert",
-            "guide",
-        ),
+    project = get_object_or_404(
+        ProjectProposal,
         id=proposal_id,
-        guide=request.user,
+        guide=request.user
     )
 
     # -----------------------------------------------------
-    # GET ALL STUDENT REPORTS
+    # WEEKLY REPORTS
     # -----------------------------------------------------
 
-    progress_reports = (
-        ProjectProgress.objects
-        .filter(
-            project=proposal,
-            student=proposal.student,
-        )
-        .order_by(
-            "report_type"
-        )
+    weekly_reports = ProjectProgress.objects.filter(
+        project=project,
+        student=project.student,
+        report_type="WEEKLY_PROGRESS"
+    ).order_by(
+        "submitted_at"
     )
 
     # -----------------------------------------------------
-    # GET GUIDE FINAL EVALUATION
+    # FINAL REPORT
     # -----------------------------------------------------
 
-    evaluation = (
-        GuideEvaluation.objects
-        .filter(
-            project=proposal,
-            guide=request.user,
-        )
-        .first()
-    )
+    final_report = ProjectProgress.objects.filter(
+        project=project,
+        student=project.student,
+        report_type="FINAL_REPORT"
+    ).first()
 
     # -----------------------------------------------------
-    # EVALUATION FORM
+    # GUIDE EVALUATION
     # -----------------------------------------------------
 
-    if evaluation:
-
-        evaluation_form = GuideEvaluationForm(
-            instance=evaluation
-        )
-
-    else:
-
-        evaluation_form = GuideEvaluationForm()
+    evaluation = GuideEvaluation.objects.filter(
+        project=project
+    ).first()
 
     # -----------------------------------------------------
-    # CHECK FINAL REPORT
+    # WEEKLY REPORT COUNTS
     # -----------------------------------------------------
 
-    final_report = (
-        ProjectProgress.objects
-        .filter(
-            project=proposal,
-            student=proposal.student,
-            report_type="FINAL_REPORT",
-        )
-        .first()
+    weekly_count = weekly_reports.count()
+
+    reviewed_weekly_count = weekly_reports.filter(
+        status="REVIEWED"
+    ).count()
+
+    all_weekly_reviewed = (
+        weekly_count > 0
+        and reviewed_weekly_count == weekly_count
     )
 
     # -----------------------------------------------------
     # FINAL REPORT REVIEW STATUS
     # -----------------------------------------------------
 
-    final_report_reviewed = False
-
-    if final_report:
-
-        if final_report.status == "REVIEWED":
-            final_report_reviewed = True
+    final_report_reviewed = (
+        final_report is not None
+        and final_report.status == "REVIEWED"
+    )
 
     # -----------------------------------------------------
-    # RENDER
+    # CAN ENTER FINAL MARK
     # -----------------------------------------------------
+
+    can_evaluate = (
+        final_report is not None
+        and final_report_reviewed
+        and all_weekly_reviewed
+    )
 
     return render(
         request,
         "guide/project_detail.html",
         {
-            "proposal": proposal,
-            "project": proposal,
-            "progress_reports": progress_reports,
-            "evaluation": evaluation,
-            "evaluation_form": evaluation_form,
+            "project": project,
+
+            "weekly_reports": weekly_reports,
             "final_report": final_report,
+
+            "weekly_count": weekly_count,
+            "reviewed_weekly_count": reviewed_weekly_count,
+            "all_weekly_reviewed": all_weekly_reviewed,
+
             "final_report_reviewed": final_report_reviewed,
+
+            "evaluation": evaluation,
+
+            "can_evaluate": can_evaluate,
         }
     )
 
 
 # =========================================================
-# GUIDE REVIEW PROGRESS REPORT
+# REVIEW PROGRESS REPORT
 # =========================================================
 
 @guide_required
 def review_progress(request, progress_id):
 
     progress = get_object_or_404(
-        ProjectProgress.objects.select_related(
-            "project",
-            "student",
-        ),
+        ProjectProgress,
         id=progress_id,
-        project__guide=request.user,
+        project__guide=request.user
     )
-
-    # -----------------------------------------------------
-    # ONLY POST REQUEST ALLOWED
-    # -----------------------------------------------------
 
     if request.method != "POST":
 
         return redirect(
             "guides:project_detail",
-            proposal_id=progress.project.id,
+            proposal_id=progress.project.id
         )
 
-    # -----------------------------------------------------
-    # GET REVIEW STATUS
-    # -----------------------------------------------------
-
-    review_status = request.POST.get(
+    status = request.POST.get(
         "status"
     )
 
@@ -275,10 +259,10 @@ def review_progress(request, progress_id):
     ).strip()
 
     # -----------------------------------------------------
-    # VALIDATE STATUS
+    # VALID STATUS
     # -----------------------------------------------------
 
-    if review_status not in [
+    if status not in [
         "REVIEWED",
         "CHANGES_REQUIRED",
     ]:
@@ -290,33 +274,14 @@ def review_progress(request, progress_id):
 
         return redirect(
             "guides:project_detail",
-            proposal_id=progress.project.id,
+            proposal_id=progress.project.id
         )
 
     # -----------------------------------------------------
-    # FEEDBACK REQUIRED FOR CHANGES
+    # SAVE REVIEW
     # -----------------------------------------------------
 
-    if (
-        review_status == "CHANGES_REQUIRED"
-        and not feedback
-    ):
-
-        messages.error(
-            request,
-            "Please enter feedback when requesting changes."
-        )
-
-        return redirect(
-            "guides:project_detail",
-            proposal_id=progress.project.id,
-        )
-
-    # -----------------------------------------------------
-    # UPDATE REPORT
-    # -----------------------------------------------------
-
-    progress.status = review_status
+    progress.status = status
 
     progress.guide_feedback = feedback
 
@@ -331,95 +296,86 @@ def review_progress(request, progress_id):
     )
 
     # -----------------------------------------------------
-    # SUCCESS MESSAGE
+    # FINAL REPORT
     # -----------------------------------------------------
 
     if progress.report_type == "FINAL_REPORT":
 
-        if review_status == "REVIEWED":
+        if status == "REVIEWED":
 
             messages.success(
                 request,
-                "Final Report has been reviewed successfully. You can now enter the final mark."
+                "Final report reviewed successfully. "
+                "You can enter the final mark if all weekly "
+                "reports are also reviewed."
             )
 
         else:
 
-            messages.success(
+            messages.warning(
                 request,
-                "Changes have been requested for the Final Report."
+                "Final report marked as changes required."
             )
+
+    # -----------------------------------------------------
+    # WEEKLY REPORT
+    # -----------------------------------------------------
 
     else:
 
-        if review_status == "REVIEWED":
+        if status == "REVIEWED":
 
             messages.success(
                 request,
-                f"{progress.get_report_type_display()} has been reviewed successfully."
+                "Weekly progress report reviewed successfully."
             )
 
         else:
 
-            messages.success(
+            messages.warning(
                 request,
-                f"Changes requested for {progress.get_report_type_display()}."
+                "Weekly progress report marked as changes required."
             )
 
     return redirect(
         "guides:project_detail",
-        proposal_id=progress.project.id,
+        proposal_id=progress.project.id
     )
 
 
 # =========================================================
-# GUIDE EVALUATION / FINAL MARK
+# EVALUATE PROJECT
 # =========================================================
 
 @guide_required
 def evaluate_project(request, proposal_id):
 
-    proposal = get_object_or_404(
+    project = get_object_or_404(
         ProjectProposal,
         id=proposal_id,
-        guide=request.user,
+        guide=request.user
     )
 
     # -----------------------------------------------------
-    # ONLY POST REQUEST ALLOWED
+    # FINAL REPORT
     # -----------------------------------------------------
 
-    if request.method != "POST":
+    final_report = ProjectProgress.objects.filter(
+        project=project,
+        student=project.student,
+        report_type="FINAL_REPORT"
+    ).first()
 
-        return redirect(
-            "guides:project_detail",
-            proposal_id=proposal.id,
-        )
-
-    # -----------------------------------------------------
-    # CHECK FINAL REPORT
-    # -----------------------------------------------------
-
-    final_report = (
-        ProjectProgress.objects
-        .filter(
-            project=proposal,
-            student=proposal.student,
-            report_type="FINAL_REPORT",
-        )
-        .first()
-    )
-
-    if not final_report:
+    if final_report is None:
 
         messages.error(
             request,
-            "Final Report has not been submitted yet."
+            "Student has not submitted the final report yet."
         )
 
         return redirect(
             "guides:project_detail",
-            proposal_id=proposal.id,
+            proposal_id=project.id
         )
 
     # -----------------------------------------------------
@@ -430,238 +386,269 @@ def evaluate_project(request, proposal_id):
 
         messages.error(
             request,
-            "Please review and approve the Final Report before entering the final mark."
+            "Final report must be reviewed before entering final marks."
         )
 
         return redirect(
             "guides:project_detail",
-            proposal_id=proposal.id,
+            proposal_id=project.id
         )
 
     # -----------------------------------------------------
-    # GET EXISTING EVALUATION
+    # ALL WEEKLY REPORTS
     # -----------------------------------------------------
 
-    evaluation = (
-        GuideEvaluation.objects
-        .filter(
-            project=proposal,
-            guide=request.user,
-        )
-        .first()
+    weekly_reports = ProjectProgress.objects.filter(
+        project=project,
+        student=project.student,
+        report_type="WEEKLY_PROGRESS"
     )
 
+    weekly_count = weekly_reports.count()
+
+    reviewed_weekly_count = weekly_reports.filter(
+        status="REVIEWED"
+    ).count()
+
     # -----------------------------------------------------
-    # CREATE / UPDATE FORM
+    # AT LEAST ONE WEEKLY REPORT
     # -----------------------------------------------------
 
-    if evaluation:
+    if weekly_count == 0:
 
-        form = GuideEvaluationForm(
-            request.POST,
-            instance=evaluation,
+        messages.error(
+            request,
+            "Student must have weekly progress reports "
+            "before final evaluation."
         )
+
+        return redirect(
+            "guides:project_detail",
+            proposal_id=project.id
+        )
+
+    # -----------------------------------------------------
+    # ALL WEEKLY REPORTS MUST BE REVIEWED
+    # -----------------------------------------------------
+
+    if reviewed_weekly_count != weekly_count:
+
+        messages.error(
+            request,
+            "All weekly progress reports must be reviewed "
+            "before entering the final mark."
+        )
+
+        return redirect(
+            "guides:project_detail",
+            proposal_id=project.id
+        )
+
+    # -----------------------------------------------------
+    # EXISTING EVALUATION
+    # -----------------------------------------------------
+
+    evaluation = GuideEvaluation.objects.filter(
+        project=project
+    ).first()
+
+    # -----------------------------------------------------
+    # POST
+    # -----------------------------------------------------
+
+    if request.method == "POST":
+
+        if evaluation:
+
+            form = GuideEvaluationForm(
+                request.POST,
+                instance=evaluation
+            )
+
+        else:
+
+            form = GuideEvaluationForm(
+                request.POST
+            )
+
+        if form.is_valid():
+
+            evaluation = form.save(
+                commit=False
+            )
+
+            evaluation.project = project
+
+            evaluation.guide = request.user
+
+            evaluation.save()
+
+            # ---------------------------------------------
+            # MARK PROJECT COMPLETED
+            # ---------------------------------------------
+
+            project.status = "COMPLETED"
+
+            project.save(
+                update_fields=["status"]
+            )
+
+            messages.success(
+                request,
+                "Final mark saved successfully. "
+                "Project marked as completed."
+            )
+
+            return redirect(
+                "guides:project_detail",
+                proposal_id=project.id
+            )
 
     else:
 
-        form = GuideEvaluationForm(
-            request.POST
-        )
+        if evaluation:
 
-    # -----------------------------------------------------
-    # SAVE FINAL MARK
-    # -----------------------------------------------------
+            form = GuideEvaluationForm(
+                instance=evaluation
+            )
 
-    if form.is_valid():
+        else:
 
-        evaluation = form.save(
-            commit=False
-        )
-
-        evaluation.project = proposal
-
-        evaluation.guide = request.user
-
-        evaluation.save()
-
-        # -------------------------------------------------
-        # MARK PROJECT AS COMPLETED
-        # -------------------------------------------------
-
-        proposal.status = "COMPLETED"
-
-        proposal.save(
-            update_fields=[
-                "status",
-                "updated_at",
-            ]
-        )
-
-        messages.success(
-            request,
-            "Final mark has been saved successfully. Student can now view the mark."
-        )
-
-        return redirect(
-            "guides:project_detail",
-            proposal_id=proposal.id,
-        )
-
-    # -----------------------------------------------------
-    # FORM INVALID
-    # -----------------------------------------------------
-
-    progress_reports = (
-        ProjectProgress.objects
-        .filter(
-            project=proposal,
-            student=proposal.student,
-        )
-        .order_by(
-            "report_type"
-        )
-    )
+            form = GuideEvaluationForm()
 
     return render(
         request,
         "guide/project_detail.html",
         {
-            "proposal": proposal,
-            "project": proposal,
-            "progress_reports": progress_reports,
-            "evaluation": evaluation,
-            "evaluation_form": form,
+            "project": project,
+
+            "weekly_reports": weekly_reports,
             "final_report": final_report,
+
+            "weekly_count": weekly_count,
+            "reviewed_weekly_count": reviewed_weekly_count,
+
+            "all_weekly_reviewed": (
+                weekly_count > 0
+                and reviewed_weekly_count == weekly_count
+            ),
+
             "final_report_reviewed": True,
+
+            "evaluation": evaluation,
+
+            "can_evaluate": True,
+
+            "evaluation_form": form,
         }
     )
 
 
 # =========================================================
-# GUIDE REJECT PROJECT
-# =========================================================
-
-@guide_required
-def reject_project(request, proposal_id):
-
-    proposal = get_object_or_404(
-        ProjectProposal,
-        id=proposal_id,
-        guide=request.user,
-    )
-
-    # -----------------------------------------------------
-    # ONLY POST REQUEST
-    # -----------------------------------------------------
-
-    if request.method != "POST":
-
-        return redirect(
-            "guides:project_detail",
-            proposal_id=proposal.id,
-        )
-
-    # -----------------------------------------------------
-    # GUIDE CAN REJECT ONLY GUIDE_ASSIGNED PROJECT
-    # -----------------------------------------------------
-
-    if proposal.status != "GUIDE_ASSIGNED":
-
-        messages.error(
-            request,
-            "This project cannot be rejected at its current stage."
-        )
-
-        return redirect(
-            "guides:project_detail",
-            proposal_id=proposal.id,
-        )
-
-    # -----------------------------------------------------
-    # REJECT PROJECT
-    # -----------------------------------------------------
-
-    proposal.status = "GUIDE_REJECTED"
-
-    proposal.guide_rejected_at = timezone.now()
-
-    proposal.save(
-        update_fields=[
-            "status",
-            "guide_rejected_at",
-            "updated_at",
-        ]
-    )
-
-    messages.success(
-        request,
-        "Project has been rejected by the Guide."
-    )
-
-    return redirect(
-        "guides:dashboard"
-    )
-
-
-# =========================================================
-# GUIDE ACCEPT / START PROJECT
+# START PROJECT
 # =========================================================
 
 @guide_required
 def start_project(request, proposal_id):
 
-    proposal = get_object_or_404(
+    project = get_object_or_404(
         ProjectProposal,
         id=proposal_id,
-        guide=request.user,
+        guide=request.user
     )
 
-    # -----------------------------------------------------
-    # ONLY POST REQUEST
-    # -----------------------------------------------------
-
-    if request.method != "POST":
-
-        return redirect(
-            "guides:project_detail",
-            proposal_id=proposal.id,
-        )
-
-    # -----------------------------------------------------
-    # PROJECT MUST BE GUIDE_ASSIGNED
-    # -----------------------------------------------------
-
-    if proposal.status != "GUIDE_ASSIGNED":
+    if project.status != "GUIDE_ASSIGNED":
 
         messages.error(
             request,
-            "This project cannot be started at the current stage."
+            "This project cannot be started."
         )
 
         return redirect(
             "guides:project_detail",
-            proposal_id=proposal.id,
+            proposal_id=project.id
         )
 
-    # -----------------------------------------------------
-    # START PROJECT
-    # -----------------------------------------------------
+    project.status = "IN_PROGRESS"
 
-    proposal.status = "IN_PROGRESS"
-
-    proposal.save(
-        update_fields=[
-            "status",
-            "updated_at",
-        ]
+    project.save(
+        update_fields=["status"]
     )
 
     messages.success(
         request,
-        "Project has been accepted and moved to In Progress."
+        "Project started successfully."
     )
 
     return redirect(
         "guides:project_detail",
-        proposal_id=proposal.id,
+        proposal_id=project.id
+    )
+
+
+# =========================================================
+# REJECT PROJECT
+# =========================================================
+
+@guide_required
+def reject_project(request, proposal_id):
+
+    project = get_object_or_404(
+        ProjectProposal,
+        id=proposal_id,
+        guide=request.user
+    )
+
+    if project.status != "GUIDE_ASSIGNED":
+
+        messages.error(
+            request,
+            "This project cannot be rejected at this stage."
+        )
+
+        return redirect(
+            "guides:project_detail",
+            proposal_id=project.id
+        )
+
+    if request.method == "POST":
+
+        reason = request.POST.get(
+            "guide_rejection_reason",
+            ""
+        ).strip()
+
+        if not reason:
+
+            messages.error(
+                request,
+                "Please enter a rejection reason."
+            )
+
+            return redirect(
+                "guides:project_detail",
+                proposal_id=project.id
+            )
+
+        project.status = "GUIDE_REJECTED"
+
+        project.guide_rejection_reason = reason
+
+        project.guide_rejected_at = timezone.now()
+
+        project.save(
+            update_fields=[
+                "status",
+                "guide_rejection_reason",
+                "guide_rejected_at",
+            ]
+        )
+
+        messages.success(
+            request,
+            "Project rejected successfully."
+        )
+
+    return redirect(
+        "guides:students"
     )

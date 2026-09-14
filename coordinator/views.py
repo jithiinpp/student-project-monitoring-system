@@ -231,6 +231,9 @@ def dashboard(request):
         "final_approved_count":
             final_approved_count,
 
+        "final_approved_student_count":
+            final_approved_count,
+
         "final_approved_proposals":
             recent_final_approved,
 
@@ -256,10 +259,10 @@ def dashboard(request):
         "changes_requested_count":
             changes_requested_count,
 
-        # Coordinator final approval only
+        # Count all proposals that have reached final approval stages
         "approved_count":
             proposals.filter(
-                status="COORDINATOR_APPROVED"
+                status__in=FINAL_APPROVED_STATUSES
             ).count(),
 
         "guide_assigned_count":

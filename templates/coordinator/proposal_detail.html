@@ -305,6 +305,21 @@ Proposal Details | Coordinator
 
             <div class="info-box">
                 <div class="info-label">
+                    Project Type
+                </div>
+
+                <div class="info-value">
+                    {% if proposal.project_type %}
+                        {{ proposal.get_project_type_display }}
+                    {% else %}
+                        Not specified
+                    {% endif %}
+                </div>
+            </div>
+
+
+            <div class="info-box">
+                <div class="info-label">
                     Domain
                 </div>
 

@@ -9,7 +9,9 @@ My Proposals | SPMS
 <style>
 
 /* =========================================================
-   SPMS - MY PROPOSALS PAGE
+   SPMS - MY PROPOSALS
+   SCREENSHOT BASED DESIGN THEME
+   CSS / DESIGN ONLY
    ========================================================= */
 
 * {
@@ -25,7 +27,7 @@ body {
 
 
 /* =========================================================
-   LAYOUT
+   MAIN LAYOUT
    ========================================================= */
 
 .spms-layout {
@@ -41,74 +43,111 @@ body {
 .spms-sidebar {
     width: 260px;
     min-height: 100vh;
-    background: #0f172a;
+
+    background: #111827;
     color: #ffffff;
+
     position: fixed;
     left: 0;
     top: 0;
     bottom: 0;
+
     display: flex;
     flex-direction: column;
+
     z-index: 1000;
+
     box-shadow: 4px 0 20px rgba(15, 23, 42, 0.08);
 }
 
 
-/* Brand */
+/* =========================================================
+   BRAND
+   ========================================================= */
 
 .sidebar-brand {
-    height: 90px;
-    padding: 20px;
+    height: 98px;
+
+    padding: 20px 18px;
+
     display: flex;
     align-items: center;
-    gap: 12px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+
+    gap: 13px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .brand-logo {
-    width: 45px;
-    height: 45px;
+    width: 46px;
+    height: 46px;
+
     border-radius: 12px;
+
     background: #2563eb;
+
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
+
+    font-size: 23px;
     font-weight: 700;
+
+    color: #ffffff;
+
+    box-shadow: 0 6px 15px rgba(37, 99, 235, 0.25);
 }
 
 .sidebar-brand h2 {
     margin: 0;
+
+    color: #ffffff;
+
     font-size: 20px;
+    font-weight: 700;
 }
 
 .sidebar-brand span {
     display: block;
-    margin-top: 3px;
-    font-size: 12px;
+
+    margin-top: 4px;
+
+    font-size: 11px;
+
     color: #94a3b8;
 }
 
 
-/* Navigation */
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
 
 .sidebar-nav {
-    padding: 25px 15px;
+    padding: 25px 12px;
+
     flex: 1;
 }
 
 .sidebar-link {
     display: flex;
     align-items: center;
+
     gap: 13px;
-    padding: 13px 15px;
-    margin-bottom: 7px;
-    color: #cbd5e1;
+
+    padding: 12px 14px;
+
+    margin-bottom: 6px;
+
+    color: #b9c3d2;
+
     text-decoration: none;
-    border-radius: 10px;
-    font-size: 14px;
+
+    border-radius: 9px;
+
+    font-size: 13px;
     font-weight: 500;
-    transition: 0.2s ease;
+
+    transition: all 0.2s ease;
 }
 
 .sidebar-link:hover {
@@ -119,44 +158,62 @@ body {
 .sidebar-link.active {
     background: #2563eb;
     color: #ffffff;
-    box-shadow: 0 5px 15px rgba(37,99,235,0.25);
+
+    box-shadow:
+        0 6px 16px rgba(37, 99, 235, 0.25);
 }
 
 .sidebar-link span:first-child {
-    width: 22px;
+    width: 23px;
+
     text-align: center;
-    font-size: 17px;
+
+    font-size: 16px;
 }
 
 
-/* Sidebar bottom */
+/* =========================================================
+   SIDEBAR BOTTOM
+   ========================================================= */
 
 .sidebar-bottom {
-    padding: 15px;
-    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 14px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.07);
 }
 
 .student-mini-profile {
     display: flex;
     align-items: center;
+
     gap: 10px;
+
     padding: 10px;
-    margin-bottom: 10px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 10px;
+
+    margin-bottom: 8px;
+
+    background: rgba(255, 255, 255, 0.045);
+
+    border-radius: 9px;
 }
 
 .profile-avatar {
     width: 38px;
     height: 38px;
+
     flex-shrink: 0;
+
     border-radius: 50%;
+
     background: #2563eb;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     color: #ffffff;
-    font-size: 15px;
+
+    font-size: 14px;
     font-weight: 700;
 }
 
@@ -166,48 +223,75 @@ body {
 
 .profile-info strong {
     display: block;
+
     color: #ffffff;
-    font-size: 13px;
+
+    font-size: 12px;
+
     white-space: nowrap;
+
     overflow: hidden;
+
     text-overflow: ellipsis;
 }
 
 .profile-info span {
     display: block;
+
     color: #94a3b8;
-    font-size: 11px;
+
+    font-size: 10px;
+
     margin-top: 3px;
 }
+
+
+/* =========================================================
+   LOGOUT
+   ========================================================= */
 
 .sidebar-logout {
     display: flex;
     align-items: center;
+
     gap: 10px;
+
     width: 100%;
-    padding: 11px 12px;
+
+    padding: 10px 12px;
+
     color: #fca5a5;
+
     text-decoration: none;
-    border-radius: 9px;
-    font-size: 13px;
-    transition: 0.2s ease;
+
+    border-radius: 8px;
+
+    font-size: 12px;
+
+    transition: all 0.2s ease;
 }
 
 .sidebar-logout:hover {
-    background: rgba(239,68,68,0.12);
+    background: rgba(239, 68, 68, 0.12);
+
     color: #fecaca;
 }
 
 
 /* =========================================================
-   MAIN
+   MAIN CONTENT
    ========================================================= */
 
 .spms-main {
     margin-left: 260px;
+
     width: calc(100% - 260px);
+
     min-height: 100vh;
+
     padding: 30px 35px;
+
+    background: #f4f7fb;
 }
 
 
@@ -217,52 +301,77 @@ body {
 
 .topbar {
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
-    margin-bottom: 28px;
+
+    margin-bottom: 26px;
 }
 
 .topbar h1 {
     margin: 0;
-    font-size: 28px;
-    color: #0f172a;
+
+    font-size: 26px;
+
+    color: #111827;
+
+    font-weight: 700;
+
+    letter-spacing: -0.3px;
 }
 
 .topbar p {
-    margin: 7px 0 0;
+    margin: 6px 0 0;
+
     color: #64748b;
-    font-size: 14px;
+
+    font-size: 13px;
 }
 
 .topbar-user {
     display: flex;
+
     align-items: center;
+
     gap: 10px;
 }
 
 .topbar-user strong {
     display: block;
-    font-size: 13px;
-    color: #0f172a;
+
+    font-size: 12px;
+
+    color: #111827;
 }
 
 .topbar-user span {
     display: block;
+
     margin-top: 3px;
-    font-size: 11px;
+
+    font-size: 10px;
+
     color: #64748b;
 }
 
 .topbar-avatar {
-    width: 42px;
-    height: 42px;
+    width: 40px;
+    height: 40px;
+
     border-radius: 50%;
+
     background: #2563eb;
+
     color: #ffffff;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     font-weight: 700;
+
+    font-size: 13px;
 }
 
 
@@ -272,29 +381,43 @@ body {
 
 .proposal-summary-card {
     background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 15px;
-    padding: 22px 25px;
-    margin-bottom: 25px;
+
+    border: 1px solid #e4eaf2;
+
+    border-radius: 14px;
+
+    padding: 20px 22px;
+
+    margin-bottom: 22px;
 
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
+
     gap: 20px;
 
-    box-shadow: 0 6px 20px rgba(15,23,42,0.04);
+    box-shadow:
+        0 5px 18px rgba(15, 23, 42, 0.04);
 }
 
 .proposal-summary-card > div:first-child span {
     display: block;
+
     color: #64748b;
-    font-size: 12px;
+
+    font-size: 11px;
 }
 
 .proposal-summary-card h2 {
     margin: 5px 0 0;
-    color: #0f172a;
-    font-size: 25px;
+
+    color: #111827;
+
+    font-size: 24px;
+
+    font-weight: 700;
 }
 
 
@@ -306,39 +429,65 @@ body {
 .secondary-button,
 .view-button {
     display: inline-flex;
+
     align-items: center;
+
     justify-content: center;
-    min-height: 42px;
-    padding: 10px 17px;
-    border-radius: 9px;
+
+    min-height: 40px;
+
+    padding: 9px 16px;
+
+    border-radius: 8px;
+
     text-decoration: none;
-    font-size: 13px;
+
+    font-size: 12px;
+
     font-weight: 600;
-    transition: 0.2s ease;
+
+    transition: all 0.2s ease;
 }
+
+
+/* PRIMARY */
 
 .primary-button {
     background: #2563eb;
+
     border: 1px solid #2563eb;
+
     color: #ffffff;
 }
 
 .primary-button:hover {
     background: #1d4ed8;
+
     border-color: #1d4ed8;
+
     color: #ffffff;
+
     transform: translateY(-1px);
+
+    box-shadow:
+        0 5px 14px rgba(37, 99, 235, 0.20);
 }
+
+
+/* SECONDARY */
 
 .secondary-button {
     background: #ffffff;
+
     border: 1px solid #cbd5e1;
+
     color: #475569;
 }
 
 .secondary-button:hover {
     background: #f8fafc;
-    color: #0f172a;
+
+    color: #111827;
 }
 
 
@@ -347,12 +496,18 @@ body {
    ========================================================= */
 
 .limit-message {
-    padding: 10px 14px;
-    border-radius: 9px;
+    padding: 9px 13px;
+
+    border-radius: 8px;
+
     background: #fff7ed;
+
     border: 1px solid #fed7aa;
+
     color: #c2410c;
-    font-size: 12px;
+
+    font-size: 11px;
+
     font-weight: 600;
 }
 
@@ -363,8 +518,10 @@ body {
 
 .proposal-list {
     display: flex;
+
     flex-direction: column;
-    gap: 18px;
+
+    gap: 16px;
 }
 
 
@@ -374,94 +531,164 @@ body {
 
 .proposal-card {
     background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 15px;
-    padding: 24px;
 
-    box-shadow: 0 6px 20px rgba(15,23,42,0.04);
+    border: 1px solid #e3e9f1;
 
-    transition: 0.2s ease;
+    border-radius: 14px;
+
+    padding: 22px;
+
+    box-shadow:
+        0 5px 18px rgba(15, 23, 42, 0.035);
+
+    transition: all 0.2s ease;
 }
 
 .proposal-card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-2px);
+
     border-color: #bfdbfe;
-    box-shadow: 0 12px 28px rgba(15,23,42,0.08);
+
+    box-shadow:
+        0 10px 25px rgba(15, 23, 42, 0.07);
 }
 
 
-/* Header */
+/* =========================================================
+   PROPOSAL HEADER
+   ========================================================= */
 
 .proposal-card-header {
     display: flex;
+
     align-items: flex-start;
+
     justify-content: space-between;
+
     gap: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid #e2e8f0;
+
+    padding-bottom: 17px;
+
+    border-bottom: 1px solid #e8edf3;
 }
 
 .proposal-number {
     display: block;
-    margin-bottom: 7px;
+
+    margin-bottom: 6px;
+
     color: #2563eb;
-    font-size: 11px;
+
+    font-size: 10px;
+
     font-weight: 700;
+
     text-transform: uppercase;
+
     letter-spacing: 0.8px;
 }
 
 .proposal-card-header h2 {
     margin: 0;
-    color: #0f172a;
-    font-size: 19px;
+
+    color: #111827;
+
+    font-size: 18px;
+
     line-height: 1.4;
+
+    font-weight: 700;
 }
 
 
 /* =========================================================
-   STATUS BADGE
+   STATUS BADGES
    ========================================================= */
 
 .status-badge {
     display: inline-flex;
+
     align-items: center;
+
     justify-content: center;
-    padding: 7px 13px;
+
+    padding: 6px 11px;
+
     border-radius: 20px;
-    font-size: 11px;
+
+    font-size: 10px;
+
     font-weight: 700;
+
     white-space: nowrap;
+
+    border: 1px solid transparent;
 }
+
+
+/* Submitted */
 
 .status-submitted {
-    background: #dbeafe;
-    color: #1d4ed8;
+    background: #eff6ff;
+
+    color: #2563eb;
+
+    border-color: #dbeafe;
 }
+
+
+/* Under Review */
 
 .status-under_review {
-    background: #fef3c7;
-    color: #92400e;
+    background: #fff7ed;
+
+    color: #d97706;
+
+    border-color: #fed7aa;
 }
+
+
+/* Expert Recommended */
 
 .status-expert_recommended {
-    background: #dcfce7;
-    color: #166534;
+    background: #ecfdf5;
+
+    color: #059669;
+
+    border-color: #d1fae5;
 }
+
+
+/* Coordinator Approved */
 
 .status-coordinator_approved {
-    background: #dcfce7;
-    color: #166534;
+    background: #ecfdf5;
+
+    color: #059669;
+
+    border-color: #d1fae5;
 }
+
+
+/* Rejected */
 
 .status-rejected {
-    background: #fee2e2;
-    color: #b91c1c;
+    background: #fef2f2;
+
+    color: #dc2626;
+
+    border-color: #fecaca;
 }
 
+
+/* Returned */
+
 .status-returned {
-    background: #ffedd5;
-    color: #c2410c;
+    background: #fff7ed;
+
+    color: #ea580c;
+
+    border-color: #fed7aa;
 }
 
 
@@ -471,9 +698,12 @@ body {
 
 .proposal-info {
     display: grid;
+
     grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    padding: 20px 0;
+
+    gap: 18px;
+
+    padding: 18px 0;
 }
 
 .proposal-info > div {
@@ -482,19 +712,32 @@ body {
 
 .proposal-info span {
     display: block;
+
     margin-bottom: 6px;
+
     color: #64748b;
-    font-size: 11px;
+
+    font-size: 10px;
+
     text-transform: uppercase;
+
     letter-spacing: 0.5px;
+
+    font-weight: 600;
 }
 
 .proposal-info strong {
     display: block;
+
     color: #334155;
+
     font-size: 13px;
+
     line-height: 1.5;
+
     word-break: break-word;
+
+    font-weight: 600;
 }
 
 
@@ -503,24 +746,36 @@ body {
    ========================================================= */
 
 .proposal-card-footer {
-    padding-top: 18px;
-    border-top: 1px solid #e2e8f0;
+    padding-top: 16px;
+
+    border-top: 1px solid #e8edf3;
+
     display: flex;
+
     justify-content: flex-end;
 }
 
 .view-button {
-    min-height: 38px;
+    min-height: 36px;
+
     padding: 8px 14px;
+
     background: #eff6ff;
-    border: 1px solid #bfdbfe;
+
+    border: 1px solid #dbeafe;
+
     color: #2563eb;
 }
 
 .view-button:hover {
     background: #2563eb;
+
     border-color: #2563eb;
+
     color: #ffffff;
+
+    box-shadow:
+        0 4px 10px rgba(37, 99, 235, 0.18);
 }
 
 
@@ -530,35 +785,55 @@ body {
 
 .empty-state {
     background: #ffffff;
+
     border: 1px dashed #cbd5e1;
-    border-radius: 16px;
-    padding: 60px 30px;
+
+    border-radius: 14px;
+
+    padding: 55px 30px;
+
     text-align: center;
+
+    box-shadow:
+        0 5px 18px rgba(15, 23, 42, 0.025);
 }
 
 .empty-icon {
-    width: 70px;
-    height: 70px;
-    margin: 0 auto 18px;
-    border-radius: 18px;
+    width: 64px;
+    height: 64px;
+
+    margin: 0 auto 17px;
+
+    border-radius: 16px;
+
     background: #eff6ff;
+
     display: flex;
+
     align-items: center;
+
     justify-content: center;
-    font-size: 30px;
+
+    font-size: 27px;
 }
 
 .empty-state h2 {
     margin: 0 0 8px;
-    color: #0f172a;
-    font-size: 20px;
+
+    color: #111827;
+
+    font-size: 19px;
 }
 
 .empty-state p {
     max-width: 500px;
-    margin: 0 auto 22px;
+
+    margin: 0 auto 21px;
+
     color: #64748b;
+
     font-size: 13px;
+
     line-height: 1.6;
 }
 
@@ -567,47 +842,52 @@ body {
    RESPONSIVE
    ========================================================= */
 
-@media (max-width: 900px) {
+@media (max-width: 1000px) {
 
     .spms-sidebar {
-        width: 220px;
+        width: 230px;
     }
 
     .spms-main {
-        margin-left: 220px;
-        width: calc(100% - 220px);
-        padding: 22px;
+        margin-left: 230px;
+
+        width: calc(100% - 230px);
+
+        padding: 25px;
     }
 
     .proposal-info {
         grid-template-columns: 1fr 1fr;
     }
-
 }
 
 
-@media (max-width: 700px) {
-
-    .proposal-info {
-        grid-template-columns: 1fr;
-        gap: 15px;
-    }
+@media (max-width: 750px) {
 
     .proposal-summary-card {
         align-items: flex-start;
+
         flex-direction: column;
     }
 
     .proposal-summary-card .primary-button,
     .proposal-summary-card .limit-message {
         width: 100%;
+
         text-align: center;
     }
 
     .proposal-card-header {
         flex-direction: column;
+
+        align-items: flex-start;
     }
 
+    .proposal-info {
+        grid-template-columns: 1fr;
+
+        gap: 14px;
+    }
 }
 
 
@@ -619,6 +899,7 @@ body {
 
     .sidebar-brand {
         justify-content: center;
+
         padding: 15px 8px;
     }
 
@@ -635,11 +916,12 @@ body {
 
     .sidebar-link {
         justify-content: center;
+
         padding: 13px 8px;
     }
 
     .sidebar-link span:first-child {
-        font-size: 19px;
+        font-size: 18px;
     }
 
     .sidebar-bottom {
@@ -648,13 +930,20 @@ body {
 
     .student-mini-profile {
         justify-content: center;
+
         background: transparent;
     }
 
     .spms-main {
         margin-left: 70px;
+
         width: calc(100% - 70px);
-        padding: 18px;
+
+        padding: 18px 14px;
+    }
+
+    .topbar {
+        margin-bottom: 20px;
     }
 
     .topbar-user {
@@ -665,12 +954,20 @@ body {
         font-size: 22px;
     }
 
+    .topbar p {
+        font-size: 12px;
+    }
+
+    .proposal-summary-card {
+        padding: 18px;
+    }
+
     .proposal-card {
         padding: 18px;
     }
 
     .proposal-card-header h2 {
-        font-size: 17px;
+        font-size: 16px;
     }
 
     .proposal-card-footer {
@@ -681,6 +978,9 @@ body {
         width: 100%;
     }
 
+    .empty-state {
+        padding: 45px 20px;
+    }
 }
 
 </style>
@@ -695,6 +995,8 @@ body {
 
     <aside class="spms-sidebar">
 
+
+        <!-- BRAND -->
 
         <div class="sidebar-brand">
 
@@ -717,6 +1019,8 @@ body {
         </div>
 
 
+        <!-- NAVIGATION -->
+
         <nav class="sidebar-nav">
 
 
@@ -726,7 +1030,10 @@ body {
                class="sidebar-link">
 
                 <span>🏠</span>
-                <span>Dashboard</span>
+
+                <span>
+                    Dashboard
+                </span>
 
             </a>
 
@@ -737,7 +1044,10 @@ body {
                class="sidebar-link active">
 
                 <span>📁</span>
-                <span>My Proposals</span>
+
+                <span>
+                    My Proposals
+                </span>
 
             </a>
 
@@ -748,7 +1058,10 @@ body {
                class="sidebar-link">
 
                 <span>➕</span>
-                <span>Submit Proposal</span>
+
+                <span>
+                    Submit Proposal
+                </span>
 
             </a>
 
@@ -759,7 +1072,10 @@ body {
                class="sidebar-link">
 
                 <span>📊</span>
-                <span>Project Status</span>
+
+                <span>
+                    Project Status
+                </span>
 
             </a>
 
@@ -785,11 +1101,15 @@ body {
                 <div class="profile-info">
 
                     <strong>
+
                         {{ request.user.get_full_name|default:request.user.username }}
+
                     </strong>
 
                     <span>
+
                         Student
+
                     </span>
 
                 </div>
@@ -801,7 +1121,10 @@ body {
             <a href="{% url 'accounts:logout' %}"
                class="sidebar-logout">
 
-                <span>🚪</span>
+                <span>
+                    🚪
+                </span>
+
                 Logout
 
             </a>
@@ -851,11 +1174,15 @@ body {
                 <div>
 
                     <strong>
+
                         {{ request.user.get_full_name|default:request.user.username }}
+
                     </strong>
 
                     <span>
+
                         Student
+
                     </span>
 
                 </div>
@@ -881,7 +1208,9 @@ body {
                 </span>
 
                 <h2>
+
                     {{ proposal_count|default:"0" }} / 3
+
                 </h2>
 
             </div>
@@ -920,6 +1249,8 @@ body {
             {% for proposal in proposals %}
 
 
+                <!-- PROPOSAL CARD -->
+
                 <div class="proposal-card">
 
 
@@ -938,7 +1269,9 @@ body {
 
 
                             <h2>
+
                                 {{ proposal.title }}
+
                             </h2>
 
                         </div>
@@ -966,7 +1299,9 @@ body {
                             </span>
 
                             <strong>
+
                                 {{ proposal.domain }}
+
                             </strong>
 
                         </div>
@@ -979,7 +1314,9 @@ body {
                             </span>
 
                             <strong>
+
                                 {{ proposal.technologies }}
+
                             </strong>
 
                         </div>
@@ -992,7 +1329,9 @@ body {
                             </span>
 
                             <strong>
+
                                 {{ proposal.submitted_at|date:"d M Y, h:i A" }}
+
                             </strong>
 
                         </div>
@@ -1029,12 +1368,16 @@ body {
 
 
                     <div class="empty-icon">
+
                         📁
+
                     </div>
 
 
                     <h2>
+
                         No proposals yet
+
                     </h2>
 
 

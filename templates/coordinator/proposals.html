@@ -148,6 +148,7 @@
                     <th>#</th>
                     <th>Student</th>
                     <th>Project</th>
+                    <th>Type</th>
                     <th>Expert</th>
                     <th>Guide</th>
                     <th>Status</th>
@@ -175,6 +176,16 @@
                         <small>
                             {{ proposal.domain|default:"No domain" }}
                         </small>
+                    </td>
+
+                    <td>
+                        {% if proposal.project_type %}
+                            <span class="status {{ proposal.project_type|lower }}">
+                                {{ proposal.get_project_type_display }}
+                            </span>
+                        {% else %}
+                            —
+                        {% endif %}
                     </td>
 
                     <td>

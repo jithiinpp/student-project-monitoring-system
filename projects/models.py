@@ -5,8 +5,12 @@ from django.db import models
 # =========================================================
 # PROJECT PROPOSAL
 # =========================================================
-
 class ProjectProposal(models.Model):
+
+    PROJECT_TYPE_CHOICES = [
+        ("MINI", "Mini Project"),
+        ("MAIN", "Main Project"),
+    ]
 
     STATUS_CHOICES = [
         ("SUBMITTED", "Submitted"),
@@ -22,28 +26,23 @@ class ProjectProposal(models.Model):
         ("REJECTED", "Rejected"),
     ]
 
-    # -----------------------------------------------------
-    # STUDENT
-    # -----------------------------------------------------
-
     student = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="project_proposals",
-        limit_choices_to={"role": "STUDENT"},
+        limit_choices_to={"role": "STUDENT"}
     )
 
-    # -----------------------------------------------------
-    # PROJECT INFORMATION
-    # -----------------------------------------------------
-
-    title = models.CharField(
-        max_length=255
+    # NEW
+    project_type = models.CharField(
+        max_length=10,
+        choices=PROJECT_TYPE_CHOICES,
+        default="MAIN"
     )
 
-    abstract = models.TextField(
-        blank=True
-    )
+    title = models.CharField(max_length=255)
+
+    abstract = models.TextField(blank=True)
 
     domain = models.CharField(
         max_length=255,
@@ -64,17 +63,13 @@ class ProjectProposal(models.Model):
         null=True
     )
 
-    # -----------------------------------------------------
-    # DOMAIN EXPERT
-    # -----------------------------------------------------
-
     domain_expert = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
         null=True,
         blank=True,
         related_name="expert_proposals",
-        limit_choices_to={"role": "EXPERT"},
+        limit_choices_to={"role": "EXPERT"}
     )
 
     expert_comments = models.TextField(
@@ -82,19 +77,11 @@ class ProjectProposal(models.Model):
         null=True
     )
 
-    # -----------------------------------------------------
-    # PROJECT STATUS
-    # -----------------------------------------------------
-
     status = models.CharField(
         max_length=40,
         choices=STATUS_CHOICES,
         default="SUBMITTED"
     )
-
-    # -----------------------------------------------------
-    # GUIDE
-    # -----------------------------------------------------
 
     guide = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -102,7 +89,7 @@ class ProjectProposal(models.Model):
         null=True,
         blank=True,
         related_name="guided_proposals",
-        limit_choices_to={"role": "GUIDE"},
+        limit_choices_to={"role": "GUIDE"}
     )
 
     guide_rejection_reason = models.TextField(
@@ -115,10 +102,6 @@ class ProjectProposal(models.Model):
         null=True
     )
 
-    # -----------------------------------------------------
-    # TIMESTAMPS
-    # -----------------------------------------------------
-
     submitted_at = models.DateTimeField(
         auto_now_add=True
     )
@@ -127,24 +110,67 @@ class ProjectProposal(models.Model):
         auto_now=True
     )
 
-    # -----------------------------------------------------
-    # STRING REPRESENTATION
-    # -----------------------------------------------------
-
     def __str__(self):
         return self.title
 
 
 # =========================================================
-# PROJECT PROGRESS / FINAL REPORT
+# PROPOSAL CHANGE REQUEST
+# =========================================================
+
+class ProposalChangeRequest(models.Model):
+
+    STATUS_CHOICES = [
+        ("PENDING", "Pending"),
+        ("SENT_TO_STUDENT", "Sent To Student"),
+        ("RESUBMITTED", "Resubmitted"),
+        ("CLOSED", "Closed"),
+    ]
+
+    proposal = models.ForeignKey(
+        ProjectProposal,
+        on_delete=models.CASCADE,
+        related_name="change_requests"
+    )
+
+    expert = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="proposal_change_requests",
+        limit_choices_to={"role": "EXPERT"}
+    )
+
+    comments = models.TextField()
+
+    status = models.CharField(
+        max_length=30,
+        choices=STATUS_CHOICES,
+        default="PENDING"
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    def __str__(self):
+        return (
+            f"Change Request - "
+            f"{self.proposal.title}"
+        )
+
+
+# =========================================================
+# PROJECT PROGRESS
 # =========================================================
 
 class ProjectProgress(models.Model):
 
     REPORT_CHOICES = [
-        ("PROGRESS_1", "Progress Report 1"),
-        ("PROGRESS_2", "Progress Report 2"),
-        ("PROGRESS_3", "Progress Report 3"),
+        ("WEEKLY_PROGRESS", "Weekly Progress"),
         ("FINAL_REPORT", "Final Report"),
     ]
 
@@ -154,39 +180,23 @@ class ProjectProgress(models.Model):
         ("CHANGES_REQUIRED", "Changes Required"),
     ]
 
-    # -----------------------------------------------------
-    # PROJECT
-    # -----------------------------------------------------
-
     project = models.ForeignKey(
         ProjectProposal,
         on_delete=models.CASCADE,
         related_name="progress_reports"
     )
 
-    # -----------------------------------------------------
-    # STUDENT
-    # -----------------------------------------------------
-
     student = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="progress_reports",
-        limit_choices_to={"role": "STUDENT"}
+        limit_choices_to={"role": "STUDENT"},
     )
-
-    # -----------------------------------------------------
-    # REPORT TYPE
-    # -----------------------------------------------------
 
     report_type = models.CharField(
         max_length=30,
         choices=REPORT_CHOICES
     )
-
-    # -----------------------------------------------------
-    # REPORT DETAILS
-    # -----------------------------------------------------
 
     title = models.CharField(
         max_length=200
@@ -200,10 +210,6 @@ class ProjectProgress(models.Model):
         null=True
     )
 
-    # -----------------------------------------------------
-    # GUIDE REVIEW STATUS
-    # -----------------------------------------------------
-
     status = models.CharField(
         max_length=30,
         choices=STATUS_CHOICES,
@@ -215,10 +221,6 @@ class ProjectProgress(models.Model):
         null=True
     )
 
-    # -----------------------------------------------------
-    # TIMESTAMPS
-    # -----------------------------------------------------
-
     submitted_at = models.DateTimeField(
         auto_now_add=True
     )
@@ -228,126 +230,12 @@ class ProjectProgress(models.Model):
         null=True
     )
 
-    # -----------------------------------------------------
-    # PREVENT DUPLICATE REPORTS
-    # -----------------------------------------------------
-
     class Meta:
-
-        constraints = [
-            models.UniqueConstraint(
-                fields=[
-                    "project",
-                    "report_type"
-                ],
-                name="unique_project_report_type"
-            )
-        ]
-
-        ordering = [
-            "submitted_at"
-        ]
-
-    # -----------------------------------------------------
-    # STRING REPRESENTATION
-    # -----------------------------------------------------
+        ordering = ["submitted_at"]
 
     def __str__(self):
         return (
             f"{self.project.title} - "
-            f"{self.get_report_type_display()}"
-        )
-
-
-# =========================================================
-# PROPOSAL CHANGE REQUEST
-# =========================================================
-
-class ProposalChangeRequest(models.Model):
-
-    STATUS_CHOICES = [
-        ("PENDING", "Pending"),
-        ("SENT_TO_STUDENT", "Sent to Student"),
-        ("RESUBMITTED", "Resubmitted"),
-        ("CLOSED", "Closed"),
-    ]
-
-    # -----------------------------------------------------
-    # PROPOSAL
-    # -----------------------------------------------------
-
-    proposal = models.ForeignKey(
-        ProjectProposal,
-        on_delete=models.CASCADE,
-        related_name="change_requests"
-    )
-
-    # -----------------------------------------------------
-    # DOMAIN EXPERT
-    # -----------------------------------------------------
-
-    expert = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="requested_changes",
-        limit_choices_to={"role": "EXPERT"}
-    )
-
-    # -----------------------------------------------------
-    # COORDINATOR
-    # -----------------------------------------------------
-
-    coordinator = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="forwarded_change_requests",
-        limit_choices_to={"role": "COORDINATOR"}
-    )
-
-    # -----------------------------------------------------
-    # CHANGE REQUEST MESSAGE
-    # -----------------------------------------------------
-
-    message = models.TextField()
-
-    # -----------------------------------------------------
-    # STATUS
-    # -----------------------------------------------------
-
-    status = models.CharField(
-        max_length=30,
-        choices=STATUS_CHOICES,
-        default="PENDING"
-    )
-
-    # -----------------------------------------------------
-    # TIMESTAMPS
-    # -----------------------------------------------------
-
-    created_at = models.DateTimeField(
-        auto_now_add=True
-    )
-
-    sent_to_student_at = models.DateTimeField(
-        blank=True,
-        null=True
-    )
-
-    resubmitted_at = models.DateTimeField(
-        blank=True,
-        null=True
-    )
-
-    # -----------------------------------------------------
-    # STRING REPRESENTATION
-    # -----------------------------------------------------
-
-    def __str__(self):
-        return (
-            f"Change Request - "
-            f"{self.proposal.title}"
+            f"{self.get_report_type_display()} - "
+            f"{self.title}"
         )

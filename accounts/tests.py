@@ -24,6 +24,7 @@ class ProposalReturnToStudentTests(TestCase):
         )
         self.proposal = ProjectProposal.objects.create(
             student=self.student,
+            project_type="MAIN",
             title="AI Monitoring System",
             domain="Artificial Intelligence",
             technologies="Python, Django",
@@ -45,6 +46,7 @@ class ProposalReturnToStudentTests(TestCase):
         response = self.client.post(
             url,
             {
+                "project_type": "MAIN",
                 "title": "AI Monitoring System Updated",
                 "domain": "Artificial Intelligence",
                 "technologies": "Python, Django, OpenCV",

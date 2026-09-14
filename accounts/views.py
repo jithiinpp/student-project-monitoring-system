@@ -330,6 +330,76 @@ def student_dashboard(request):
         )
 
     # ========================================================
+    # STUDENT WORKFLOW STATUS
+    # ========================================================
+
+    workflow_status_map = {
+        "SUBMITTED": 1,
+        "EXPERT_ASSIGNED": 2,
+        "CHANGES_REQUESTED": 2,
+        "EXPERT_APPROVED": 2,
+        "COORDINATOR_APPROVED": 3,
+        "GUIDE_ASSIGNED": 4,
+        "GUIDE_REJECTED": 4,
+        "IN_PROGRESS": 5,
+        "COMPLETED": 10,
+    }
+
+    current_status = project.status if project else "SUBMITTED"
+    current_workflow_step = workflow_status_map.get(current_status, 1)
+
+    workflow_steps = [
+        {
+            "number": 1,
+            "title": "Submit Proposals",
+            "description": "Student can submit up to 3 project proposals.",
+            "state": "complete" if current_workflow_step > 1 else "active" if current_status == "SUBMITTED" else "pending",
+        },
+        {
+            "number": 2,
+            "title": "Domain Expert Review",
+            "description": "Domain Expert reviews the proposals and recommends one project.",
+            "state": "complete" if current_workflow_step > 2 else "active" if current_workflow_step == 2 else "pending",
+        },
+        {
+            "number": 3,
+            "title": "Coordinator Approval",
+            "description": "Coordinator gives final approval for the selected project.",
+            "state": "complete" if current_workflow_step > 3 else "active" if current_workflow_step == 3 else "pending",
+        },
+        {
+            "number": 4,
+            "title": "Guide Assignment",
+            "description": "Coordinator assigns a Guide to the approved project.",
+            "state": "complete" if current_workflow_step > 4 else "active" if current_workflow_step == 4 else "pending",
+        },
+        {
+            "number": 5,
+            "title": "Project Progress",
+            "description": "Student completes project progress work and the required reports.",
+            "state": "complete" if current_workflow_step > 5 else "active" if current_workflow_step == 5 else "pending",
+        },
+        {
+            "number": 6,
+            "title": "Final Report",
+            "description": "Student submits the final report for assessment.",
+            "state": "complete" if current_workflow_step >= 10 else "active" if current_workflow_step == 6 else "pending",
+        },
+        {
+            "number": 7,
+            "title": "Final Evaluation",
+            "description": "Guide reviews the Final Report and enters the project mark.",
+            "state": "complete" if current_workflow_step >= 10 else "active" if current_workflow_step == 7 else "pending",
+        },
+        {
+            "number": 8,
+            "title": "Project Completed",
+            "description": "Final mark is displayed on the dashboard and the project is completed.",
+            "state": "complete" if current_workflow_step >= 10 else "active" if current_workflow_step == 8 else "pending",
+        },
+    ]
+
+    # ========================================================
     # CONTEXT
     # ========================================================
 
@@ -342,6 +412,11 @@ def student_dashboard(request):
         "pending_count": pending_count,
 
         "approved_count": approved_count,
+
+        "current_workflow_step": current_workflow_step,
+        "current_workflow_status": current_status,
+        "current_workflow_status_display": project.get_status_display() if project else "Not Started",
+        "workflow_steps": workflow_steps,
 
         # Active project
         "project": project,

@@ -7,14 +7,14 @@ class GuideEvaluation(models.Model):
     project = models.OneToOneField(
         "projects.ProjectProposal",
         on_delete=models.CASCADE,
-        related_name="guide_evaluation"
+        related_name="guide_evaluation",
     )
 
     guide = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="guide_evaluations",
-        limit_choices_to={"role": "GUIDE"}
+        limit_choices_to={"role": "GUIDE"},
     )
 
     marks = models.DecimalField(

@@ -9,7 +9,7 @@ Proposal Details | SPMS
 <style>
 
 /* =========================================================
-   SPMS PROPOSAL DETAILS PAGE
+   SPMS STUDENT PROPOSAL DETAIL
    ========================================================= */
 
 * {
@@ -20,12 +20,11 @@ body {
     margin: 0;
     background: #f4f7fb;
     font-family: Arial, Helvetica, sans-serif;
-    color: #1e293b;
+    color: #1f2937;
 }
 
-
 /* =========================================================
-   MAIN LAYOUT
+   LAYOUT
    ========================================================= */
 
 .spms-layout {
@@ -33,16 +32,15 @@ body {
     min-height: 100vh;
 }
 
-
 /* =========================================================
    SIDEBAR
    ========================================================= */
 
 .spms-sidebar {
-    width: 260px;
+    width: 252px;
     min-height: 100vh;
-    background: #0f172a;
-    color: white;
+    background: #111827;
+    color: #ffffff;
     position: fixed;
     left: 0;
     top: 0;
@@ -50,50 +48,57 @@ body {
     display: flex;
     flex-direction: column;
     z-index: 1000;
-    box-shadow: 4px 0 20px rgba(15, 23, 42, 0.08);
+    border-right: 1px solid rgba(255,255,255,0.05);
 }
 
-
-/* Brand */
+/* =========================================================
+   BRAND
+   ========================================================= */
 
 .sidebar-brand {
-    height: 90px;
-    padding: 20px;
+    height: 98px;
+    padding: 20px 18px;
     display: flex;
     align-items: center;
-    gap: 12px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
+    gap: 13px;
+    border-bottom: 1px solid rgba(255,255,255,0.07);
 }
 
 .brand-logo {
-    width: 45px;
-    height: 45px;
+    width: 46px;
+    height: 46px;
+    flex-shrink: 0;
     border-radius: 12px;
     background: #2563eb;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: #ffffff;
     font-size: 22px;
     font-weight: 700;
+    box-shadow: 0 6px 16px rgba(37,99,235,0.25);
 }
 
 .sidebar-brand h2 {
     margin: 0;
     font-size: 20px;
+    color: #ffffff;
+    font-weight: 700;
 }
 
 .sidebar-brand span {
     display: block;
-    margin-top: 3px;
-    font-size: 12px;
+    margin-top: 4px;
+    font-size: 11px;
     color: #94a3b8;
 }
 
-
-/* Navigation */
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
 
 .sidebar-nav {
-    padding: 25px 15px;
+    padding: 27px 12px;
     flex: 1;
 }
 
@@ -101,39 +106,42 @@ body {
     display: flex;
     align-items: center;
     gap: 13px;
-    padding: 13px 15px;
-    margin-bottom: 7px;
-    color: #cbd5e1;
+    min-height: 44px;
+    padding: 11px 14px;
+    margin-bottom: 6px;
+    color: #aeb9ca;
     text-decoration: none;
-    border-radius: 10px;
-    font-size: 14px;
+    border-radius: 9px;
+    font-size: 13px;
     font-weight: 500;
-    transition: 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .sidebar-link:hover {
-    background: #1e293b;
-    color: white;
+    background: rgba(255,255,255,0.06);
+    color: #ffffff;
 }
 
 .sidebar-link.active {
     background: #2563eb;
-    color: white;
-    box-shadow: 0 5px 15px rgba(37,99,235,0.25);
+    color: #ffffff;
+    box-shadow: 0 6px 16px rgba(37,99,235,0.25);
 }
 
 .sidebar-link span:first-child {
-    width: 22px;
+    width: 23px;
+    min-width: 23px;
     text-align: center;
-    font-size: 17px;
+    font-size: 16px;
 }
 
-
-/* Sidebar bottom */
+/* =========================================================
+   SIDEBAR BOTTOM
+   ========================================================= */
 
 .sidebar-bottom {
-    padding: 15px;
-    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 14px 12px;
+    border-top: 1px solid rgba(255,255,255,0.07);
 }
 
 .student-mini-profile {
@@ -141,22 +149,22 @@ body {
     align-items: center;
     gap: 10px;
     padding: 10px;
-    margin-bottom: 10px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 10px;
+    margin-bottom: 8px;
+    background: rgba(255,255,255,0.045);
+    border-radius: 9px;
 }
 
 .profile-avatar {
-    width: 38px;
-    height: 38px;
+    width: 37px;
+    height: 37px;
     flex-shrink: 0;
     border-radius: 50%;
     background: #2563eb;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: white;
-    font-size: 15px;
+    color: #ffffff;
+    font-size: 14px;
     font-weight: 700;
 }
 
@@ -166,8 +174,8 @@ body {
 
 .profile-info strong {
     display: block;
-    color: white;
-    font-size: 13px;
+    color: #ffffff;
+    font-size: 12px;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -176,7 +184,7 @@ body {
 .profile-info span {
     display: block;
     color: #94a3b8;
-    font-size: 11px;
+    font-size: 10px;
     margin-top: 3px;
 }
 
@@ -185,31 +193,30 @@ body {
     align-items: center;
     gap: 10px;
     width: 100%;
-    padding: 11px 12px;
+    padding: 10px 11px;
     color: #fca5a5;
     text-decoration: none;
-    border-radius: 9px;
-    font-size: 13px;
-    transition: 0.2s ease;
+    border-radius: 8px;
+    font-size: 12px;
+    transition: all 0.2s ease;
 }
 
 .sidebar-logout:hover {
-    background: rgba(239,68,68,0.12);
+    background: rgba(239,68,68,0.10);
     color: #fecaca;
 }
-
 
 /* =========================================================
    MAIN
    ========================================================= */
 
 .spms-main {
-    margin-left: 260px;
-    width: calc(100% - 260px);
+    margin-left: 252px;
+    width: calc(100% - 252px);
     min-height: 100vh;
-    padding: 30px 35px;
+    padding: 32px;
+    background: #f4f7fb;
 }
-
 
 /* =========================================================
    TOP BAR
@@ -219,21 +226,21 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 28px;
+    margin-bottom: 25px;
 }
 
 .topbar h1 {
     margin: 0;
-    font-size: 28px;
-    color: #0f172a;
+    font-size: 25px;
+    color: #111827;
+    font-weight: 700;
 }
 
 .topbar p {
     margin: 7px 0 0;
     color: #64748b;
-    font-size: 14px;
+    font-size: 13px;
 }
-
 
 /* =========================================================
    DETAIL CARD
@@ -241,12 +248,11 @@ body {
 
 .detail-card {
     background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 18px;
-    padding: 30px;
-    box-shadow: 0 8px 25px rgba(15,23,42,0.05);
+    border: 1px solid #e5eaf2;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 5px 18px rgba(15,23,42,0.045);
 }
-
 
 /* =========================================================
    DETAIL HEADER
@@ -257,8 +263,8 @@ body {
     justify-content: space-between;
     align-items: flex-start;
     gap: 20px;
-    padding-bottom: 25px;
-    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 22px;
+    border-bottom: 1px solid #e8edf4;
 }
 
 .proposal-number {
@@ -267,17 +273,16 @@ body {
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 8px;
+    letter-spacing: 0.8px;
+    margin-bottom: 7px;
 }
 
 .detail-header h2 {
     margin: 0;
-    font-size: 25px;
-    color: #0f172a;
-    line-height: 1.35;
+    font-size: 23px;
+    color: #111827;
+    line-height: 1.4;
 }
-
 
 /* =========================================================
    STATUS
@@ -294,47 +299,55 @@ body {
     white-space: nowrap;
 }
 
-
-/* Default */
-
 .status-submitted {
-    background: #dbeafe;
-    color: #1d4ed8;
+    background: #eff6ff;
+    color: #2563eb;
+    border: 1px solid #dbeafe;
 }
 
 .status-under_review {
-    background: #fef3c7;
-    color: #92400e;
+    background: #fff7ed;
+    color: #d97706;
+    border: 1px solid #fed7aa;
 }
 
 .status-expert_recommended {
-    background: #dcfce7;
-    color: #166534;
+    background: #ecfdf5;
+    color: #059669;
+    border: 1px solid #d1fae5;
 }
 
 .status-coordinator_approved {
-    background: #dcfce7;
-    color: #166534;
+    background: #ecfdf5;
+    color: #059669;
+    border: 1px solid #d1fae5;
 }
 
 .status-rejected {
-    background: #fee2e2;
-    color: #b91c1c;
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fecaca;
 }
 
 .status-returned {
-    background: #ffedd5;
-    color: #c2410c;
+    background: #fff7ed;
+    color: #ea580c;
+    border: 1px solid #fed7aa;
 }
 
+.status-changes_requested {
+    background: #fff7ed;
+    color: #ea580c;
+    border: 1px solid #fed7aa;
+}
 
 /* =========================================================
-   DETAIL SECTIONS
+   DETAIL SECTION
    ========================================================= */
 
 .detail-section {
-    padding: 22px 0;
-    border-bottom: 1px solid #e2e8f0;
+    padding: 21px 0;
+    border-bottom: 1px solid #e8edf4;
 }
 
 .detail-section:last-child {
@@ -342,9 +355,10 @@ body {
 }
 
 .detail-section h3 {
-    margin: 0 0 9px;
-    color: #0f172a;
-    font-size: 14px;
+    margin: 0 0 8px;
+    color: #1f2937;
+    font-size: 13px;
+    font-weight: 700;
 }
 
 .detail-section p {
@@ -355,17 +369,19 @@ body {
     white-space: pre-line;
 }
 
-
 /* =========================================================
    DETAIL GRID
    ========================================================= */
 
 .detail-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 25px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0 28px;
 }
 
+.detail-grid .detail-section:last-child {
+    grid-column: 1 / -1;
+}
 
 /* =========================================================
    BUTTONS
@@ -374,8 +390,8 @@ body {
 .form-actions {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding-top: 25px;
+    gap: 11px;
+    padding-top: 22px;
 }
 
 .primary-button,
@@ -389,38 +405,40 @@ body {
     text-decoration: none;
     font-size: 13px;
     font-weight: 600;
-    transition: 0.2s ease;
+    transition: all 0.2s ease;
 }
 
 .primary-button {
     background: #2563eb;
-    color: white;
+    color: #ffffff;
     border: 1px solid #2563eb;
 }
 
 .primary-button:hover {
     background: #1d4ed8;
-    color: white;
+    color: #ffffff;
+    border-color: #1d4ed8;
     transform: translateY(-1px);
+    box-shadow: 0 5px 14px rgba(37,99,235,0.20);
 }
 
 .secondary-button {
     background: #ffffff;
     color: #475569;
-    border: 1px solid #cbd5e1;
+    border: 1px solid #d6dee9;
 }
 
 .secondary-button:hover {
     background: #f8fafc;
-    color: #0f172a;
+    color: #111827;
+    border-color: #cbd5e1;
 }
-
 
 /* =========================================================
    RESPONSIVE
    ========================================================= */
 
-@media (max-width: 768px) {
+@media (max-width: 900px) {
 
     .spms-sidebar {
         width: 220px;
@@ -429,25 +447,22 @@ body {
     .spms-main {
         margin-left: 220px;
         width: calc(100% - 220px);
-        padding: 22px;
+        padding: 24px;
     }
 
     .detail-grid {
         grid-template-columns: 1fr;
-        gap: 0;
     }
 
-    .detail-header {
-        flex-direction: column;
+    .detail-grid .detail-section:last-child {
+        grid-column: auto;
     }
-
 }
 
-
-@media (max-width: 600px) {
+@media (max-width: 650px) {
 
     .spms-sidebar {
-        width: 70px;
+        width: 68px;
     }
 
     .sidebar-brand {
@@ -457,8 +472,7 @@ body {
 
     .sidebar-brand > div:last-child,
     .sidebar-link span:last-child,
-    .student-mini-profile .profile-info,
-    .sidebar-logout {
+    .student-mini-profile .profile-info {
         display: none;
     }
 
@@ -468,11 +482,11 @@ body {
 
     .sidebar-link {
         justify-content: center;
-        padding: 13px 8px;
+        padding: 12px 7px;
     }
 
     .sidebar-link span:first-child {
-        font-size: 19px;
+        font-size: 17px;
     }
 
     .sidebar-bottom {
@@ -484,10 +498,15 @@ body {
         background: transparent;
     }
 
+    .sidebar-logout {
+        justify-content: center;
+        font-size: 0;
+    }
+
     .spms-main {
-        margin-left: 70px;
-        width: calc(100% - 70px);
-        padding: 18px;
+        margin-left: 68px;
+        width: calc(100% - 68px);
+        padding: 18px 14px;
     }
 
     .topbar h1 {
@@ -496,7 +515,11 @@ body {
 
     .detail-card {
         padding: 20px;
-        border-radius: 14px;
+        border-radius: 13px;
+    }
+
+    .detail-header {
+        flex-direction: column;
     }
 
     .detail-header h2 {
@@ -512,7 +535,6 @@ body {
     .secondary-button {
         width: 100%;
     }
-
 }
 
 </style>
@@ -521,12 +543,9 @@ body {
 <div class="spms-layout">
 
 
-    <!-- =====================================================
-         SIDEBAR
-         ===================================================== -->
+    <!-- SIDEBAR -->
 
     <aside class="spms-sidebar">
-
 
         <div class="sidebar-brand">
 
@@ -596,7 +615,6 @@ body {
 
             <div class="student-mini-profile">
 
-
                 <div class="profile-avatar">
 
                     {{ request.user.first_name|first|default:request.user.username|first|upper }}
@@ -616,7 +634,6 @@ body {
 
                 </div>
 
-
             </div>
 
 
@@ -628,21 +645,15 @@ body {
 
             </a>
 
-
         </div>
-
 
     </aside>
 
 
-    <!-- =====================================================
-         MAIN CONTENT
-         ===================================================== -->
+    <!-- MAIN CONTENT -->
 
     <main class="spms-main">
 
-
-        <!-- TOP BAR -->
 
         <header class="topbar">
 
@@ -661,24 +672,18 @@ body {
         </header>
 
 
-        <!-- =================================================
-             PROPOSAL DETAIL CARD
-             ================================================= -->
+        <!-- PROPOSAL -->
 
         <div class="detail-card">
 
 
-            <!-- HEADER -->
-
             <div class="detail-header">
-
 
                 <div>
 
                     <span class="proposal-number">
                         Project Proposal
                     </span>
-
 
                     <h2>
                         {{ proposal.title }}
@@ -692,7 +697,6 @@ body {
                     {{ proposal.get_status_display }}
 
                 </span>
-
 
             </div>
 
@@ -712,9 +716,22 @@ body {
             </div>
 
 
-            <!-- DOMAIN + TECHNOLOGIES -->
+            <!-- PROJECT DETAILS -->
 
             <div class="detail-grid">
+
+
+                <div class="detail-section">
+
+                    <h3>
+                        Project Type
+                    </h3>
+
+                    <p>
+                        {{ proposal.get_project_type_display|default:"Not specified" }}
+                    </p>
+
+                </div>
 
 
                 <div class="detail-section">
@@ -761,7 +778,7 @@ body {
             </div>
 
 
-            <!-- SUBMITTED DATE -->
+            <!-- DATE -->
 
             <div class="detail-section">
 
@@ -786,13 +803,12 @@ body {
                         Proposal Document
                     </h3>
 
-
                     <a href="{{ proposal.proposal_document.url }}"
                        target="_blank"
                        rel="noopener noreferrer"
                        class="primary-button">
 
-                        📄 View Proposal PDF
+                        View Proposal PDF
 
                     </a>
 
@@ -800,6 +816,8 @@ body {
 
             {% endif %}
 
+
+            <!-- EXPERT FEEDBACK -->
 
             {% if proposal.status == "CHANGES_REQUESTED" %}
 
@@ -818,23 +836,26 @@ body {
             {% endif %}
 
 
-            <!-- BACK BUTTON -->
+            <!-- ACTIONS -->
 
             <div class="form-actions">
 
                 {% if proposal.status == "CHANGES_REQUESTED" %}
+
                     <a href="{% url 'accounts:edit_proposal' proposal.id %}"
                        class="primary-button">
 
-                        ✏️ Edit and Resubmit
+                        Edit and Resubmit
 
                     </a>
+
                 {% endif %}
+
 
                 <a href="{% url 'accounts:student_proposals' %}"
                    class="secondary-button">
 
-                    ← Back to Proposals
+                    Back to Proposals
 
                 </a>
 
@@ -842,7 +863,6 @@ body {
 
 
         </div>
-
 
     </main>
 

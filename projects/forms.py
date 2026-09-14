@@ -1,5 +1,6 @@
 from django import forms
-from .models import ProjectProposal, ProjectProgress
+
+from .models import ProjectProgress, ProjectProposal
 
 
 # =========================================================
@@ -12,6 +13,7 @@ class ProjectProposalForm(forms.ModelForm):
         model = ProjectProposal
 
         fields = [
+            "project_type",
             "title",
             "abstract",
             "domain",
@@ -21,6 +23,12 @@ class ProjectProposalForm(forms.ModelForm):
         ]
 
         widgets = {
+            "project_type": forms.Select(
+                attrs={
+                    "class": "form-control",
+                }
+            ),
+
             "title": forms.TextInput(
                 attrs={
                     "class": "form-control",
@@ -43,10 +51,11 @@ class ProjectProposalForm(forms.ModelForm):
                 }
             ),
 
-            "technologies": forms.TextInput(
+            "technologies": forms.Textarea(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Python, Django, HTML, CSS, JavaScript",
+                    "rows": 4,
+                    "placeholder": "Example: Python, Django, HTML, CSS, JavaScript",
                 }
             ),
 
@@ -64,6 +73,16 @@ class ProjectProposalForm(forms.ModelForm):
                     "accept": ".pdf,.doc,.docx",
                 }
             ),
+        }
+
+        labels = {
+            "project_type": "Project Type",
+            "title": "Project Title",
+            "abstract": "Abstract",
+            "domain": "Project Domain",
+            "technologies": "Technologies",
+            "description": "Project Description",
+            "proposal_document": "Proposal Document",
         }
 
 
@@ -86,15 +105,15 @@ class ProjectProgressForm(forms.ModelForm):
             "title": forms.TextInput(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Enter report title",
+                    "placeholder": "Enter progress title",
                 }
             ),
 
             "description": forms.Textarea(
                 attrs={
                     "class": "form-control",
-                    "rows": 7,
-                    "placeholder": "Describe your project progress...",
+                    "rows": 5,
+                    "placeholder": "Describe the work completed this week",
                 }
             ),
 
@@ -104,4 +123,10 @@ class ProjectProgressForm(forms.ModelForm):
                     "accept": ".pdf,.doc,.docx",
                 }
             ),
+        }
+
+        labels = {
+            "title": "Progress Title",
+            "description": "Progress Details",
+            "document": "Progress Document",
         }

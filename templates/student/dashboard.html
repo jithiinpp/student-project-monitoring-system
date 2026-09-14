@@ -2239,278 +2239,39 @@ body {
 
             <div class="workflow-card">
 
-
-                <!-- STEP 1 -->
-
-                <div class="workflow-step active">
-
-                    <div class="workflow-number">
-                        1
+                {% if current_workflow_status_display %}
+                    <div style="margin-bottom: 18px; font-size: 13px; color: #475569; font-weight: 600;">
+                        Current status: {{ current_workflow_status_display }}
                     </div>
+                {% endif %}
 
-                    <div>
+                {% for step in workflow_steps %}
 
-                        <h3>
-                            Submit Proposals
-                        </h3>
+                    <div class="workflow-step {{ step.state }}">
 
-                        <p>
-                            Student can submit up to 3 project proposals.
-                        </p>
+                        <div class="workflow-number">
+                            {{ step.number }}
+                        </div>
 
-                    </div>
+                        <div>
 
-                </div>
+                            <h3>
+                                {{ step.title }}
+                            </h3>
 
+                            <p>
+                                {{ step.description }}
+                            </p>
 
-                <div class="workflow-line"></div>
-
-
-
-                <!-- STEP 2 -->
-
-                <div class="workflow-step">
-
-                    <div class="workflow-number">
-                        2
-                    </div>
-
-                    <div>
-
-                        <h3>
-                            Domain Expert Review
-                        </h3>
-
-                        <p>
-                            Domain Expert reviews the proposals and recommends
-                            one project.
-                        </p>
+                        </div>
 
                     </div>
 
-                </div>
-
-
-                <div class="workflow-line"></div>
-
-
-
-                <!-- STEP 3 -->
-
-                <div class="workflow-step">
-
-                    <div class="workflow-number">
-                        3
-                    </div>
-
-                    <div>
-
-                        <h3>
-                            Coordinator Approval
-                        </h3>
-
-                        <p>
-                            Coordinator gives final approval for the selected
-                            project.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="workflow-line"></div>
-
-
-
-                <!-- STEP 4 -->
-
-                <div class="workflow-step">
-
-                    <div class="workflow-number">
-                        4
-                    </div>
-
-                    <div>
-
-                        <h3>
-                            Guide Assignment
-                        </h3>
-
-                        <p>
-                            Coordinator assigns a Guide to the approved project.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="workflow-line"></div>
-
-
-
-                <!-- STEP 5 -->
-
-                <div class="workflow-step">
-
-                    <div class="workflow-number">
-                        5
-                    </div>
-
-                    <div>
-
-                        <h3>
-                            Progress Report 1
-                        </h3>
-
-                        <p>
-                            Student submits the first progress report for Guide review.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="workflow-line"></div>
-
-
-
-                <!-- STEP 6 -->
-
-                <div class="workflow-step">
-
-                    <div class="workflow-number">
-                        6
-                    </div>
-
-                    <div>
-
-                        <h3>
-                            Progress Report 2
-                        </h3>
-
-                        <p>
-                            Student submits Progress Report 2 after Report 1
-                            has been reviewed.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="workflow-line"></div>
-
-
-
-                <!-- STEP 7 -->
-
-                <div class="workflow-step">
-
-                    <div class="workflow-number">
-                        7
-                    </div>
-
-                    <div>
-
-                        <h3>
-                            Progress Report 3
-                        </h3>
-
-                        <p>
-                            Student submits Progress Report 3 after Report 2
-                            has been reviewed.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="workflow-line"></div>
-
-
-
-                <!-- STEP 8 -->
-
-                <div class="workflow-step">
-
-                    <div class="workflow-number">
-                        8
-                    </div>
-
-                    <div>
-
-                        <h3>
-                            Final Report
-                        </h3>
-
-                        <p>
-                            Student submits the Final Report after Progress
-                            Report 3 has been reviewed.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="workflow-line"></div>
-
-
-
-                <!-- STEP 9 -->
-
-                <div class="workflow-step">
-
-                    <div class="workflow-number">
-                        9
-                    </div>
-
-                    <div>
-
-                        <h3>
-                            Final Evaluation
-                        </h3>
-
-                        <p>
-                            Guide reviews the Final Report and enters the final
-                            project mark.
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-                <div class="workflow-line"></div>
-
-
-
-                <!-- STEP 10 -->
-
-                <div class="workflow-step">
-
-                    <div class="workflow-number">
-                        10
-                    </div>
-
-                    <div>
-
-                        <h3>
-                            Project Completed
-                        </h3>
-
-                        <p>
-                            Final mark is displayed on the Student Dashboard
-                            and the project is completed.
-                        </p>
-
-                    </div>
-
-                </div>
+                    {% if not forloop.last %}
+                        <div class="workflow-line"></div>
+                    {% endif %}
+
+                {% endfor %}
 
 
             </div>
