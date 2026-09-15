@@ -170,14 +170,29 @@ class ProposalChangeRequest(models.Model):
 class ProjectProgress(models.Model):
 
     REPORT_CHOICES = [
-        ("WEEKLY_PROGRESS", "Weekly Progress"),
-        ("FINAL_REPORT", "Final Report"),
+        (
+            "WEEKLY_PROGRESS",
+            "Weekly Progress Report"
+        ),
+        (
+            "FINAL_REPORT",
+            "Final Report"
+        ),
     ]
 
     STATUS_CHOICES = [
-        ("SUBMITTED", "Submitted"),
-        ("REVIEWED", "Reviewed"),
-        ("CHANGES_REQUIRED", "Changes Required"),
+        (
+            "SUBMITTED",
+            "Submitted"
+        ),
+        (
+            "REVIEWED",
+            "Reviewed"
+        ),
+        (
+            "CHANGES_REQUIRED",
+            "Changes Required"
+        ),
     ]
 
     project = models.ForeignKey(
@@ -190,7 +205,9 @@ class ProjectProgress(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="progress_reports",
-        limit_choices_to={"role": "STUDENT"},
+        limit_choices_to={
+            "role": "STUDENT"
+        }
     )
 
     report_type = models.CharField(
@@ -231,11 +248,13 @@ class ProjectProgress(models.Model):
     )
 
     class Meta:
-        ordering = ["submitted_at"]
+        ordering = [
+            "submitted_at"
+        ]
 
     def __str__(self):
+
         return (
             f"{self.project.title} - "
-            f"{self.get_report_type_display()} - "
-            f"{self.title}"
+            f"{self.get_report_type_display()}"
         )

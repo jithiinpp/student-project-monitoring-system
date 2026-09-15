@@ -42,14 +42,18 @@ class GuideEvaluationForm(forms.ModelForm):
 
     def clean_marks(self):
 
-        marks = self.cleaned_data.get("marks")
+        marks = self.cleaned_data.get(
+            "marks"
+        )
 
         if marks is None:
+
             raise forms.ValidationError(
                 "Please enter the final mark."
             )
 
         if marks < 0 or marks > 100:
+
             raise forms.ValidationError(
                 "Final mark must be between 0 and 100."
             )

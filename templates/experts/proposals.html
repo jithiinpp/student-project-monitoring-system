@@ -1,157 +1,363 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title %}My Proposals | Expert{% endblock %}
+<head>
 
-{% block extra_css %}
+    <meta charset="UTF-8">
 
-<style>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    .proposals-page {
-        padding: 30px;
-        max-width: 1400px;
-        margin: auto;
-    }
+    <title>My Proposals | SPMS</title>
 
-    .page-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 25px;
-    }
+    <style>
 
-    .page-header h1 {
-        margin: 0;
-        color: #1f2937;
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    .page-header p {
-        color: #6b7280;
-    }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1e293b;
+        }
 
-    .btn {
-        display: inline-block;
-        padding: 10px 16px;
-        border-radius: 7px;
-        text-decoration: none;
-        border: none;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 14px;
-    }
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 245px;
+            height: 100vh;
+            background: #0f172a;
+            padding: 24px 14px;
+        }
 
-    .btn-primary {
-        background: #1d72f3;
-        color: white;
-    }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+            padding: 0 12px 30px;
+        }
 
-    .btn-dark {
-        background: #12161f;
-        color: white;
-    }
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .table-card {
-        background: white;
-        border-radius: 12px;
-        padding: 25px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-        overflow-x: auto;
-    }
+        .logo-icon svg {
+            width: 21px;
+            stroke: white;
+        }
 
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
+        .nav-title {
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 10px 12px;
+        }
 
-    th {
-        background: #f4f6f9;
-        color: #374151;
-        text-align: left;
-        padding: 14px;
-        font-size: 14px;
-    }
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            margin-bottom: 5px;
+            color: #cbd5e1;
+            text-decoration: none;
+            border-radius: 9px;
+            font-size: 14px;
+        }
 
-    td {
-        padding: 14px;
-        border-bottom: 1px solid #e5e7eb;
-        color: #4b5563;
-        font-size: 14px;
-    }
+        .nav-link:hover {
+            background: #1e293b;
+            color: white;
+        }
 
-    tr:hover {
-        background: #f9fafb;
-    }
+        .nav-link.active {
+            background: #2563eb;
+            color: white;
+        }
 
-    .status {
-        display: inline-block;
-        padding: 6px 10px;
-        border-radius: 20px;
-        font-size: 12px;
-        font-weight: 600;
-    }
+        .nav-icon svg {
+            width: 19px;
+            height: 19px;
+            stroke: currentColor;
+        }
 
-    .status-assigned {
-        background: #fff7ed;
-        color: #c2410c;
-    }
+        .logout {
+            position: absolute;
+            bottom: 20px;
+            left: 14px;
+            right: 14px;
+        }
 
-    .status-approved {
-        background: #ecfdf5;
-        color: #15803d;
-    }
+        .main {
+            margin-left: 245px;
+            padding: 35px;
+        }
 
-    .status-changes {
-        background: #fef2f2;
-        color: #dc2626;
-    }
+        .header {
+            margin-bottom: 25px;
+        }
 
-    .status-other {
-        background: #eff6ff;
-        color: #1d4ed8;
-    }
+        .header h1 {
+            font-size: 28px;
+            color: #0f172a;
+            margin-bottom: 7px;
+        }
 
-    .empty {
-        text-align: center;
-        padding: 50px;
-        color: #6b7280;
-    }
+        .header p {
+            color: #64748b;
+            font-size: 14px;
+        }
 
-    .back-button {
-        margin-top: 20px;
-    }
+        .search-box {
+            margin-bottom: 20px;
+        }
 
-</style>
+        .search-box input {
+            width: 100%;
+            max-width: 500px;
+            padding: 13px 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            outline: none;
+            font-size: 14px;
+        }
 
-{% endblock %}
+        .search-box input:focus {
+            border-color: #2563eb;
+        }
+
+        .table-card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            overflow: hidden;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            background: #f8fafc;
+            padding: 15px;
+            color: #64748b;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 17px 15px;
+            border-top: 1px solid #e2e8f0;
+            font-size: 13px;
+        }
+
+        .title {
+            font-weight: 600;
+            color: #0f172a;
+        }
+
+        .student {
+            color: #64748b;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 10px;
+            border-radius: 20px;
+            background: #eff6ff;
+            color: #2563eb;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            background: #2563eb;
+            color: white;
+            text-decoration: none;
+            border-radius: 7px;
+            font-size: 12px;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .empty {
+            padding: 60px 20px;
+            text-align: center;
+            color: #64748b;
+        }
+
+        @media(max-width: 750px) {
+
+            .sidebar {
+                width: 210px;
+            }
+
+            .main {
+                margin-left: 210px;
+                padding: 20px;
+            }
+
+            .table-card {
+                overflow-x: auto;
+            }
+
+            table {
+                min-width: 700px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
 
 
-{% block content %}
+<aside class="sidebar">
 
-<div class="proposals-page">
+    <div class="logo">
 
-    <div class="page-header">
+        <div class="logo-icon">
 
-        <div>
-            <h1>Assigned Proposals</h1>
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke-width="2">
 
-            <p>
-                Total proposals assigned to you:
-                <strong>{{ total_proposals }}</strong>
-            </p>
+                <path d="M12 3L3 7l9 4 9-4-9-4z"/>
+                <path d="M5 10v5c0 2 3 4 7 4s7-2 7-4v-5"/>
+
+            </svg>
+
         </div>
 
-        <a
-            href="{% url 'experts:dashboard' %}"
-            class="btn btn-dark"
+        SPMS
+
+    </div>
+
+
+    <div class="nav-title">
+        Expert Menu
+    </div>
+
+
+    <a href="{% url 'experts:dashboard' %}"
+       class="nav-link">
+
+        <span class="nav-icon">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke-width="2">
+
+                <rect x="3" y="3" width="7" height="7"/>
+                <rect x="14" y="3" width="7" height="7"/>
+                <rect x="3" y="14" width="7" height="7"/>
+                <rect x="14" y="14" width="7" height="7"/>
+
+            </svg>
+
+        </span>
+
+        Dashboard
+
+    </a>
+
+
+    <a href="{% url 'experts:my_proposals' %}"
+       class="nav-link active">
+
+        <span class="nav-icon">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke-width="2">
+
+                <path d="M4 4h16v16H4z"/>
+                <path d="M8 8h8"/>
+                <path d="M8 12h8"/>
+                <path d="M8 16h5"/>
+
+            </svg>
+
+        </span>
+
+        My Proposals
+
+    </a>
+
+
+    <a href="{% url 'accounts:logout' %}"
+       class="nav-link logout">
+
+        <span class="nav-icon">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke-width="2">
+
+                <path d="M10 17l5-5-5-5"/>
+                <path d="M15 12H3"/>
+                <path d="M21 3v18"/>
+
+            </svg>
+
+        </span>
+
+        Logout
+
+    </a>
+
+</aside>
+
+
+<main class="main">
+
+    <div class="header">
+
+        <h1>My Assigned Proposals</h1>
+
+        <p>
+            Review project proposals assigned to you as a Domain Expert.
+        </p>
+
+    </div>
+
+
+    <div class="search-box">
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Search proposal or student..."
+            onkeyup="searchProposals()"
         >
-            ← Back to Dashboard
-        </a>
 
     </div>
 
 
     <div class="table-card">
-
-        {% if proposals %}
 
         <table>
 
@@ -159,109 +365,81 @@
 
                 <tr>
 
-                    <th>#</th>
-
+                    <th>Proposal</th>
                     <th>Student</th>
-
-                    <th>Project Title</th>
-
                     <th>Domain</th>
-
-                    <th>Technologies</th>
-
                     <th>Status</th>
-
                     <th>Action</th>
 
                 </tr>
 
             </thead>
 
-
-            <tbody>
+            <tbody id="proposalTable">
 
                 {% for proposal in proposals %}
 
-                <tr>
+                    <tr>
 
-                    <td>
-                        {{ forloop.counter }}
-                    </td>
+                        <td class="title">
+                            {{ proposal.title }}
+                        </td>
 
-
-                    <td>
-
-                        <strong>
+                        <td class="student">
                             {{ proposal.student.get_full_name|default:proposal.student.username }}
-                        </strong>
+                        </td>
 
-                        <br>
+                        <td>
+                            {{ proposal.domain|default:"-" }}
+                        </td>
 
-                        <small>
-                            {{ proposal.student.username }}
-                        </small>
+                        <td>
 
-                    </td>
-
-
-                    <td>
-                        {{ proposal.title }}
-                    </td>
-
-
-                    <td>
-                        {{ proposal.domain|default:"-" }}
-                    </td>
-
-
-                    <td>
-                        {{ proposal.technologies|default:"-" }}
-                    </td>
-
-
-                    <td>
-
-                        {% if proposal.status == "EXPERT_ASSIGNED" %}
-
-                            <span class="status status-assigned">
-                                Expert Assigned
-                            </span>
-
-                        {% elif proposal.status == "EXPERT_APPROVED" %}
-
-                            <span class="status status-approved">
-                                Expert Approved
-                            </span>
-
-                        {% elif proposal.status == "CHANGES_REQUESTED" %}
-
-                            <span class="status status-changes">
-                                Changes Requested
-                            </span>
-
-                        {% else %}
-
-                            <span class="status status-other">
+                            <span class="status">
                                 {{ proposal.get_status_display }}
                             </span>
 
-                        {% endif %}
+                        </td>
 
-                    </td>
+                        <td>
 
+                            <a
+                                href="{% url 'experts:proposal_detail' proposal.id %}"
+                                class="btn"
+                            >
 
-                    <td>
+                                Review
 
-                        <a
-                            href="{% url 'experts:proposal_detail' proposal.id %}"
-                            class="btn btn-primary"
-                        >
-                            View / Review
-                        </a>
+                                <svg width="13"
+                                     height="13"
+                                     viewBox="0 0 24 24"
+                                     fill="none"
+                                     stroke="currentColor"
+                                     stroke-width="2">
 
-                    </td>
+                                    <path d="M9 18l6-6-6-6"/>
 
-                </tr>
+                                </svg>
+
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td colspan="5">
+
+                            <div class="empty">
+                                No proposals have been assigned to you yet.
+                            </div>
+
+                        </td>
+
+                    </tr>
 
                 {% endfor %}
 
@@ -269,35 +447,40 @@
 
         </table>
 
-        {% else %}
-
-            <div class="empty">
-
-                <h3>No Proposals Assigned</h3>
-
-                <p>
-                    The Coordinator has not assigned any project
-                    proposals to you yet.
-                </p>
-
-            </div>
-
-        {% endif %}
-
     </div>
 
+</main>
 
-    <div class="back-button">
 
-        <a
-            href="{% url 'experts:dashboard' %}"
-            class="btn btn-dark"
-        >
-            ← Back to Dashboard
-        </a>
+<script>
 
-    </div>
+function searchProposals() {
 
-</div>
+    const input =
+        document.getElementById("searchInput")
+        .value
+        .toLowerCase();
 
-{% endblock %}
+    const rows =
+        document.querySelectorAll(
+            "#proposalTable tr"
+        );
+
+    rows.forEach(function(row) {
+
+        const text =
+            row.innerText.toLowerCase();
+
+        row.style.display =
+            text.includes(input)
+                ? ""
+                : "none";
+
+    });
+
+}
+
+</script>
+
+</body>
+</html>

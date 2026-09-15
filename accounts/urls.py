@@ -150,4 +150,10 @@ urlpatterns = [
         views.panel_dashboard,
         name="panel_dashboard"
     ),
+
+    path(
+        "final-mark/",
+        views.student_final_mark,
+         name="student_final_mark"
+    ),
 ]

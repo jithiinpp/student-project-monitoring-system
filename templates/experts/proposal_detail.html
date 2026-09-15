@@ -1,191 +1,437 @@
-{% extends "base.html" %}
+<!DOCTYPE html>
+<html lang="en">
 
-{% block title %}Proposal Details | Expert{% endblock %}
+<head>
 
-{% block extra_css %}
+    <meta charset="UTF-8">
 
-<style>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    .proposal-page {
-        max-width: 1100px;
-        margin: auto;
-        padding: 30px;
-    }
+    <title>Review Proposal | SPMS</title>
 
-    .page-header {
-        margin-bottom: 25px;
-    }
+    <style>
 
-    .page-header h1 {
-        margin: 0;
-        color: #1f2937;
-    }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-    .page-header p {
-        color: #6b7280;
-    }
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1e293b;
+        }
 
-    .card {
-        background: white;
-        border-radius: 12px;
-        padding: 25px;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-    }
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 245px;
+            height: 100vh;
+            background: #0f172a;
+            padding: 24px 14px;
+        }
 
-    .card h2 {
-        margin-top: 0;
-        color: #1f2937;
-        border-bottom: 1px solid #e5e7eb;
-        padding-bottom: 12px;
-    }
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: white;
+            font-size: 20px;
+            font-weight: 700;
+            padding: 0 12px 30px;
+        }
 
-    .info-grid {
-        display: grid;
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-    }
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            background: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
 
-    .info-item {
-        background: #f9fafb;
-        padding: 15px;
-        border-radius: 8px;
-    }
+        .logo-icon svg {
+            width: 21px;
+            stroke: white;
+        }
 
-    .label {
-        font-size: 12px;
-        color: #6b7280;
-        margin-bottom: 5px;
-    }
+        .nav-title {
+            color: #64748b;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 10px 12px;
+        }
 
-    .value {
-        color: #111827;
-        font-weight: 600;
-    }
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            margin-bottom: 5px;
+            color: #cbd5e1;
+            text-decoration: none;
+            border-radius: 9px;
+            font-size: 14px;
+        }
 
-    .text-content {
-        color: #374151;
-        line-height: 1.7;
-        white-space: pre-line;
-    }
+        .nav-link:hover {
+            background: #1e293b;
+            color: white;
+        }
 
-    .status {
-        display: inline-block;
-        padding: 7px 13px;
-        border-radius: 20px;
-        font-size: 13px;
-        font-weight: 600;
-        background: #eff6ff;
-        color: #1d4ed8;
-    }
+        .nav-link.active {
+            background: #2563eb;
+            color: white;
+        }
 
-    .document-link {
-        display: inline-block;
-        margin-top: 10px;
-        padding: 10px 15px;
-        background: #1d72f3;
-        color: white;
-        text-decoration: none;
-        border-radius: 7px;
-    }
+        .nav-icon svg {
+            width: 19px;
+            height: 19px;
+            stroke: currentColor;
+        }
 
-    .review-box {
-        background: #f8fafc;
-        border: 1px solid #e5e7eb;
-        border-radius: 10px;
-        padding: 25px;
-    }
+        .logout {
+            position: absolute;
+            bottom: 20px;
+            left: 14px;
+            right: 14px;
+        }
 
-    textarea {
-        width: 100%;
-        min-height: 150px;
-        padding: 12px;
-        border: 1px solid #d1d5db;
-        border-radius: 7px;
-        resize: vertical;
-        font-family: inherit;
-        box-sizing: border-box;
-    }
+        .main {
+            margin-left: 245px;
+            padding: 35px;
+        }
 
-    textarea:focus {
-        outline: none;
-        border-color: #1d72f3;
-    }
+        .back {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            color: #2563eb;
+            text-decoration: none;
+            font-size: 13px;
+            margin-bottom: 18px;
+        }
 
-    .review-buttons {
-        display: flex;
-        gap: 12px;
-        margin-top: 15px;
-    }
+        .header {
+            margin-bottom: 25px;
+        }
 
-    .btn {
-        display: inline-block;
-        padding: 11px 18px;
-        border-radius: 7px;
-        text-decoration: none;
-        border: none;
-        cursor: pointer;
-        font-weight: 600;
-        font-size: 14px;
-    }
+        .header h1 {
+            font-size: 27px;
+            color: #0f172a;
+            margin-bottom: 7px;
+        }
 
-    .btn-success {
-        background: #16a34a;
-        color: white;
-    }
+        .header p {
+            color: #64748b;
+            font-size: 14px;
+        }
 
-    .btn-warning {
-        background: #f59e0b;
-        color: white;
-    }
+        .grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 22px;
+        }
 
-    .btn-dark {
-        background: #12161f;
-        color: white;
-    }
+        .card {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 14px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
 
-    .expert-comment {
-        background: #fff7ed;
-        border-left: 4px solid #f59e0b;
-        padding: 15px;
-        margin-top: 15px;
-        color: #374151;
-    }
+        .card h2 {
+            font-size: 17px;
+            color: #0f172a;
+            margin-bottom: 20px;
+        }
 
-    @media (max-width: 700px) {
+        .field {
+            margin-bottom: 20px;
+        }
 
-        .proposal-page {
+        .label {
+            font-size: 11px;
+            color: #64748b;
+            text-transform: uppercase;
+            font-weight: 700;
+            margin-bottom: 7px;
+        }
+
+        .value {
+            color: #334155;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 7px 11px;
+            border-radius: 20px;
+            background: #eff6ff;
+            color: #2563eb;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .document {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 13px;
+            border: 1px solid #dbeafe;
+            background: #eff6ff;
+            color: #2563eb;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: 13px;
+        }
+
+        .document svg {
+            width: 17px;
+            height: 17px;
+            stroke: currentColor;
+        }
+
+        .review-form textarea {
+            width: 100%;
+            min-height: 130px;
+            resize: vertical;
+            border: 1px solid #cbd5e1;
+            border-radius: 9px;
+            padding: 12px;
+            font-family: inherit;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .review-form textarea:focus {
+            border-color: #2563eb;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .btn {
+            border: none;
+            padding: 11px 16px;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .approve {
+            background: #2563eb;
+            color: white;
+        }
+
+        .approve:hover {
+            background: #1d4ed8;
+        }
+
+        .changes {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .changes:hover {
+            background: #d97706;
+        }
+
+        .reject {
+            background: #dc2626;
+            color: white;
+        }
+
+        .reject:hover {
+            background: #b91c1c;
+        }
+
+        .student-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
             padding: 15px;
+            border-radius: 10px;
         }
 
-        .info-grid {
-            grid-template-columns: 1fr;
+        .student-name {
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 5px;
         }
 
-        .review-buttons {
-            flex-direction: column;
+        .student-info {
+            color: #64748b;
+            font-size: 12px;
+            line-height: 1.6;
         }
 
-    }
+        .expert-comment {
+            background: #f8fafc;
+            padding: 14px;
+            border-radius: 9px;
+            color: #475569;
+            font-size: 13px;
+            line-height: 1.6;
+        }
 
-</style>
+        @media(max-width: 900px) {
 
-{% endblock %}
+            .sidebar {
+                width: 210px;
+            }
+
+            .main {
+                margin-left: 210px;
+                padding: 20px;
+            }
+
+            .grid {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
 
 
-{% block content %}
+<aside class="sidebar">
 
-<div class="proposal-page">
+    <div class="logo">
+
+        <div class="logo-icon">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke-width="2">
+
+                <path d="M12 3L3 7l9 4 9-4-9-4z"/>
+                <path d="M5 10v5c0 2 3 4 7 4s7-2 7-4v-5"/>
+
+            </svg>
+
+        </div>
+
+        SPMS
+
+    </div>
 
 
-    <!-- =====================================================
-         HEADER
-    ====================================================== -->
+    <div class="nav-title">
+        Expert Menu
+    </div>
 
-    <div class="page-header">
+
+    <a href="{% url 'experts:dashboard' %}"
+       class="nav-link">
+
+        <span class="nav-icon">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke-width="2">
+
+                <rect x="3" y="3" width="7" height="7"/>
+                <rect x="14" y="3" width="7" height="7"/>
+                <rect x="3" y="14" width="7" height="7"/>
+                <rect x="14" y="14" width="7" height="7"/>
+
+            </svg>
+
+        </span>
+
+        Dashboard
+
+    </a>
+
+
+    <a href="{% url 'experts:my_proposals' %}"
+       class="nav-link active">
+
+        <span class="nav-icon">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke-width="2">
+
+                <path d="M4 4h16v16H4z"/>
+                <path d="M8 8h8"/>
+                <path d="M8 12h8"/>
+                <path d="M8 16h5"/>
+
+            </svg>
+
+        </span>
+
+        My Proposals
+
+    </a>
+
+
+    <a href="{% url 'accounts:logout' %}"
+       class="nav-link logout">
+
+        <span class="nav-icon">
+
+            <svg viewBox="0 0 24 24"
+                 fill="none"
+                 stroke-width="2">
+
+                <path d="M10 17l5-5-5-5"/>
+                <path d="M15 12H3"/>
+                <path d="M21 3v18"/>
+
+            </svg>
+
+        </span>
+
+        Logout
+
+    </a>
+
+</aside>
+
+
+<main class="main">
+
+
+    <a href="{% url 'experts:my_proposals' %}"
+       class="back">
+
+        <svg width="16"
+             height="16"
+             viewBox="0 0 24 24"
+             fill="none"
+             stroke="currentColor"
+             stroke-width="2">
+
+            <path d="M15 18l-6-6 6-6"/>
+
+        </svg>
+
+        Back to My Proposals
+
+    </a>
+
+
+    <div class="header">
 
         <h1>
-            Proposal Details
+            {{ proposal.title }}
         </h1>
 
         <p>
@@ -195,297 +441,316 @@
     </div>
 
 
-    <!-- =====================================================
-         BASIC INFORMATION
-    ====================================================== -->
+    <div class="grid">
 
-    <div class="card">
 
-        <h2>
-            Project Information
-        </h2>
+        <!-- =========================
+             LEFT
+        ========================= -->
 
-        <div class="info-grid">
+        <div>
 
-            <div class="info-item">
 
-                <div class="label">
-                    Project Title
+            <div class="card">
+
+                <h2>
+                    Proposal Details
+                </h2>
+
+
+                <div class="field">
+
+                    <div class="label">
+                        Project Title
+                    </div>
+
+                    <div class="value">
+                        {{ proposal.title }}
+                    </div>
+
                 </div>
 
-                <div class="value">
-                    {{ proposal.title }}
+
+                <div class="field">
+
+                    <div class="label">
+                        Domain
+                    </div>
+
+                    <div class="value">
+                        {{ proposal.domain|default:"Not specified" }}
+                    </div>
+
                 </div>
+
+
+                <div class="field">
+
+                    <div class="label">
+                        Technologies
+                    </div>
+
+                    <div class="value">
+                        {{ proposal.technologies|default:"Not specified" }}
+                    </div>
+
+                </div>
+
+
+                <div class="field">
+
+                    <div class="label">
+                        Abstract
+                    </div>
+
+                    <div class="value">
+                        {{ proposal.abstract|default:"No abstract provided." }}
+                    </div>
+
+                </div>
+
+
+                <div class="field">
+
+                    <div class="label">
+                        Description
+                    </div>
+
+                    <div class="value">
+                        {{ proposal.description|default:"No description provided." }}
+                    </div>
+
+                </div>
+
+
+                {% if proposal.proposal_document %}
+
+                    <div class="field">
+
+                        <div class="label">
+                            Proposal Document
+                        </div>
+
+                        <a href="{{ proposal.proposal_document.url }}"
+                           target="_blank"
+                           class="document">
+
+                            <svg viewBox="0 0 24 24"
+                                 fill="none"
+                                 stroke-width="2">
+
+                                <path d="M6 3h9l3 3v15H6z"/>
+                                <path d="M15 3v4h4"/>
+
+                            </svg>
+
+                            View Proposal Document
+
+                        </a>
+
+                    </div>
+
+                {% endif %}
 
             </div>
 
 
-            <div class="info-item">
+            {% if proposal.expert_comments %}
 
-                <div class="label">
-                    Student
-                </div>
+                <div class="card">
 
-                <div class="value">
+                    <h2>
+                        Previous Expert Comment
+                    </h2>
 
-                    {{ proposal.student.get_full_name|default:proposal.student.username }}
-
-                </div>
-
-            </div>
-
-
-            <div class="info-item">
-
-                <div class="label">
-                    Username
-                </div>
-
-                <div class="value">
-                    {{ proposal.student.username }}
-                </div>
-
-            </div>
-
-
-            <div class="info-item">
-
-                <div class="label">
-                    Domain
-                </div>
-
-                <div class="value">
-                    {{ proposal.domain|default:"Not specified" }}
-                </div>
-
-            </div>
-
-
-            <div class="info-item">
-
-                <div class="label">
-                    Technologies
-                </div>
-
-                <div class="value">
-                    {{ proposal.technologies|default:"Not specified" }}
-                </div>
-
-            </div>
-
-
-            <div class="info-item">
-
-                <div class="label">
-                    Status
-                </div>
-
-                <div class="value">
-
-                    <span class="status">
-                        {{ proposal.get_status_display }}
-                    </span>
+                    <div class="expert-comment">
+                        {{ proposal.expert_comments }}
+                    </div>
 
                 </div>
 
-            </div>
-
-        </div>
-
-    </div>
+            {% endif %}
 
 
-    <!-- =====================================================
-         ABSTRACT
-    ====================================================== -->
+            <!-- =========================
+                 REVIEW FORM
+            ========================= -->
 
-    <div class="card">
+            {% if proposal.status == "EXPERT_ASSIGNED" or proposal.status == "CHANGES_REQUESTED" %}
 
-        <h2>
-            Abstract
-        </h2>
+                <div class="card">
 
-        <div class="text-content">
-
-            {{ proposal.abstract|default:"No abstract provided." }}
-
-        </div>
-
-    </div>
+                    <h2>
+                        Submit Review
+                    </h2>
 
 
-    <!-- =====================================================
-         DESCRIPTION
-    ====================================================== -->
-
-    <div class="card">
-
-        <h2>
-            Project Description
-        </h2>
-
-        <div class="text-content">
-
-            {{ proposal.description|default:"No project description provided." }}
-
-        </div>
-
-    </div>
-
-
-    <!-- =====================================================
-         DOCUMENT
-    ====================================================== -->
-
-    {% if proposal.proposal_document %}
-
-    <div class="card">
-
-        <h2>
-            Proposal Document
-        </h2>
-
-        <a
-            href="{{ proposal.proposal_document.url }}"
-            target="_blank"
-            class="document-link"
-        >
-            View Proposal PDF
-        </a>
-
-    </div>
-
-    {% endif %}
-
-
-    <!-- =====================================================
-         PREVIOUS EXPERT COMMENT
-    ====================================================== -->
-
-    {% if proposal.expert_comments %}
-
-    <div class="card">
-
-        <h2>
-            Expert Comments
-        </h2>
-
-        <div class="expert-comment">
-
-            {{ proposal.expert_comments }}
-
-        </div>
-
-    </div>
-
-    {% endif %}
-
-
-    <!-- =====================================================
-         REVIEW SECTION
-    ====================================================== -->
-
-    {% if proposal.status == "EXPERT_ASSIGNED" or proposal.status == "SUBMITTED" or proposal.status == "CHANGES_REQUESTED" %}
-
-    <div class="card">
-
-        <h2>
-            Review Proposal
-        </h2>
-
-        <div class="review-box">
-
-            <form
-                method="POST"
-                action="{% url 'experts:review_proposal' proposal.id %}"
-            >
-
-                {% csrf_token %}
-
-                <label>
-                    <strong>
-                        Comments / Feedback
-                    </strong>
-                </label>
-
-                <br><br>
-
-                <textarea
-                    name="comments"
-                    placeholder="Enter your review comments or changes required..."
-                ></textarea>
-
-
-                <div class="review-buttons">
-
-                    <button
-                        type="submit"
-                        name="decision"
-                        value="approve"
-                        class="btn btn-success"
+                    <form
+                        method="POST"
+                        action="{% url 'experts:review_proposal' proposal.id %}"
+                        class="review-form"
                     >
-                        ✓ Approve Proposal
-                    </button>
+
+                        {% csrf_token %}
 
 
-                    <button
-                        type="submit"
-                        name="decision"
-                        value="changes"
-                        class="btn btn-warning"
-                    >
-                        Request Changes
-                    </button>
+                        <div class="field">
+
+                            <div class="label">
+                                Comments
+                            </div>
+
+                            <textarea
+                                name="comments"
+                                placeholder="Enter your review comments..."
+                            ></textarea>
+
+                        </div>
+
+
+                        <div class="actions">
+
+
+                            <button
+                                type="submit"
+                                name="decision"
+                                value="approve"
+                                class="btn approve"
+                            >
+
+                                Approve
+
+                            </button>
+
+
+                            <button
+                                type="submit"
+                                name="decision"
+                                value="changes"
+                                class="btn changes"
+                            >
+
+                                Request Changes
+
+                            </button>
+
+
+                            <button
+                                type="submit"
+                                name="decision"
+                                value="reject"
+                                class="btn reject"
+                            >
+
+                                Reject
+
+                            </button>
+
+
+                        </div>
+
+                    </form>
 
                 </div>
 
-            </form>
+            {% endif %}
+
+
+        </div>
+
+
+        <!-- =========================
+             RIGHT
+        ========================= -->
+
+        <div>
+
+
+            <div class="card">
+
+                <h2>
+                    Proposal Status
+                </h2>
+
+                <span class="status">
+                    {{ proposal.get_status_display }}
+                </span>
+
+            </div>
+
+
+            <div class="card">
+
+                <h2>
+                    Student Information
+                </h2>
+
+
+                <div class="student-box">
+
+                    <div class="student-name">
+
+                        {{ proposal.student.get_full_name|default:proposal.student.username }}
+
+                    </div>
+
+
+                    <div class="student-info">
+
+                        Username:
+                        {{ proposal.student.username }}
+
+                        <br>
+
+                        Roll Number:
+                        {{ proposal.student.roll_number|default:"-" }}
+
+                        <br>
+
+                        Department:
+                        {{ proposal.student.department|default:"-" }}
+
+                        <br>
+
+                        Semester:
+                        {{ proposal.student.semester|default:"-" }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="card">
+
+                <h2>
+                    Assigned Expert
+                </h2>
+
+                <div class="student-box">
+
+                    <div class="student-name">
+
+                        {{ proposal.domain_expert.get_full_name|default:proposal.domain_expert.username }}
+
+                    </div>
+
+                    <div class="student-info">
+                        Domain Expert
+                    </div>
+
+                </div>
+
+            </div>
+
 
         </div>
 
     </div>
 
-    {% endif %}
+</main>
 
+</body>
 
-    <!-- =====================================================
-         ALREADY APPROVED
-    ====================================================== -->
-
-    {% if proposal.status == "EXPERT_APPROVED" %}
-
-    <div class="card">
-
-        <h2>
-            Review Status
-        </h2>
-
-        <p>
-            This proposal has already been approved by you
-            and has been sent back to the Coordinator for
-            final approval.
-        </p>
-
-    </div>
-
-    {% endif %}
-
-
-    <!-- =====================================================
-         BACK BUTTON
-    ====================================================== -->
-
-    <div>
-
-        <a
-            href="{% url 'experts:dashboard' %}"
-            class="btn btn-dark"
-        >
-            ← Back to Dashboard
-        </a>
-
-    </div>
-
-</div>
-
-{% endblock %}
+</html>

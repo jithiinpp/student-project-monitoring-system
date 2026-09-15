@@ -16,6 +16,8 @@ from projects.models import (
     ProjectProgress,
 )
 
+from guides.models import GuideEvaluation
+
 
 # ============================================================
 # REPORT SEQUENCE
@@ -316,20 +318,6 @@ def student_dashboard(request):
     )
 
     # ========================================================
-    # FINAL EVALUATION / FINAL MARK
-    # ========================================================
-
-    evaluation = None
-
-    if project:
-
-        evaluation = getattr(
-            project,
-            "guide_evaluation",
-            None
-        )
-
-    # ========================================================
     # STUDENT WORKFLOW STATUS
     # ========================================================
 
@@ -345,57 +333,113 @@ def student_dashboard(request):
         "COMPLETED": 10,
     }
 
-    current_status = project.status if project else "SUBMITTED"
-    current_workflow_step = workflow_status_map.get(current_status, 1)
+    current_status = (
+        project.status
+        if project
+        else "SUBMITTED"
+    )
+
+    current_workflow_step = workflow_status_map.get(
+        current_status,
+        1
+    )
 
     workflow_steps = [
+
         {
             "number": 1,
             "title": "Submit Proposals",
             "description": "Student can submit up to 3 project proposals.",
-            "state": "complete" if current_workflow_step > 1 else "active" if current_status == "SUBMITTED" else "pending",
+            "state":
+                "complete"
+                if current_workflow_step > 1
+                else "active"
+                if current_status == "SUBMITTED"
+                else "pending",
         },
+
         {
             "number": 2,
             "title": "Domain Expert Review",
             "description": "Domain Expert reviews the proposals and recommends one project.",
-            "state": "complete" if current_workflow_step > 2 else "active" if current_workflow_step == 2 else "pending",
+            "state":
+                "complete"
+                if current_workflow_step > 2
+                else "active"
+                if current_workflow_step == 2
+                else "pending",
         },
+
         {
             "number": 3,
             "title": "Coordinator Approval",
             "description": "Coordinator gives final approval for the selected project.",
-            "state": "complete" if current_workflow_step > 3 else "active" if current_workflow_step == 3 else "pending",
+            "state":
+                "complete"
+                if current_workflow_step > 3
+                else "active"
+                if current_workflow_step == 3
+                else "pending",
         },
+
         {
             "number": 4,
             "title": "Guide Assignment",
             "description": "Coordinator assigns a Guide to the approved project.",
-            "state": "complete" if current_workflow_step > 4 else "active" if current_workflow_step == 4 else "pending",
+            "state":
+                "complete"
+                if current_workflow_step > 4
+                else "active"
+                if current_workflow_step == 4
+                else "pending",
         },
+
         {
             "number": 5,
             "title": "Project Progress",
             "description": "Student completes project progress work and the required reports.",
-            "state": "complete" if current_workflow_step > 5 else "active" if current_workflow_step == 5 else "pending",
+            "state":
+                "complete"
+                if current_workflow_step > 5
+                else "active"
+                if current_workflow_step == 5
+                else "pending",
         },
+
         {
             "number": 6,
             "title": "Final Report",
             "description": "Student submits the final report for assessment.",
-            "state": "complete" if current_workflow_step >= 10 else "active" if current_workflow_step == 6 else "pending",
+            "state":
+                "complete"
+                if current_workflow_step >= 10
+                else "active"
+                if current_workflow_step == 6
+                else "pending",
         },
+
         {
             "number": 7,
             "title": "Final Evaluation",
             "description": "Guide reviews the Final Report and enters the project mark.",
-            "state": "complete" if current_workflow_step >= 10 else "active" if current_workflow_step == 7 else "pending",
+            "state":
+                "complete"
+                if current_workflow_step >= 10
+                else "active"
+                if current_workflow_step == 7
+                else "pending",
         },
+
         {
             "number": 8,
             "title": "Project Completed",
-            "description": "Final mark is displayed on the dashboard and the project is completed.",
-            "state": "complete" if current_workflow_step >= 10 else "active" if current_workflow_step == 8 else "pending",
+            "description": "Final mark is available in the Final Mark page and the project is completed.",
+            "state":
+                "complete"
+                if current_workflow_step >= 10
+                else "active"
+                if current_workflow_step == 8
+                else "pending",
         },
     ]
 
@@ -414,20 +458,82 @@ def student_dashboard(request):
         "approved_count": approved_count,
 
         "current_workflow_step": current_workflow_step,
+
         "current_workflow_status": current_status,
-        "current_workflow_status_display": project.get_status_display() if project else "Not Started",
+
+        "current_workflow_status_display":
+            project.get_status_display()
+            if project
+            else "Not Started",
+
         "workflow_steps": workflow_steps,
 
         # Active project
         "project": project,
-
-        # Guide final evaluation
-        "evaluation": evaluation,
     }
 
     return render(
         request,
         "student/dashboard.html",
+        context
+    )
+
+
+# ============================================================
+# STUDENT FINAL MARK
+# ============================================================
+
+@login_required
+def student_final_mark(request):
+
+    # --------------------------------------------------------
+    # SUPERUSER → COORDINATOR
+    # --------------------------------------------------------
+
+    if request.user.is_superuser:
+
+        return redirect(
+            "accounts:coordinator_dashboard"
+        )
+
+    # --------------------------------------------------------
+    # ONLY STUDENTS
+    # --------------------------------------------------------
+
+    if request.user.role != "STUDENT":
+
+        return redirect(
+            "accounts:dashboard"
+        )
+
+    # --------------------------------------------------------
+    # GET STUDENT FINAL EVALUATION
+    # --------------------------------------------------------
+
+    evaluation = (
+        GuideEvaluation.objects
+        .filter(
+            project__student=request.user
+        )
+        .select_related(
+            "project",
+            "guide"
+        )
+        .order_by("-updated_at")
+        .first()
+    )
+
+    # --------------------------------------------------------
+    # CONTEXT
+    # --------------------------------------------------------
+
+    context = {
+        "evaluation": evaluation,
+    }
+
+    return render(
+        request,
+        "student/final_mark.html",
         context
     )
 

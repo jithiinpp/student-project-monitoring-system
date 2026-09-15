@@ -17,11 +17,11 @@ def expert_required(view_func):
     @login_required
     def wrapper(request, *args, **kwargs):
 
-        # Superuser can access Expert page
+        # Superuser can access Expert pages
         if request.user.is_superuser:
             return view_func(request, *args, **kwargs)
 
-        # Only Expert
+        # Only Domain Expert
         if request.user.role != "EXPERT":
 
             messages.error(
@@ -29,9 +29,7 @@ def expert_required(view_func):
                 "You are not authorized to access the Expert page."
             )
 
-            return redirect(
-                "accounts:dashboard"
-            )
+            return redirect("accounts:dashboard")
 
         return view_func(request, *args, **kwargs)
 
@@ -50,7 +48,11 @@ def dashboard(request):
         .filter(
             domain_expert=request.user
         )
-        .select_related("student")
+        .select_related(
+            "student",
+            "domain_expert"
+        )
+        .order_by("-updated_at")
     )
 
     total_proposals = proposals.count()
@@ -72,6 +74,7 @@ def dashboard(request):
     ).count()
 
     context = {
+        "proposals": proposals,
 
         "total_proposals": total_proposals,
 
@@ -82,10 +85,6 @@ def dashboard(request):
         "changes_count": changes_count,
 
         "submitted_count": submitted_count,
-
-        "proposals": proposals.order_by(
-            "-updated_at"
-        ),
     }
 
     return render(
@@ -107,7 +106,10 @@ def my_proposals(request):
         .filter(
             domain_expert=request.user
         )
-        .select_related("student")
+        .select_related(
+            "student",
+            "domain_expert"
+        )
         .order_by("-updated_at")
     )
 
@@ -136,17 +138,49 @@ def proposal_detail(request, proposal_id):
         domain_expert=request.user
     )
 
+    change_requests = (
+        ProposalChangeRequest.objects
+        .filter(
+            proposal=proposal
+        )
+        .select_related(
+            "expert",
+            "coordinator"
+        )
+        .order_by("-created_at")
+    )
+
     return render(
         request,
         "experts/proposal_detail.html",
         {
-            "proposal": proposal
+            "proposal": proposal,
+            "change_requests": change_requests,
         }
     )
 
 
 # =========================================================
 # REVIEW PROPOSAL
+# =========================================================
+#
+# Expert has ONLY two decisions:
+#
+# 1. APPROVE
+#       EXPERT_APPROVED
+#       ↓
+#       Coordinator
+#       ↓
+#       Final approval
+#
+# 2. REQUEST CHANGES
+#       PENDING
+#       ↓
+#       Coordinator
+#       ↓
+#       Student
+#
+# Expert does NOT give final approval.
 # =========================================================
 
 @expert_required
@@ -158,6 +192,10 @@ def review_proposal(request, proposal_id):
         domain_expert=request.user
     )
 
+    # -----------------------------------------------------
+    # ONLY POST REQUEST ALLOWED
+    # -----------------------------------------------------
+
     if request.method != "POST":
 
         return redirect(
@@ -165,18 +203,34 @@ def review_proposal(request, proposal_id):
             proposal_id=proposal.id
         )
 
+    # -----------------------------------------------------
+    # EXPERT CAN REVIEW ONLY ASSIGNED PROPOSALS
+    # -----------------------------------------------------
+
+    if proposal.status != "EXPERT_ASSIGNED":
+
+        messages.error(
+            request,
+            "This proposal is not currently waiting for Expert review."
+        )
+
+        return redirect(
+            "experts:proposal_detail",
+            proposal_id=proposal.id
+        )
+
     decision = request.POST.get(
-        "decision"
-    )
+        "decision",
+        ""
+    ).strip()
 
     comments = request.POST.get(
         "comments",
         ""
     ).strip()
 
-
     # =====================================================
-    # APPROVE
+    # EXPERT APPROVES
     # =====================================================
 
     if decision == "approve":
@@ -195,21 +249,25 @@ def review_proposal(request, proposal_id):
 
         messages.success(
             request,
-            "Proposal approved successfully and sent back to Coordinator."
+            "Proposal approved by Expert and sent to Coordinator "
+            "for final approval."
         )
 
+        return redirect(
+            "experts:my_proposals"
+        )
 
     # =====================================================
-    # REQUEST CHANGES
+    # EXPERT REQUESTS CHANGES
     # =====================================================
 
-    elif decision == "changes":
+    if decision == "changes":
 
         if not comments:
 
             messages.error(
                 request,
-                "Please enter comments when requesting changes."
+                "Please enter comments explaining the required changes."
             )
 
             return redirect(
@@ -218,22 +276,21 @@ def review_proposal(request, proposal_id):
             )
 
         # -------------------------------------------------
-        # Create Change Request
+        # CREATE CHANGE REQUEST
         # -------------------------------------------------
 
         ProposalChangeRequest.objects.create(
-
             proposal=proposal,
-
             expert=request.user,
-
             message=comments,
-
             status="PENDING"
         )
 
         # -------------------------------------------------
-        # Change proposal status
+        # CHANGE PROPOSAL STATUS
+        #
+        # Coordinator will receive this request.
+        # Coordinator must send it to Student.
         # -------------------------------------------------
 
         proposal.status = "CHANGES_REQUESTED"
@@ -250,22 +307,23 @@ def review_proposal(request, proposal_id):
 
         messages.success(
             request,
-            "Changes requested. The request has been sent to the Coordinator for review."
+            "Change request sent to Coordinator."
         )
 
+        return redirect(
+            "experts:my_proposals"
+        )
 
     # =====================================================
     # INVALID DECISION
     # =====================================================
 
-    else:
-
-        messages.error(
-            request,
-            "Invalid review decision."
-        )
-
+    messages.error(
+        request,
+        "Invalid review decision."
+    )
 
     return redirect(
-        "experts:my_proposals"
+        "experts:proposal_detail",
+        proposal_id=proposal.id
     )

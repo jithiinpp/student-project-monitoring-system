@@ -79,6 +79,8 @@ body {
     width: 45px;
     height: 45px;
 
+    flex-shrink: 0;
+
     border-radius: 12px;
 
     background: #2563eb;
@@ -86,6 +88,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+
+    color: #ffffff;
 
     font-size: 22px;
     font-weight: 700;
@@ -149,12 +153,34 @@ body {
     box-shadow: 0 5px 15px rgba(37, 99, 235, 0.25);
 }
 
-.sidebar-link span:first-child {
+
+/* =========================================================
+   SIDEBAR ICONS
+========================================================= */
+
+.sidebar-icon {
     width: 22px;
+    height: 22px;
 
-    text-align: center;
+    flex-shrink: 0;
 
-    font-size: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sidebar-icon svg {
+    width: 19px;
+    height: 19px;
+
+    stroke: currentColor;
+
+    fill: none;
+
+    stroke-width: 1.8;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 
@@ -259,6 +285,29 @@ body {
     background: rgba(239, 68, 68, 0.12);
 
     color: #fecaca;
+}
+
+.logout-icon {
+    width: 20px;
+    height: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logout-icon svg {
+    width: 18px;
+    height: 18px;
+
+    fill: none;
+
+    stroke: currentColor;
+
+    stroke-width: 1.8;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 
@@ -439,11 +488,23 @@ body {
     align-items: center;
     justify-content: center;
 
-    font-size: 42px;
-
     position: relative;
 
     z-index: 2;
+}
+
+.welcome-icon svg {
+    width: 45px;
+    height: 45px;
+
+    fill: none;
+
+    stroke: #ffffff;
+
+    stroke-width: 1.5;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 
@@ -489,15 +550,31 @@ body {
     width: 48px;
     height: 48px;
 
+    flex-shrink: 0;
+
     border-radius: 12px;
 
     background: #eff6ff;
 
+    color: #2563eb;
+
     display: flex;
     align-items: center;
     justify-content: center;
+}
 
-    font-size: 22px;
+.stat-icon svg {
+    width: 23px;
+    height: 23px;
+
+    fill: none;
+
+    stroke: currentColor;
+
+    stroke-width: 1.8;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 .stat-card span {
@@ -607,11 +684,25 @@ body {
 
     background: #eff6ff;
 
+    color: #2563eb;
+
     display: flex;
     align-items: center;
     justify-content: center;
+}
 
-    font-size: 22px;
+.action-icon svg {
+    width: 24px;
+    height: 24px;
+
+    fill: none;
+
+    stroke: currentColor;
+
+    stroke-width: 1.8;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 .action-card h3 {
@@ -640,7 +731,23 @@ body {
 
     color: #2563eb;
 
-    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.action-arrow svg {
+    width: 18px;
+    height: 18px;
+
+    fill: none;
+
+    stroke: currentColor;
+
+    stroke-width: 2;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 
@@ -679,11 +786,25 @@ body {
 
     background: #eff6ff;
 
+    color: #2563eb;
+
     display: flex;
     align-items: center;
     justify-content: center;
+}
 
-    font-size: 28px;
+.progress-icon svg {
+    width: 29px;
+    height: 29px;
+
+    fill: none;
+
+    stroke: currentColor;
+
+    stroke-width: 1.8;
+
+    stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 .progress-info {
@@ -757,173 +878,6 @@ body {
     background: #dbeafe;
 
     color: #1d4ed8;
-}
-
-
-/* =========================================================
-   FINAL MARK CARD
-========================================================= */
-
-.final-mark-card {
-    background: #ffffff;
-
-    border: 1px solid #e2e8f0;
-
-    border-radius: 16px;
-
-    padding: 25px;
-
-    box-shadow:
-        0 5px 20px rgba(15, 23, 42, 0.03);
-}
-
-.final-mark-header {
-    display: flex;
-
-    align-items: center;
-
-    justify-content: space-between;
-
-    margin-bottom: 20px;
-}
-
-.final-mark-header h2 {
-    margin: 0;
-
-    font-size: 20px;
-
-    color: #0f172a;
-}
-
-.final-mark-header p {
-    margin: 6px 0 0;
-
-    color: #64748b;
-
-    font-size: 13px;
-}
-
-.final-mark-icon {
-    width: 50px;
-    height: 50px;
-
-    border-radius: 12px;
-
-    background: #eff6ff;
-
-    color: #2563eb;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    font-size: 24px;
-}
-
-.final-mark-content {
-    display: flex;
-
-    align-items: center;
-
-    gap: 30px;
-
-    padding-top: 20px;
-
-    border-top: 1px solid #e2e8f0;
-}
-
-.mark-display {
-    min-width: 180px;
-
-    padding: 20px;
-
-    border-radius: 12px;
-
-    background: #f8fafc;
-
-    text-align: center;
-}
-
-.mark-number {
-    display: block;
-
-    color: #2563eb;
-
-    font-size: 38px;
-
-    font-weight: 700;
-
-    line-height: 1;
-}
-
-.mark-total {
-    display: block;
-
-    margin-top: 8px;
-
-    color: #64748b;
-
-    font-size: 13px;
-}
-
-.mark-feedback {
-    flex: 1;
-
-    padding: 18px;
-
-    background: #f8fafc;
-
-    border-radius: 12px;
-}
-
-.mark-feedback-title {
-    margin-bottom: 8px;
-
-    color: #0f172a;
-
-    font-size: 14px;
-
-    font-weight: 700;
-}
-
-.mark-feedback p {
-    margin: 0;
-
-    color: #64748b;
-
-    font-size: 13px;
-
-    line-height: 1.6;
-}
-
-.no-mark {
-    padding: 20px;
-
-    background: #f8fafc;
-
-    border-radius: 12px;
-
-    border: 1px dashed #cbd5e1;
-}
-
-.no-mark strong {
-    display: block;
-
-    margin-bottom: 6px;
-
-    color: #334155;
-
-    font-size: 14px;
-}
-
-.no-mark p {
-    margin: 0;
-
-    color: #64748b;
-
-    font-size: 13px;
-
-    line-height: 1.5;
 }
 
 
@@ -1168,16 +1122,6 @@ body {
         flex: 1;
     }
 
-    .final-mark-content {
-        flex-direction: column;
-
-        align-items: stretch;
-    }
-
-    .mark-display {
-        width: 100%;
-    }
-
     .project-details {
         grid-template-columns: 1fr;
     }
@@ -1199,7 +1143,7 @@ body {
     .sidebar-brand > div:last-child,
     .sidebar-link span:last-child,
     .student-mini-profile .profile-info,
-    .sidebar-logout {
+    .sidebar-logout > span:last-child {
         display: none;
     }
 
@@ -1213,8 +1157,14 @@ body {
         padding: 13px 8px;
     }
 
-    .sidebar-link span:first-child {
-        font-size: 19px;
+    .sidebar-icon {
+        width: 22px;
+        height: 22px;
+    }
+
+    .sidebar-icon svg {
+        width: 20px;
+        height: 20px;
     }
 
     .sidebar-bottom {
@@ -1225,6 +1175,12 @@ body {
         justify-content: center;
 
         background: transparent;
+    }
+
+    .sidebar-logout {
+        justify-content: center;
+
+        padding: 11px 8px;
     }
 
     .spms-main {
@@ -1257,14 +1213,9 @@ body {
         padding: 18px;
     }
 
-    .final-mark-card {
-        padding: 18px;
-    }
-
     .progress-buttons {
         flex-direction: column;
     }
-
 }
 
 
@@ -1273,8 +1224,6 @@ body {
     .progress-icon {
         width: 50px;
         height: 50px;
-
-        font-size: 23px;
     }
 
     .progress-info h3 {
@@ -1284,7 +1233,6 @@ body {
     .progress-info p {
         font-size: 12px;
     }
-
 }
 
 </style>
@@ -1333,8 +1281,16 @@ body {
             <a href="{% url 'accounts:student_dashboard' %}"
                class="sidebar-link active">
 
-                <span>
-                    🏠
+                <span class="sidebar-icon">
+
+                    <!-- Dashboard Icon -->
+                    <svg viewBox="0 0 24 24">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                    </svg>
+
                 </span>
 
                 <span>
@@ -1349,8 +1305,14 @@ body {
             <a href="{% url 'accounts:student_proposals' %}"
                class="sidebar-link">
 
-                <span>
-                    📁
+                <span class="sidebar-icon">
+
+                    <!-- Folder Icon -->
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 6.5A2.5 2.5 0 0 1 5.5 4H10l2 2h6.5A2.5 2.5 0 0 1 21 8.5v8A2.5 2.5 0 0 1 18.5 19h-13A2.5 2.5 0 0 1 3 16.5z"></path>
+                        <path d="M3 9h18"></path>
+                    </svg>
+
                 </span>
 
                 <span>
@@ -1365,8 +1327,17 @@ body {
             <a href="{% url 'accounts:add_proposal' %}"
                class="sidebar-link">
 
-                <span>
-                    ➕
+                <span class="sidebar-icon">
+
+                    <!-- Plus Document Icon -->
+                    <svg viewBox="0 0 24 24">
+                        <path d="M6 3h8l4 4v5"></path>
+                        <path d="M14 3v5h5"></path>
+                        <path d="M6 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"></path>
+                        <path d="M16 15v6"></path>
+                        <path d="M13 18h6"></path>
+                    </svg>
+
                 </span>
 
                 <span>
@@ -1381,8 +1352,17 @@ body {
             <a href="{% url 'accounts:student_proposals' %}"
                class="sidebar-link">
 
-                <span>
-                    📊
+                <span class="sidebar-icon">
+
+                    <!-- Chart Icon -->
+                    <svg viewBox="0 0 24 24">
+                        <path d="M4 19V5"></path>
+                        <path d="M4 19h16"></path>
+                        <path d="M8 16v-5"></path>
+                        <path d="M12 16V8"></path>
+                        <path d="M16 16v-9"></path>
+                    </svg>
+
                 </span>
 
                 <span>
@@ -1397,12 +1377,43 @@ body {
             <a href="{% url 'accounts:student_progress' %}"
                class="sidebar-link">
 
-                <span>
-                    📝
+                <span class="sidebar-icon">
+
+                    <!-- Document Icon -->
+                    <svg viewBox="0 0 24 24">
+                        <path d="M6 3h8l4 4v14H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
+                        <path d="M14 3v5h5"></path>
+                        <path d="M8 13h8"></path>
+                        <path d="M8 17h6"></path>
+                    </svg>
+
                 </span>
 
                 <span>
                     Progress Reports
+                </span>
+
+            </a>
+
+
+            <!-- FINAL MARK -->
+
+            <a href="{% url 'accounts:student_final_mark' %}"
+               class="sidebar-link">
+
+                <span class="sidebar-icon">
+
+                    <!-- Award / Final Mark Icon -->
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="8" r="5"></circle>
+                        <path d="M9 12.5L8 21l4-2 4 2-1-8.5"></path>
+                        <path d="M12 5.5l.8 1.6 1.7.2-1.2 1.2.3 1.7-1.6-.8-1.6.8.3-1.7-1.2-1.2 1.7-.2z"></path>
+                    </svg>
+
+                </span>
+
+                <span>
+                    Final Mark
                 </span>
 
             </a>
@@ -1449,11 +1460,20 @@ body {
             <a href="{% url 'accounts:logout' %}"
                class="sidebar-logout">
 
-                <span>
-                    🚪
+                <span class="logout-icon">
+
+                    <!-- Logout Icon -->
+                    <svg viewBox="0 0 24 24">
+                        <path d="M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4"></path>
+                        <path d="M14 8l4 4-4 4"></path>
+                        <path d="M9 12h9"></path>
+                    </svg>
+
                 </span>
 
-                Logout
+                <span>
+                    Logout
+                </span>
 
             </a>
 
@@ -1461,7 +1481,6 @@ body {
         </div>
 
     </aside>
-
 
 
     <!-- =====================================================
@@ -1524,7 +1543,6 @@ body {
         </header>
 
 
-
         <!-- =================================================
              WELCOME CARD
         ================================================== -->
@@ -1560,12 +1578,20 @@ body {
 
             <div class="welcome-icon">
 
-                🎓
+                <!-- Graduation Cap Icon -->
+                <svg viewBox="0 0 24 24">
+
+                    <path d="M2 10l10-5 10 5-10 5z"></path>
+
+                    <path d="M6 12.5v4.5c3 2 9 2 12 0v-4.5"></path>
+
+                    <path d="M22 10v5"></path>
+
+                </svg>
 
             </div>
 
         </section>
-
 
 
         <!-- =================================================
@@ -1580,7 +1606,13 @@ body {
             <div class="stat-card">
 
                 <div class="stat-icon">
-                    📁
+
+                    <!-- Folder Icon -->
+                    <svg viewBox="0 0 24 24">
+                        <path d="M3 6.5A2.5 2.5 0 0 1 5.5 4H10l2 2h6.5A2.5 2.5 0 0 1 21 8.5v8A2.5 2.5 0 0 1 18.5 19h-13A2.5 2.5 0 0 1 3 16.5z"></path>
+                        <path d="M3 9h18"></path>
+                    </svg>
+
                 </div>
 
                 <div>
@@ -1603,7 +1635,13 @@ body {
             <div class="stat-card">
 
                 <div class="stat-icon">
-                    ⏳
+
+                    <!-- Clock Icon -->
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="9"></circle>
+                        <path d="M12 7v5l3 2"></path>
+                    </svg>
+
                 </div>
 
                 <div>
@@ -1626,7 +1664,13 @@ body {
             <div class="stat-card">
 
                 <div class="stat-icon">
-                    ✅
+
+                    <!-- Check Circle Icon -->
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="9"></circle>
+                        <path d="M8 12l2.5 2.5L16 9"></path>
+                    </svg>
+
                 </div>
 
                 <div>
@@ -1649,7 +1693,14 @@ body {
             <div class="stat-card">
 
                 <div class="stat-icon">
-                    🎯
+
+                    <!-- Target Icon -->
+                    <svg viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="8"></circle>
+                        <circle cx="12" cy="12" r="4"></circle>
+                        <circle cx="12" cy="12" r="1"></circle>
+                    </svg>
+
                 </div>
 
                 <div>
@@ -1668,132 +1719,6 @@ body {
 
 
         </section>
-
-
-
-        <!-- =================================================
-             FINAL PROJECT MARK
-        ================================================== -->
-
-        <section class="dashboard-section">
-
-
-            <div class="section-heading">
-
-                <div>
-
-                    <h2>
-                        Final Project Mark
-                    </h2>
-
-                    <p>
-                        Final evaluation given by your Guide
-                    </p>
-
-                </div>
-
-            </div>
-
-
-            <div class="final-mark-card">
-
-
-                {% if evaluation %}
-
-                    <div class="final-mark-header">
-
-                        <div>
-
-                            <h2>
-                                Project Evaluation
-                            </h2>
-
-                            <p>
-                                Your Guide has completed the final evaluation.
-                            </p>
-
-                        </div>
-
-
-                        <div class="final-mark-icon">
-
-                            ★
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="final-mark-content">
-
-
-                        <!-- MARK -->
-
-                        <div class="mark-display">
-
-                            <span class="mark-number">
-                                {{ evaluation.marks }}
-                            </span>
-
-                            <span class="mark-total">
-                                Final Mark out of 100
-                            </span>
-
-                        </div>
-
-
-                        <!-- FEEDBACK -->
-
-                        <div class="mark-feedback">
-
-                            <div class="mark-feedback-title">
-                                Guide Feedback
-                            </div>
-
-
-                            {% if evaluation.feedback %}
-
-                                <p>
-                                    {{ evaluation.feedback }}
-                                </p>
-
-                            {% else %}
-
-                                <p>
-                                    No additional feedback was provided.
-                                </p>
-
-                            {% endif %}
-
-                        </div>
-
-
-                    </div>
-
-
-                {% else %}
-
-                    <div class="no-mark">
-
-                        <strong>
-                            Final mark is not available yet.
-                        </strong>
-
-                        <p>
-                            Your Guide will enter the final mark after
-                            reviewing your Final Report. Once the evaluation
-                            is completed, your final mark will appear here.
-                        </p>
-
-                    </div>
-
-                {% endif %}
-
-
-            </div>
-
-        </section>
-
 
 
         <!-- =================================================
@@ -1962,7 +1887,6 @@ body {
         </section>
 
 
-
         <!-- =================================================
              QUICK ACTIONS
         ================================================== -->
@@ -1996,7 +1920,13 @@ body {
                    class="action-card">
 
                     <div class="action-icon">
-                        📁
+
+                        <!-- Folder Icon -->
+                        <svg viewBox="0 0 24 24">
+                            <path d="M3 6.5A2.5 2.5 0 0 1 5.5 4H10l2 2h6.5A2.5 2.5 0 0 1 21 8.5v8A2.5 2.5 0 0 1 18.5 19h-13A2.5 2.5 0 0 1 3 16.5z"></path>
+                            <path d="M3 9h18"></path>
+                        </svg>
+
                     </div>
 
                     <div>
@@ -2012,11 +1942,15 @@ body {
                     </div>
 
                     <span class="action-arrow">
-                        →
+
+                        <svg viewBox="0 0 24 24">
+                            <path d="M5 12h14"></path>
+                            <path d="M13 6l6 6-6 6"></path>
+                        </svg>
+
                     </span>
 
                 </a>
-
 
 
                 <!-- SUBMIT PROPOSAL -->
@@ -2025,7 +1959,14 @@ body {
                    class="action-card">
 
                     <div class="action-icon">
-                        ➕
+
+                        <!-- Plus Icon -->
+                        <svg viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="9"></circle>
+                            <path d="M12 8v8"></path>
+                            <path d="M8 12h8"></path>
+                        </svg>
+
                     </div>
 
                     <div>
@@ -2041,11 +1982,15 @@ body {
                     </div>
 
                     <span class="action-arrow">
-                        →
+
+                        <svg viewBox="0 0 24 24">
+                            <path d="M5 12h14"></path>
+                            <path d="M13 6l6 6-6 6"></path>
+                        </svg>
+
                     </span>
 
                 </a>
-
 
 
                 <!-- PROJECT STATUS -->
@@ -2054,7 +1999,16 @@ body {
                    class="action-card">
 
                     <div class="action-icon">
-                        📊
+
+                        <!-- Chart Icon -->
+                        <svg viewBox="0 0 24 24">
+                            <path d="M4 19V5"></path>
+                            <path d="M4 19h16"></path>
+                            <path d="M8 16v-5"></path>
+                            <path d="M12 16V8"></path>
+                            <path d="M16 16v-9"></path>
+                        </svg>
+
                     </div>
 
                     <div>
@@ -2070,11 +2024,15 @@ body {
                     </div>
 
                     <span class="action-arrow">
-                        →
+
+                        <svg viewBox="0 0 24 24">
+                            <path d="M5 12h14"></path>
+                            <path d="M13 6l6 6-6 6"></path>
+                        </svg>
+
                     </span>
 
                 </a>
-
 
 
                 <!-- PROGRESS REPORTS -->
@@ -2083,7 +2041,14 @@ body {
                    class="action-card">
 
                     <div class="action-icon">
-                        📝
+
+                        <!-- Document Check Icon -->
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 3h8l4 4v14H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
+                            <path d="M14 3v5h5"></path>
+                            <path d="M8 14l2 2 4-4"></path>
+                        </svg>
+
                     </div>
 
                     <div>
@@ -2099,7 +2064,12 @@ body {
                     </div>
 
                     <span class="action-arrow">
-                        →
+
+                        <svg viewBox="0 0 24 24">
+                            <path d="M5 12h14"></path>
+                            <path d="M13 6l6 6-6 6"></path>
+                        </svg>
+
                     </span>
 
                 </a>
@@ -2108,7 +2078,6 @@ body {
             </div>
 
         </section>
-
 
 
         <!-- =================================================
@@ -2143,7 +2112,6 @@ body {
             </div>
 
 
-
             <div class="progress-card">
 
 
@@ -2152,20 +2120,22 @@ body {
 
                     <div class="progress-icon">
 
-                        📝
+                        <!-- Document Icon -->
+                        <svg viewBox="0 0 24 24">
+                            <path d="M6 3h8l4 4v14H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
+                            <path d="M14 3v5h5"></path>
+                            <path d="M8 13h8"></path>
+                            <path d="M8 17h6"></path>
+                        </svg>
 
                     </div>
-
 
 
                     <div class="progress-info">
 
                         <h3>
-
                             Progress Report Sequence
-
                         </h3>
-
 
                         <p>
 
@@ -2177,7 +2147,6 @@ body {
                         </p>
 
                     </div>
-
 
 
                     <div class="progress-buttons">
@@ -2194,7 +2163,7 @@ body {
                         <a href="{% url 'accounts:add_progress' %}"
                            class="progress-btn progress-btn-primary">
 
-                            + Upload Report
+                            Upload Report
 
                         </a>
 
@@ -2209,7 +2178,6 @@ body {
 
 
         </section>
-
 
 
         <!-- =================================================
@@ -2236,21 +2204,33 @@ body {
             </div>
 
 
-
             <div class="workflow-card">
 
                 {% if current_workflow_status_display %}
-                    <div style="margin-bottom: 18px; font-size: 13px; color: #475569; font-weight: 600;">
-                        Current status: {{ current_workflow_status_display }}
+
+                    <div style="
+                        margin-bottom: 18px;
+                        font-size: 13px;
+                        color: #475569;
+                        font-weight: 600;
+                    ">
+
+                        Current status:
+                        {{ current_workflow_status_display }}
+
                     </div>
+
                 {% endif %}
+
 
                 {% for step in workflow_steps %}
 
                     <div class="workflow-step {{ step.state }}">
 
                         <div class="workflow-number">
+
                             {{ step.number }}
+
                         </div>
 
                         <div>
@@ -2267,8 +2247,11 @@ body {
 
                     </div>
 
+
                     {% if not forloop.last %}
+
                         <div class="workflow-line"></div>
+
                     {% endif %}
 
                 {% endfor %}
