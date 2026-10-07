@@ -15,7 +15,7 @@ Upload Weekly Progress | SPMS
 .progress-form-page {
     min-height: calc(100vh - 0px);
     padding: 32px;
-    background: #f4f7fb;
+    background: #edf2f9;
     font-family: Arial, Helvetica, sans-serif;
     color: #1f2937;
 }
@@ -64,9 +64,9 @@ Upload Weekly Progress | SPMS
    ========================================================= */
 
 .project-info {
-    background: #eff6ff;
-    border: 1px solid #dbeafe;
-    border-left: 4px solid #2563eb;
+    background: #eef2ff;
+    border: 1px solid #dce2fa;
+    border-left: 4px solid #4f5bd5;
     padding: 17px 18px;
     border-radius: 10px;
     margin-bottom: 28px;
@@ -74,7 +74,7 @@ Upload Weekly Progress | SPMS
 
 .project-info strong {
     display: block;
-    color: #1e40af;
+    color: #34358f;
     font-size: 13px;
     font-weight: 700;
     margin-bottom: 6px;
@@ -122,8 +122,8 @@ Upload Weekly Progress | SPMS
 
 .form-control:focus {
     outline: none;
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.10);
+    border-color: #4f5bd5;
+    box-shadow: 0 0 0 3px rgba(79, 91, 213, 0.10);
 }
 
 textarea.form-control {
@@ -173,8 +173,8 @@ input[type="file"].form-control {
 }
 
 .btn-submit {
-    border: 1px solid #2563eb;
-    background: #2563eb;
+    border: 1px solid #4f5bd5;
+    background: #4f5bd5;
     color: #ffffff;
     min-height: 44px;
     padding: 11px 21px;
@@ -186,9 +186,9 @@ input[type="file"].form-control {
 }
 
 .btn-submit:hover {
-    background: #1d4ed8;
-    border-color: #1d4ed8;
-    box-shadow: 0 5px 14px rgba(37, 99, 235, 0.22);
+    background: #34358f;
+    border-color: #34358f;
+    box-shadow: 0 5px 14px rgba(79, 91, 213, 0.22);
     transform: translateY(-1px);
 }
 
@@ -256,18 +256,29 @@ input[type="file"].form-control {
 </style>
 
 
-<div class="progress-form-page">
+<div class="spms-layout">
+    {% include 'student/sidebar.html' %}
+    <main class="spms-main">
+        <div class="progress-form-page">
 
     <div class="form-container">
 
         <div class="form-header">
 
             <h1>
-                Upload Weekly Progress
+                {% if report_type == "FINAL_REPORT" %}
+                    Upload Final Report
+                {% else %}
+                    Upload Weekly Progress
+                {% endif %}
             </h1>
 
             <p>
-                Document the work completed during this week.
+                {% if report_type == "FINAL_REPORT" %}
+                    Submit your completed final project report.
+                {% else %}
+                    Document the work completed during this week.
+                {% endif %}
             </p>
 
         </div>
@@ -298,25 +309,18 @@ input[type="file"].form-control {
                 {% csrf_token %}
 
 
-                <!-- WEEK -->
-
-                <div class="form-group">
-
-                    <label for="{{ form.week_number.id_for_label }}">
-                        Week Number
-                    </label>
-
-                    {{ form.week_number }}
-
-                    {% if form.week_number.errors %}
-                        {{ form.week_number.errors }}
-                    {% endif %}
-
-                    <div class="form-help">
-                        Example: Week 1, Week 2, Week 3...
+                {% if report_type != "FINAL_REPORT" %}
+                    <div class="form-group">
+                        <label for="{{ form.week_number.id_for_label }}">Week Number</label>
+                        {{ form.week_number }}
+                        {% if form.week_number.errors %}
+                            {{ form.week_number.errors }}
+                        {% endif %}
+                        <div class="form-help">
+                            Choose the week assigned to this progress report.
+                        </div>
                     </div>
-
-                </div>
+                {% endif %}
 
 
                 <!-- TITLE -->
@@ -334,7 +338,11 @@ input[type="file"].form-control {
                     {% endif %}
 
                     <div class="form-help">
-                        Give a short title for this week's work.
+                        {% if report_type == "FINAL_REPORT" %}
+                            Give your final report a short title.
+                        {% else %}
+                            Give a short title for this week's work.
+                        {% endif %}
                     </div>
 
                 </div>
@@ -355,8 +363,12 @@ input[type="file"].form-control {
                     {% endif %}
 
                     <div class="form-help">
-                        Explain what you completed this week,
-                        problems faced, and what you plan to do next.
+                        {% if report_type == "FINAL_REPORT" %}
+                            Summarize the completed project and its outcomes.
+                        {% else %}
+                            Explain what you completed this week,
+                            problems faced, and what you plan to do next.
+                        {% endif %}
                     </div>
 
                 </div>
@@ -377,7 +389,7 @@ input[type="file"].form-control {
                     {% endif %}
 
                     <div class="form-help">
-                        Optional: PDF, DOC or DOCX.
+                        Optional: PDF only.
                     </div>
 
                 </div>
@@ -390,7 +402,11 @@ input[type="file"].form-control {
                     <button type="submit"
                             class="btn-submit">
 
-                        Submit Progress
+                        {% if report_type == "FINAL_REPORT" %}
+                            Submit Final Report
+                        {% else %}
+                            Submit Progress
+                        {% endif %}
 
                     </button>
 
@@ -410,6 +426,8 @@ input[type="file"].form-control {
 
     </div>
 
+</div>
+    </main>
 </div>
 
 {% endblock %}

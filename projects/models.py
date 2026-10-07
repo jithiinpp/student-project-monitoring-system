@@ -30,7 +30,7 @@ class ProjectProposal(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="project_proposals",
-        limit_choices_to={"role": "STUDENT"}
+        limit_choices_to={"is_student": True}
     )
 
     # NEW
@@ -69,7 +69,7 @@ class ProjectProposal(models.Model):
         null=True,
         blank=True,
         related_name="expert_proposals",
-        limit_choices_to={"role": "EXPERT"}
+        limit_choices_to={"is_expert": True}
     )
 
     expert_comments = models.TextField(
@@ -89,7 +89,7 @@ class ProjectProposal(models.Model):
         null=True,
         blank=True,
         related_name="guided_proposals",
-        limit_choices_to={"role": "GUIDE"}
+        limit_choices_to={"is_guide": True}
     )
 
     guide_rejection_reason = models.TextField(
@@ -100,6 +100,12 @@ class ProjectProposal(models.Model):
     guide_rejected_at = models.DateTimeField(
         blank=True,
         null=True
+    )
+
+    review_date = models.DateTimeField(
+        blank=True,
+        null=True,
+        help_text="Scheduled date and time for the project review by the panel."
     )
 
     submitted_at = models.DateTimeField(
@@ -137,10 +143,15 @@ class ProposalChangeRequest(models.Model):
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
         related_name="proposal_change_requests",
-        limit_choices_to={"role": "EXPERT"}
+        limit_choices_to={"is_expert": True}
     )
 
     comments = models.TextField()
+
+    coordinator_comments = models.TextField(
+        blank=True,
+        null=True
+    )
 
     status = models.CharField(
         max_length=30,
@@ -171,8 +182,16 @@ class ProjectProgress(models.Model):
 
     REPORT_CHOICES = [
         (
-            "WEEKLY_PROGRESS",
-            "Weekly Progress Report"
+            "PROGRESS_1",
+            "Progress Report 1"
+        ),
+        (
+            "PROGRESS_2",
+            "Progress Report 2"
+        ),
+        (
+            "PROGRESS_3",
+            "Progress Report 3"
         ),
         (
             "FINAL_REPORT",
@@ -206,13 +225,18 @@ class ProjectProgress(models.Model):
         on_delete=models.CASCADE,
         related_name="progress_reports",
         limit_choices_to={
-            "role": "STUDENT"
+            "is_student": True
         }
     )
 
     report_type = models.CharField(
         max_length=30,
         choices=REPORT_CHOICES
+    )
+
+    week_number = models.PositiveSmallIntegerField(
+        blank=True,
+        null=True
     )
 
     title = models.CharField(
@@ -231,6 +255,18 @@ class ProjectProgress(models.Model):
         max_length=30,
         choices=STATUS_CHOICES,
         default="SUBMITTED"
+    )
+
+    marks = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        null=True,
+        blank=True
+    )
+
+    detailed_marks = models.JSONField(
+        default=dict,
+        blank=True
     )
 
     guide_feedback = models.TextField(
@@ -258,3 +294,85 @@ class ProjectProgress(models.Model):
             f"{self.project.title} - "
             f"{self.get_report_type_display()}"
         )
+
+    @property
+    def week_label(self):
+        week_number = self.week_number
+        if week_number is None:
+            week_number = {
+                "PROGRESS_1": 1,
+                "PROGRESS_2": 2,
+                "PROGRESS_3": 3,
+            }.get(self.report_type)
+        return f"Week {week_number}" if week_number else ""
+
+
+# =========================================================
+# PANEL EVALUATION
+# =========================================================
+
+class PanelEvaluation(models.Model):
+
+    project = models.OneToOneField(
+        ProjectProposal,
+        on_delete=models.CASCADE,
+        related_name="panel_evaluation"
+    )
+
+    panel_member = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="panel_evaluations",
+        limit_choices_to={"is_panel": True}
+    )
+
+    marks = models.DecimalField(
+        max_digits=5,
+        decimal_places=2,
+        default=0
+    )
+
+    detailed_marks = models.JSONField(
+        default=dict,
+        blank=True
+    )
+
+    feedback = models.TextField(
+        blank=True
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True
+    )
+
+    updated_at = models.DateTimeField(
+        auto_now=True
+    )
+
+    def __str__(self):
+        return f"Panel Evaluation for {self.project.title}"
+
+
+# =========================================================
+# PROJECT MESSAGES
+# =========================================================
+
+class ProjectMessage(models.Model):
+    project = models.ForeignKey(
+        ProjectProposal,
+        on_delete=models.CASCADE,
+        related_name="messages"
+    )
+    sender = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="sent_messages"
+    )
+    message = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["created_at"]
+
+    def __str__(self):
+        return f"Message by {self.sender.username} on {self.project.title}"

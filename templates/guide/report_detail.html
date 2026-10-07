@@ -1,0 +1,331 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ report.title }} | SPMS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .report-detail-card {
+        padding: 28px;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+    }
+
+    .report-detail-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 20px;
+        padding-bottom: 22px;
+        border-bottom: 1px solid var(--border-color);
+    }
+
+    .report-detail-type {
+        margin: 0 0 6px;
+        color: #4f5bd5;
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+    }
+
+    .report-detail-header h2 {
+        margin: 0;
+        color: var(--text-main);
+        font-size: 22px;
+        font-weight: 750;
+        overflow-wrap: anywhere;
+    }
+
+    .report-detail-date {
+        margin: 8px 0 0;
+        color: var(--text-muted);
+        font-size: 13px;
+    }
+
+    .report-detail-status {
+        flex: 0 0 auto;
+        padding: 7px 12px;
+        border-radius: 999px;
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .report-detail-status--reviewed {
+        background: #dcfce7;
+        color: #4f5bd5;
+    }
+
+    .report-detail-status--changes {
+        background: #fef3c7;
+        color: #b45309;
+    }
+
+    .report-detail-status--submitted {
+        background: #ffedd5;
+        color: #c2410c;
+    }
+
+    .report-detail-content {
+        padding-top: 24px;
+    }
+
+    .report-detail-content h3 {
+        margin: 0 0 12px;
+        color: var(--text-main);
+        font-size: 16px;
+    }
+
+    .report-detail-description {
+        color: #334155;
+        font-size: 14px;
+        line-height: 1.75;
+        overflow-wrap: anywhere;
+    }
+
+    .report-detail-description p {
+        margin: 0 0 12px;
+    }
+
+    .report-detail-document {
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        margin-top: 8px;
+        padding: 11px 15px;
+        border: 1px solid #c7d2fe;
+        border-radius: 9px;
+        background: #eef2ff;
+        color: #34358f;
+        font-size: 13px;
+        font-weight: 700;
+        text-decoration: none;
+        transition: background 0.2s, border-color 0.2s;
+    }
+
+    .report-detail-document:hover {
+        border-color: #93c5fd;
+        background: #e0e7ff;
+    }
+
+    .report-detail-feedback {
+        margin-top: 20px;
+        padding: 16px 18px;
+        border: 1px solid #e0e7ff;
+        border-left: 4px solid #6366f1;
+        border-radius: 9px;
+        background: #f8fafc;
+        color: #334155;
+        font-size: 13px;
+        line-height: 1.6;
+        overflow-wrap: anywhere;
+    }
+
+    .report-detail-feedback h3 {
+        margin: 0 0 8px;
+        font-size: 13px;
+    }
+
+    .report-detail-feedback p {
+        margin: 0 0 8px;
+    }
+
+    .report-detail-review {
+        margin-top: 26px;
+        padding-top: 22px;
+        border-top: 1px solid var(--border-color);
+    }
+
+    .report-detail-review label {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--text-main);
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .report-detail-review textarea {
+        display: block;
+        width: 100%;
+        min-height: 120px;
+        box-sizing: border-box;
+        padding: 12px 14px;
+        border: 1px solid #cbd5e1;
+        border-radius: 9px;
+        background: #fff;
+        color: var(--text-main);
+        font: inherit;
+        font-size: 14px;
+        line-height: 1.5;
+        resize: vertical;
+        transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .report-detail-review textarea:focus {
+        border-color: #6366f1;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+    }
+
+    .report-detail-actions {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 14px;
+    }
+
+    .report-detail-actions button {
+        min-height: 40px;
+        padding: 9px 15px;
+        border: 0;
+        border-radius: 8px;
+        color: #fff;
+        font: inherit;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: transform 0.15s, filter 0.15s;
+    }
+
+    .report-detail-actions button:hover {
+        filter: brightness(0.95);
+        transform: translateY(-1px);
+    }
+
+    .report-detail-approve {
+        background: #6366f1;
+    }
+
+    .report-detail-request-changes {
+        background: #d97706;
+    }
+
+    @media (max-width: 640px) {
+        .dashboard-main {
+            padding: 24px 16px;
+        }
+
+        .report-detail-card {
+            padding: 20px 16px;
+        }
+
+        .report-detail-header {
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .report-detail-actions {
+            flex-direction: column;
+        }
+
+        .report-detail-actions button {
+            width: 100%;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    {% include "guide/sidebar.html" %}
+
+    <main class="dashboard-main">
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>{{ report.title|default:report.get_report_type_display }}</h1>
+                <p>
+                    {{ project.student.get_full_name|default:project.student.username }}
+                    &middot; {{ project.title }}
+                    {% if report.week_label %}
+                        &middot; {{ report.week_label }}
+                    {% endif %}
+                </p>
+            </div>
+            <div class="header-actions">
+                <a href="{% url 'guides:student_reports' project.id %}" class="btn-secondary">
+                    <span>&larr;</span>
+                    <span>Back to student reports</span>
+                </a>
+            </div>
+        </header>
+
+        <section class="recent-section">
+            <div class="recent-card report-detail-card">
+                <div class="report-detail-header">
+                    <div>
+                        <p class="report-detail-type">{{ report.get_report_type_display }}</p>
+                        <h2>{{ report.title }}</h2>
+                        {% if report.week_label %}
+                            <p class="report-detail-date">{{ report.week_label }}</p>
+                        {% endif %}
+                        <p class="report-detail-date">
+                            Submitted {{ report.submitted_at|date:"d M Y, h:i A" }}
+                        </p>
+                    </div>
+
+                    {% if report.status == "REVIEWED" %}
+                        <span class="report-detail-status report-detail-status--reviewed">Reviewed</span>
+                    {% elif report.status == "CHANGES_REQUIRED" %}
+                        <span class="report-detail-status report-detail-status--changes">Changes required</span>
+                    {% else %}
+                        <span class="report-detail-status report-detail-status--submitted">Pending review</span>
+                    {% endif %}
+                </div>
+
+                <div class="report-detail-content">
+                    <h3>Report details</h3>
+                    <div class="report-detail-description">{{ report.description|linebreaks }}</div>
+
+                    {% if report.document %}
+                        <a href="{{ report.document.url }}" target="_blank" rel="noopener noreferrer" class="report-detail-document">
+                            View submitted document
+                        </a>
+                    {% endif %}
+
+                    {% if report.detailed_marks %}
+                        <div class="report-detail-feedback">
+                            <h3>Marks</h3>
+                            {% for category, mark in report.detailed_marks.items %}
+                                <div>{{ category }}: {{ mark }}</div>
+                            {% endfor %}
+                        </div>
+                    {% elif report.marks is not None %}
+                        <div class="report-detail-feedback">
+                            <h3>Marks</h3>
+                            <div>{{ report.marks }}</div>
+                        </div>
+                    {% endif %}
+
+                    {% if report.guide_feedback %}
+                        <div class="report-detail-feedback">
+                            <h3>Guide feedback</h3>
+                            <div>{{ report.guide_feedback|linebreaks }}</div>
+                        </div>
+                    {% endif %}
+
+                    {% if report.status == "SUBMITTED" %}
+                        <form method="post" action="{% url 'guides:review_progress' report.id %}" class="report-detail-review">
+                            {% csrf_token %}
+                            <label for="guide-feedback">Review feedback</label>
+                            <textarea
+                                id="guide-feedback"
+                                name="feedback"
+                                placeholder="Enter your feedback for the student..."
+                            >{{ report.guide_feedback }}</textarea>
+
+                            <div class="report-detail-actions">
+                                <button type="submit" name="status" value="REVIEWED" class="report-detail-approve">
+                                    Mark as reviewed
+                                </button>
+                                <button type="submit" name="status" value="CHANGES_REQUIRED" class="report-detail-request-changes">
+                                    Request changes
+                                </button>
+                            </div>
+                        </form>
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+    </main>
+</div>
+{% endblock %}

@@ -1,135 +1,15 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Upload Progress - SPMS{% endblock %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/coordinator_theme.css' %}?v=3">
+{% endblock %}
+
 {% block content %}
 
-<style>
-
-.progress-page {
-    max-width: 850px;
-    margin: 40px auto;
-    padding: 0 20px;
-}
-
-.progress-header {
-    margin-bottom: 25px;
-}
-
-.progress-header h1 {
-    margin: 0;
-    font-size: 28px;
-    color: #111827;
-}
-
-.progress-header p {
-    margin-top: 8px;
-    color: #6b7280;
-}
-
-.project-card {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 22px;
-}
-
-.project-card h3 {
-    margin: 0 0 8px;
-    color: #111827;
-}
-
-.project-card p {
-    margin: 5px 0;
-    color: #6b7280;
-}
-
-.form-card {
-    background: #ffffff;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 25px;
-}
-
-.form-group {
-    margin-bottom: 20px;
-}
-
-.form-group label {
-    display: block;
-    font-weight: 600;
-    margin-bottom: 8px;
-    color: #374151;
-}
-
-.form-control {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 11px 13px;
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    font-size: 14px;
-}
-
-.form-control:focus {
-    outline: none;
-    border-color: #2563eb;
-}
-
-.report-info {
-    background: #eff6ff;
-    border: 1px solid #bfdbfe;
-    border-radius: 8px;
-    padding: 14px;
-    margin-bottom: 22px;
-    color: #1e40af;
-}
-
-.errorlist {
-    color: #dc2626;
-    padding-left: 20px;
-}
-
-.button-row {
-    display: flex;
-    gap: 12px;
-}
-
-.btn {
-    padding: 11px 18px;
-    border-radius: 8px;
-    text-decoration: none;
-    border: none;
-    cursor: pointer;
-    font-weight: 600;
-}
-
-.btn-primary {
-    background: #2563eb;
-    color: white;
-}
-
-.btn-secondary {
-    background: #f3f4f6;
-    color: #374151;
-}
-
-@media (max-width: 600px) {
-
-    .progress-page {
-        margin: 20px auto;
-    }
-
-    .button-row {
-        flex-direction: column;
-    }
-
-}
-
-</style>
-
-
+<div class="coordinator-theme-page">
 <div class="progress-page">
 
     <div class="progress-header">
@@ -232,6 +112,7 @@
 
     </div>
 
+</div>
 </div>
 
 {% endblock %}

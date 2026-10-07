@@ -21,9 +21,27 @@ urlpatterns = [
     ),
 
     path(
+        "reports/",
+        views.reports,
+        name="reports"
+    ),
+
+    path(
+        "evaluations/",
+        views.evaluations,
+        name="evaluations"
+    ),
+
+    path(
         "project/<int:proposal_id>/",
         views.project_detail,
         name="project_detail"
+    ),
+
+    path(
+        "project/<int:proposal_id>/send-message/",
+        views.send_message,
+        name="send_message"
     ),
 
     path(
@@ -48,5 +66,17 @@ urlpatterns = [
         "progress/<int:progress_id>/review/",
         views.review_progress,
         name="review_progress"
+    ),
+
+    path(
+        "project/<int:proposal_id>/reports/",
+        views.student_reports,
+        name="student_reports"
+    ),
+
+    path(
+        "report/<int:progress_id>/",
+        views.report_detail,
+        name="report_detail"
     ),
 ]

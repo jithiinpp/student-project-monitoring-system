@@ -17,7 +17,7 @@ Project Progress - SPMS
     max-width: 1150px;
     margin: 0 auto;
     padding: 32px;
-    background: #f4f7fb;
+    background: #edf2f9;
     min-height: 100vh;
     font-family: Arial, Helvetica, sans-serif;
     color: #1f2937;
@@ -57,7 +57,7 @@ Project Progress - SPMS
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    background: #2563eb;
+    background: #4f5bd5;
     color: #ffffff;
     padding: 11px 18px;
     min-height: 42px;
@@ -65,17 +65,17 @@ Project Progress - SPMS
     text-decoration: none;
     font-size: 13px;
     font-weight: 600;
-    border: 1px solid #2563eb;
+    border: 1px solid #4f5bd5;
     transition: all 0.2s ease;
     white-space: nowrap;
 }
 
 .add-btn:hover {
-    background: #1d4ed8;
-    border-color: #1d4ed8;
+    background: #34358f;
+    border-color: #34358f;
     color: #ffffff;
     transform: translateY(-1px);
-    box-shadow: 0 5px 14px rgba(37, 99, 235, 0.22);
+    box-shadow: 0 5px 14px rgba(79, 91, 213, 0.22);
 }
 
 /* =========================================================
@@ -172,15 +172,15 @@ Project Progress - SPMS
 }
 
 .status-submitted {
-    background: #eff6ff;
-    color: #2563eb;
-    border: 1px solid #dbeafe;
+    background: #eef2ff;
+    color: #4f5bd5;
+    border: 1px solid #dce2fa;
 }
 
 .status-reviewed {
     background: #ecfdf5;
     color: #059669;
-    border: 1px solid #d1fae5;
+    border: 1px solid #dce2fa;
 }
 
 .status-changes {
@@ -214,14 +214,14 @@ Project Progress - SPMS
     display: inline-flex;
     align-items: center;
     margin-top: 17px;
-    color: #2563eb;
+    color: #4f5bd5;
     text-decoration: none;
     font-weight: 600;
     font-size: 13px;
 }
 
 .document-link:hover {
-    color: #1d4ed8;
+    color: #34358f;
     text-decoration: underline;
 }
 
@@ -255,7 +255,7 @@ Project Progress - SPMS
    ========================================================= */
 
 .mark-card {
-    border-left: 4px solid #2563eb;
+    border-left: 4px solid #4f5bd5;
 }
 
 .mark-card h2 {
@@ -267,7 +267,7 @@ Project Progress - SPMS
 .final-mark {
     font-size: 38px;
     font-weight: 700;
-    color: #2563eb;
+    color: #4f5bd5;
     margin: 18px 0;
 }
 
@@ -356,7 +356,10 @@ Project Progress - SPMS
 </style>
 
 
-<div class="progress-page">
+<div class="spms-layout">
+    {% include 'student/sidebar.html' %}
+    <main class="spms-main">
+        <div class="progress-page">
 
     <div class="page-header">
 
@@ -604,6 +607,8 @@ Project Progress - SPMS
 
     {% endif %}
 
+</div>
+    </main>
 </div>
 
 {% endblock %}

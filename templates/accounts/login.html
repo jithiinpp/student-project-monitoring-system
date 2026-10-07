@@ -22,7 +22,7 @@ SPMS | Login
 
         padding: 40px 20px;
 
-        background: #f4f7fb;
+        background: #edf2f9;
     }
 
 
@@ -63,7 +63,7 @@ SPMS | Login
         align-items: center;
         justify-content: center;
 
-        background: #2563eb;
+        background: #4f5bd5;
 
         color: #ffffff;
 
@@ -164,10 +164,10 @@ SPMS | Login
 
     .form-group input:focus {
 
-        border-color: #2563eb;
+        border-color: #6366f1;
 
         box-shadow:
-            0 0 0 3px rgba(37, 99, 235, 0.12);
+            0 0 0 3px rgba(99, 102, 241, 0.14);
     }
 
 
@@ -185,7 +185,7 @@ SPMS | Login
 
         border-radius: 9px;
 
-        background: #2563eb;
+        background: #4f5bd5;
 
         color: #ffffff;
 
@@ -201,7 +201,7 @@ SPMS | Login
 
     .auth-button:hover {
 
-        background: #1d4ed8;
+        background: #34358f;
 
         transform: translateY(-1px);
     }
@@ -237,7 +237,7 @@ SPMS | Login
 
     .auth-footer a {
 
-        color: #2563eb;
+        color: #4f5bd5;
 
         font-size: 14px;
 
@@ -250,99 +250,6 @@ SPMS | Login
     .auth-footer a:hover {
 
         text-decoration: underline;
-    }
-
-
-    /* ==============================
-       LOGOUT SUCCESS POPUP
-    ============================== */
-
-    .logout-popup {
-
-        position: fixed;
-
-        top: 20px;
-
-        right: 20px;
-
-        z-index: 99999;
-
-        width: 300px;
-
-        padding: 14px 18px;
-
-        background: #ffffff;
-
-        color: #1f2937;
-
-        border-left: 4px solid #16a34a;
-
-        border-radius: 8px;
-
-        box-shadow:
-            0 8px 25px rgba(0, 0, 0, 0.12);
-
-        font-size: 14px;
-
-        font-weight: 500;
-
-        text-align: left;
-
-        animation: popupIn 0.35s ease;
-    }
-
-
-    /* Popup success */
-
-    .logout-popup.success {
-
-        border-left-color: #16a34a;
-    }
-
-
-    /* Popup animation */
-
-    @keyframes popupIn {
-
-        from {
-
-            opacity: 0;
-
-            transform: translateX(30px);
-        }
-
-        to {
-
-            opacity: 1;
-
-            transform: translateX(0);
-        }
-    }
-
-
-    /* Popup hide animation */
-
-    .logout-popup.hide {
-
-        animation: popupOut 0.4s ease forwards;
-    }
-
-
-    @keyframes popupOut {
-
-        from {
-
-            opacity: 1;
-
-            transform: translateX(0);
-        }
-
-        to {
-
-            opacity: 0;
-
-            transform: translateX(30px);
-        }
     }
 
 
@@ -372,17 +279,6 @@ SPMS | Login
         }
 
 
-        .logout-popup {
-
-            top: 15px;
-
-            right: 15px;
-
-            left: 15px;
-
-            width: auto;
-        }
-
     }
 
 </style>
@@ -391,27 +287,6 @@ SPMS | Login
 
 
 {% block content %}
-
-
-<!-- =================================
-     LOGOUT SUCCESS POPUP
-================================= -->
-
-{% if messages %}
-
-    {% for message in messages %}
-
-        <div
-            class="logout-popup {{ message.tags }}"
-            id="logoutPopup"
-        >
-            {{ message }}
-        </div>
-
-    {% endfor %}
-
-{% endif %}
-
 
 
 <!-- =================================
@@ -522,37 +397,6 @@ SPMS | Login
 
 </div>
 
-
-
-<!-- =================================
-     POPUP SCRIPT
-================================= -->
-
-<script>
-
-    document.addEventListener("DOMContentLoaded", function () {
-
-        const popup = document.getElementById("logoutPopup");
-
-        if (popup) {
-
-            setTimeout(function () {
-
-                popup.classList.add("hide");
-
-                setTimeout(function () {
-
-                    popup.remove();
-
-                }, 400);
-
-            }, 3000);
-
-        }
-
-    });
-
-</script>
 
 
 {% endblock %}

@@ -19,7 +19,7 @@ Submit Proposal | SPMS
 
 .proposal-page {
     min-height: 100vh;
-    background: #f4f7fb;
+    background: #edf2f9;
     padding: 32px;
     font-family: Arial, Helvetica, sans-serif;
     color: #1f2937;
@@ -123,10 +123,10 @@ Submit Proposal | SPMS
 
     font-size: 15px;
     font-weight: 700;
-    color: #2563eb;
+    color: #4f5bd5;
 
-    background: #eff6ff;
-    border: 1px solid #dbeafe;
+    background: #eef2ff;
+    border: 1px solid #dce2fa;
     border-radius: 9px;
 
     white-space: nowrap;
@@ -248,10 +248,10 @@ Submit Proposal | SPMS
 .form-group textarea:focus,
 .form-group select:focus {
 
-    border-color: #2563eb;
+    border-color: #4f5bd5;
 
     box-shadow:
-        0 0 0 3px rgba(37, 99, 235, 0.10);
+        0 0 0 3px rgba(79, 91, 213, 0.10);
 }
 
 .form-group textarea {
@@ -299,9 +299,9 @@ Submit Proposal | SPMS
 
 .file-box:hover {
 
-    border-color: #2563eb;
+    border-color: #4f5bd5;
 
-    background: #eff6ff;
+    background: #eef2ff;
 }
 
 .file-box input {
@@ -383,15 +383,15 @@ Submit Proposal | SPMS
 
     padding: 15px 17px;
 
-    background: #eff6ff;
+    background: #eef2ff;
 
-    border: 1px solid #dbeafe;
+    border: 1px solid #dce2fa;
 
-    border-left: 4px solid #2563eb;
+    border-left: 4px solid #4f5bd5;
 
     border-radius: 9px;
 
-    color: #1e40af;
+    color: #34358f;
 
     font-size: 13px;
 
@@ -400,7 +400,7 @@ Submit Proposal | SPMS
 
 .submission-notice strong {
 
-    color: #1d4ed8;
+    color: #34358f;
 }
 
 /* =========================================================
@@ -481,25 +481,25 @@ Submit Proposal | SPMS
 
 .btn-submit {
 
-    background: #2563eb;
+    background: #4f5bd5;
 
     color: #ffffff;
 
-    border: 1px solid #2563eb;
+    border: 1px solid #4f5bd5;
 }
 
 .btn-submit:hover {
 
-    background: #1d4ed8;
+    background: #34358f;
 
-    border-color: #1d4ed8;
+    border-color: #34358f;
 
     color: #ffffff;
 
     transform: translateY(-1px);
 
     box-shadow:
-        0 5px 14px rgba(37, 99, 235, 0.22);
+        0 5px 14px rgba(79, 91, 213, 0.22);
 }
 
 /* =========================================================
@@ -596,7 +596,10 @@ Submit Proposal | SPMS
 </style>
 
 
-<div class="proposal-page">
+<div class="spms-layout">
+    {% include 'student/sidebar.html' %}
+    <main class="spms-main">
+        <div class="proposal-page">
 
     <div class="proposal-container">
 
@@ -1066,6 +1069,8 @@ Submit Proposal | SPMS
 
     </div>
 
+</div>
+    </main>
 </div>
 
 {% endblock %}

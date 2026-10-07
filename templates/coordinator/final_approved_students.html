@@ -3,295 +3,142 @@
 {% block title %}Final Approved Students{% endblock %}
 
 {% block content %}
+<div class="dashboard-layout">
+    
+    <!-- SIDEBAR -->
+    {% include 'coordinator/sidebar.html' %}
 
-<div class="page-header">
-    <div>
-        <h1>Final Approved Students</h1>
-        <p>Students whose projects have received final Coordinator approval and Guide assignment.</p>
-    </div>
-
-    <a href="{% url 'coordinator:dashboard' %}" class="back-btn">
-        ← Back to Dashboard
-    </a>
-</div>
-
-
-<div class="summary-card">
-    <div>
-        <span>Total Final Approved Students</span>
-        <strong>{{ final_approved_count }}</strong>
-    </div>
-</div>
-
-
-<div class="table-card">
-
-    <div class="table-header">
-        <h2>Approved Students & Projects</h2>
-    </div>
-
-    {% if approved_projects %}
-
-    <div class="table-wrapper">
-
-        <table>
-
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Student</th>
-                    <th>Roll Number</th>
-                    <th>Project</th>
-                    <th>Domain</th>
-                    <th>Guide</th>
-                    <th>Status</th>
-                    <th>Details</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                {% for proposal in approved_projects %}
-
-                <tr>
-
-                    <td>{{ forloop.counter }}</td>
-
-                    <td>
-                        <strong>
-                            {{ proposal.student.get_full_name|default:proposal.student.username }}
-                        </strong>
-                        <br>
-                        <small>
-                            {{ proposal.student.username }}
-                        </small>
-                    </td>
-
-                    <td>
-                        {{ proposal.student.roll_number|default:"-" }}
-                    </td>
-
-                    <td>
-                        {{ proposal.title }}
-                    </td>
-
-                    <td>
-                        {{ proposal.domain|default:"-" }}
-                    </td>
-
-                    <td>
-                        {% if proposal.guide %}
-                            {{ proposal.guide.get_full_name|default:proposal.guide.username }}
-                        {% else %}
-                            Not Assigned
-                        {% endif %}
-                    </td>
-
-                    <td>
-
-                        {% if proposal.status == "COORDINATOR_APPROVED" %}
-                            <span class="status approved">
-                                Coordinator Approved
-                            </span>
-
-                        {% elif proposal.status == "GUIDE_ASSIGNED" %}
-                            <span class="status guide">
-                                Guide Assigned
-                            </span>
-
-                        {% elif proposal.status == "IN_PROGRESS" %}
-                            <span class="status progress">
-                                In Progress
-                            </span>
-
-                        {% elif proposal.status == "COMPLETED" %}
-                            <span class="status completed">
-                                Completed
-                            </span>
-                        {% endif %}
-
-                    </td>
-
-                    <td>
-                        <a
-                            href="{% url 'coordinator:proposal_detail' proposal.id %}"
-                            class="details-btn"
-                        >
-                            View Details
-                        </a>
-                    </td>
-
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
-    </div>
-
-    {% else %}
-
-        <div class="empty-state">
-            <h3>No Final Approved Students</h3>
-            <p>
-                Students will appear here after the Coordinator approves
-                their project and a Guide is assigned.
-            </p>
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main">
+        
+        <!-- HEADER -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>Final Approved Students</h1>
+                <p>Students whose projects have received final Coordinator approval and Guide assignment.</p>
+            </div>
+            <div class="header-actions">
+                <div class="stat-card" style="display: flex; align-items: center; gap: 12px; background: white; padding: 12px 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid rgba(226, 232, 240, 0.8);">
+                    <div class="stat-icon" style="color: #10b981; background: #e0e7ff; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center;">
+                        <svg style="width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                    </div>
+                    <div class="stat-content" style="display: flex; flex-direction: column;">
+                        <span class="stat-label" style="font-size: 12px; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Approved</span>
+                        <span class="stat-value" style="font-size: 20px; font-weight: 700; color: #0f172a; line-height: 1;">{{ final_approved_count }}</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+    <div class="content-card">
+        <div class="card-header">
+            <h2 class="card-title">Approved Students & Projects</h2>
         </div>
 
-    {% endif %}
+        {% if approved_projects %}
+        <div class="table-wrapper">
+            <table class="premium-table">
+                <thead>
+                    <tr>
+                        <th style="width: 50px; text-align: center;">#</th>
+                        <th>Student</th>
+                        <th>Project & Domain</th>
+                        <th>Guide</th>
+                        <th>Status</th>
+                        <th style="text-align: right;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for proposal in approved_projects %}
+                    <tr>
+                        <td style="text-align: center; color: var(--text-muted); font-weight: 500;">
+                            {{ forloop.counter }}
+                        </td>
+                        
+                        <!-- Student Avatar & Name -->
+                        <td>
+                            <a href="{% url 'accounts:student_profile' proposal.student.id %}" class="user-cell" style="text-decoration: none; cursor: pointer;">
+                                <div class="user-avatar">
+                                    {% if proposal.student.first_name %}
+                                        {{ proposal.student.first_name|first|upper }}
+                                    {% else %}
+                                        {{ proposal.student.username|first|upper }}
+                                    {% endif %}
+                                </div>
+                                <div class="user-info">
+                                    <span class="user-name">{{ proposal.student.get_full_name|default:proposal.student.username }}</span>
+                                    <span class="user-roll" style="color: #64748b; font-size: 12px;">{{ proposal.student.department|default:"Dept N/A" }} • Roll: {{ proposal.student.roll_number|default:"N/A" }}</span>
+                                    <span style="color: #64748b; font-size: 11px; margin-top: 2px;">{{ proposal.student.email|default:"No Email" }}</span>
+                                </div>
+                            </a>
+                        </td>
 
+                        <!-- Project & Domain -->
+                        <td>
+                            <div class="project-cell">
+                                <span class="project-title">{{ proposal.title }}</span>
+                                {% if proposal.domain %}
+                                    <span class="domain-pill">{{ proposal.domain }}</span>
+                                {% else %}
+                                    <span class="domain-pill empty-domain">No Domain</span>
+                                {% endif %}
+                            </div>
+                        </td>
+
+                        <!-- Guide -->
+                        <td>
+                            <div class="guide-cell">
+                                {% if proposal.guide %}
+                                    <div class="guide-avatar">
+                                        {% if proposal.guide.first_name %}
+                                            {{ proposal.guide.first_name|first|upper }}
+                                        {% else %}
+                                            {{ proposal.guide.username|first|upper }}
+                                        {% endif %}
+                                    </div>
+                                    <span class="guide-name">{{ proposal.guide.get_full_name|default:proposal.guide.username }}</span>
+                                {% else %}
+                                    <span style="color: var(--text-muted); font-size: 13.5px;">Not Assigned</span>
+                                {% endif %}
+                            </div>
+                        </td>
+
+                        <!-- Status -->
+                        <td>
+                            {% if proposal.status == "COORDINATOR_APPROVED" %}
+                                <span class="status-badge status-approved">Coordinator Approved</span>
+                            {% elif proposal.status == "GUIDE_ASSIGNED" %}
+                                <span class="status-badge status-guide">Guide Assigned</span>
+                            {% elif proposal.status == "IN_PROGRESS" %}
+                                <span class="status-badge status-progress">In Progress</span>
+                            {% elif proposal.status == "COMPLETED" %}
+                                <span class="status-badge status-completed">Completed</span>
+                            {% endif %}
+                        </td>
+
+                        <!-- Action -->
+                        <td style="text-align: right;">
+                            <a href="{% url 'coordinator:proposal_detail' proposal.id %}" class="btn-action">
+                                Details
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">
+                <svg viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+            </div>
+            <h2 class="empty-title">No Final Approved Students</h2>
+            <p class="empty-desc">Students will appear here after their projects are approved and a Guide is assigned.</p>
+        </div>
+        {% endif %}
+    </div>
+
+    </main>
 </div>
 
-
-<style>
-
-.page-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 25px;
-}
-
-.page-header h1 {
-    margin: 0;
-    font-size: 28px;
-    color: #111827;
-}
-
-.page-header p {
-    margin-top: 6px;
-    color: #6b7280;
-}
-
-.back-btn {
-    padding: 10px 16px;
-    border-radius: 8px;
-    background: #ffffff;
-    border: 1px solid #dbe2ea;
-    color: #2563eb;
-    text-decoration: none;
-}
-
-.summary-card {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 20px;
-    margin-bottom: 20px;
-}
-
-.summary-card span {
-    display: block;
-    color: #6b7280;
-    font-size: 14px;
-}
-
-.summary-card strong {
-    display: block;
-    margin-top: 5px;
-    font-size: 30px;
-    color: #111827;
-}
-
-.table-card {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    overflow: hidden;
-}
-
-.table-header {
-    padding: 20px;
-    border-bottom: 1px solid #e5e7eb;
-}
-
-.table-header h2 {
-    margin: 0;
-    font-size: 19px;
-    color: #111827;
-}
-
-.table-wrapper {
-    overflow-x: auto;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-th,
-td {
-    padding: 15px 18px;
-    text-align: left;
-    border-bottom: 1px solid #edf0f3;
-}
-
-th {
-    background: #f8fafc;
-    color: #64748b;
-    font-size: 13px;
-}
-
-td {
-    color: #374151;
-    font-size: 14px;
-}
-
-td small {
-    color: #9ca3af;
-}
-
-.status {
-    display: inline-block;
-    padding: 6px 9px;
-    border-radius: 6px;
-    font-size: 12px;
-    font-weight: 600;
-}
-
-.status.approved {
-    background: #ecfdf5;
-    color: #15803d;
-}
-
-.status.guide {
-    background: #eff6ff;
-    color: #2563eb;
-}
-
-.status.progress {
-    background: #fff7ed;
-    color: #c2410c;
-}
-
-.status.completed {
-    background: #f0fdf4;
-    color: #166534;
-}
-
-.details-btn {
-    color: #2563eb;
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.empty-state {
-    padding: 50px;
-    text-align: center;
-}
-
-.empty-state h3 {
-    margin-bottom: 8px;
-}
-
-.empty-state p {
-    color: #6b7280;
-}
-
-</style>
 
 {% endblock %}

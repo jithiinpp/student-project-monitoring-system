@@ -84,7 +84,7 @@ class StudentRegistrationForm(UserCreationForm):
         user = super().save(commit=False)
 
         # Public registration is always Student
-        user.role = "STUDENT"
+        user.is_student=True
 
         if commit:
             user.save()

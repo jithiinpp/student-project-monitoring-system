@@ -4,19 +4,12 @@ from django.db import models
 
 class User(AbstractUser):
 
-    ROLE_CHOICES = [
-        ("STUDENT", "Student"),
-        ("COORDINATOR", "Coordinator"),
-        ("EXPERT", "Domain Expert"),
-        ("GUIDE", "Guide"),
-        ("PANEL", "Panel Member"),
-    ]
-
-    role = models.CharField(
-        max_length=20,
-        choices=ROLE_CHOICES,
-        default="STUDENT"
-    )
+    is_student = models.BooleanField(default=False)
+    is_coordinator = models.BooleanField(default=False)
+    is_faculty = models.BooleanField(default=False)
+    is_expert = models.BooleanField(default=False)
+    is_guide = models.BooleanField(default=False)
+    is_panel = models.BooleanField(default=False)
 
     phone = models.CharField(
         max_length=15,
@@ -32,6 +25,12 @@ class User(AbstractUser):
 
     department = models.CharField(
         max_length=100,
+        blank=True,
+        null=True
+    )
+
+    domain_of_expertise = models.CharField(
+        max_length=200,
         blank=True,
         null=True
     )

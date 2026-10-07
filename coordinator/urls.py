@@ -34,6 +34,24 @@ urlpatterns = [
     ),
 
     path(
+        "proposals/<int:proposal_id>/send-message/",
+        views.coordinator_send_message,
+        name="coordinator_send_message"
+    ),
+
+    path(
+        "proposals/<int:proposal_id>/schedule-review/",
+        views.schedule_review,
+        name="schedule_review"
+    ),
+
+    path(
+        "schedule-reviews/",
+        views.schedule_reviews_list,
+        name="schedule_reviews_list"
+    ),
+
+    path(
         "proposals/<int:proposal_id>/assign-expert/",
         views.assign_expert,
         name="assign_expert"
@@ -66,6 +84,18 @@ urlpatterns = [
 
     # Experts
     path(
+        "faculty/",
+        views.faculty,
+        name="faculty"
+    ),
+
+    path(
+        "faculty/add/",
+        views.add_faculty,
+        name="add_faculty"
+    ),
+
+    path(
         "experts/",
         views.experts,
         name="experts"
@@ -73,7 +103,8 @@ urlpatterns = [
 
     path(
         "experts/add/",
-        views.add_expert,
+        views.assign_faculty_role,
+        {"role": "is_expert"},
         name="add_expert"
     ),
 
@@ -98,7 +129,8 @@ urlpatterns = [
 
     path(
         "guides/add/",
-        views.add_guide,
+        views.assign_faculty_role,
+        {"role": "is_guide"},
         name="add_guide"
     ),
 
@@ -123,7 +155,8 @@ urlpatterns = [
 
     path(
         "panels/add/",
-        views.add_panel,
+        views.assign_faculty_role,
+        {"role": "is_panel"},
         name="add_panel"
     ),
 
@@ -137,31 +170,6 @@ urlpatterns = [
         "panels/<int:user_id>/delete/",
         views.delete_panel,
         name="delete_panel"
-    ),
-
-    # Staff
-    path(
-        "staff/",
-        views.staff,
-        name="staff"
-    ),
-
-    path(
-        "staff/add/",
-        views.add_staff,
-        name="add_staff"
-    ),
-
-    path(
-        "staff/<int:user_id>/",
-        views.staff_detail,
-        name="staff_detail"
-    ),
-
-    path(
-        "staff/<int:user_id>/delete/",
-        views.delete_staff,
-        name="delete_staff"
     ),
 
     # Students

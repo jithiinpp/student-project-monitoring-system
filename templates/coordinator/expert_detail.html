@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+
+{% block title %}
+Expert Details | SPMS
+{% endblock %}
+
+{% block extra_css %}
+
+{% endblock %}
+
+{% block content %}
+<div class="expert-page">
+    <div class="expert-container">
+        
+        <div class="page-header">
+            <div>
+                <h1>Expert Details</h1>
+                <p>Detailed information about {{ expert.get_full_name|default:expert.username }}</p>
+            </div>
+            <a href="{% url 'coordinator:experts' %}" class="btn-secondary">Back to Experts List</a>
+        </div>
+
+        <div class="card">
+            <div class="info-grid">
+                <div class="info-box">
+                    <div class="info-label">Full Name</div>
+                    <div class="info-value">
+                        {% if expert.first_name or expert.last_name %}
+                            {{ expert.first_name }} {{ expert.last_name }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-label">Username</div>
+                    <div class="info-value">{{ expert.username }}</div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-label">Role</div>
+                    <div class="info-value">
+                        {% if expert.is_expert %}Domain Expert{% endif %}
+                        {% if expert.is_guide %}{% if expert.is_expert %}, {% endif %}Guide{% endif %}
+                        {% if expert.is_panel %}{% if expert.is_expert or expert.is_guide %}, {% endif %}Panel Member{% endif %}
+                        {% if not expert.is_expert and not expert.is_guide and not expert.is_panel %}User{% endif %}
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-label">Email Address</div>
+                    <div class="info-value">{{ expert.email|default:"Not Provided" }}</div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-label">Phone Number</div>
+                    <div class="info-value">{{ expert.phone|default:"Not Provided" }}</div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-label">Department</div>
+                    <div class="info-value">{{ expert.department|default:"Not Provided" }}</div>
+                </div>
+                
+                <div class="info-box">
+                    <div class="info-label">Status</div>
+                    <div class="info-value">
+                        {% if expert.is_active %}
+                            <span style="color: #6366f1;">Active</span>
+                        {% else %}
+                            <span style="color: #dc2626;">Inactive</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-label">Date Joined</div>
+                    <div class="info-value">{{ expert.date_joined|date:"M d, Y" }}</div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+</div>
+{% endblock %}

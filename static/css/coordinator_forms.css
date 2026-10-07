@@ -1,0 +1,305 @@
+.coordinator-form-page {
+    min-height: 100vh;
+}
+
+.coordinator-form-page .dashboard-main {
+    min-width: 0;
+    width: 100%;
+    max-width: none;
+}
+
+.coordinator-form-content {
+    width: 100%;
+    max-width: 880px;
+    margin: 12px auto 0;
+}
+
+.coordinator-form-page .form-card {
+    padding: 36px;
+    border-radius: 18px;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
+}
+
+.coordinator-form-page .form-header {
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.coordinator-form-icon {
+    display: grid;
+    width: 50px;
+    height: 50px;
+    flex: 0 0 50px;
+    place-items: center;
+    border: 1px solid #e0e7ff;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #eef2ff, #e0e7ff);
+    color: #4f5bd5;
+}
+
+.coordinator-form-icon svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.coordinator-form-page .form-title-wrapper h1 {
+    font-size: 25px;
+    letter-spacing: -0.03em;
+}
+
+.coordinator-form-page .form-title-wrapper p {
+    max-width: 620px;
+    line-height: 1.6;
+}
+
+.coordinator-form-page .form-grid {
+    gap: 4px 22px;
+}
+
+.coordinator-form-page .form-group {
+    min-width: 0;
+    margin-bottom: 17px;
+}
+
+.coordinator-form-page .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #334155;
+    font-size: 13px;
+    font-weight: 650;
+}
+
+.coordinator-form-page .form-group label span {
+    color: #dc2626;
+}
+
+.coordinator-form-page .faculty-role-fieldset {
+    min-width: 0;
+    padding: 0;
+    border: 0;
+}
+
+.coordinator-form-page .faculty-role-fieldset legend {
+    margin-bottom: 6px;
+    color: #334155;
+    font-size: 13px;
+    font-weight: 650;
+}
+
+.coordinator-form-page .faculty-role-help {
+    margin: 0 0 12px;
+    color: #64748b;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.coordinator-form-page .faculty-role-options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.coordinator-form-page .faculty-role-option {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    margin: 0 !important;
+    padding: 0 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 999px;
+    background: #fff;
+    color: #475569 !important;
+    cursor: pointer;
+    transition: border-color 0.18s ease, background 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.coordinator-form-page .faculty-role-option:hover {
+    border-color: #a5b4fc;
+    background: #f8f9ff;
+}
+
+.coordinator-form-page .faculty-role-option input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    opacity: 0;
+}
+
+.coordinator-form-page .faculty-role-option span {
+    color: inherit !important;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.coordinator-form-page .faculty-role-option:has(input:checked) {
+    border-color: #6366f1;
+    background: #eef2ff;
+    color: #3730a3 !important;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.08);
+}
+
+.coordinator-form-page .faculty-role-option:has(input:focus-visible) {
+    outline: 3px solid rgba(99, 102, 241, 0.25);
+    outline-offset: 2px;
+}
+
+.coordinator-form-page #expert-domain-group[hidden] {
+    display: none;
+}
+
+.coordinator-form-page .form-group input,
+.coordinator-form-page .form-group select {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 46px;
+    padding: 11px 14px;
+    border: 1px solid #cbd5e1;
+    border-radius: 9px;
+    background: #fff;
+    color: #0f172a;
+    font: inherit;
+    font-size: 14px;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+}
+
+.coordinator-form-page .form-group input::placeholder {
+    color: #94a3b8;
+}
+
+.coordinator-form-page .form-group input:focus,
+.coordinator-form-page .form-group select:focus {
+    border-color: #6366f1;
+    outline: none;
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.14);
+}
+
+.coordinator-form-page .faculty-details {
+    padding: 18px 20px;
+    border: 1px solid #e0e7ff;
+    border-radius: 12px;
+    background: #f8f9ff;
+}
+
+.coordinator-form-page .faculty-details[hidden] {
+    display: none;
+}
+
+.coordinator-form-page .faculty-details-heading {
+    margin-bottom: 10px;
+    color: #64748b;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.coordinator-form-page .faculty-details strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #0f172a;
+    font-size: 15px;
+}
+
+.coordinator-form-page .faculty-detail-line {
+    margin-top: 4px;
+    color: #64748b;
+    font-size: 13px;
+    overflow-wrap: anywhere;
+}
+
+.coordinator-form-page .faculty-empty-message {
+    margin: 10px 0 0;
+    padding: 11px 13px;
+    border: 1px solid #fde68a;
+    border-radius: 8px;
+    background: #fffbeb;
+    color: #92400e;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.coordinator-form-page .faculty-empty-message a {
+    color: #3730a3;
+    font-weight: 600;
+}
+
+.coordinator-form-page .form-actions {
+    margin-top: 20px;
+    padding-top: 22px;
+}
+
+.coordinator-form-page .form-actions .btn {
+    min-height: 44px;
+}
+
+.coordinator-form-page .form-actions .btn-submit:disabled {
+    cursor: not-allowed;
+    opacity: 0.55;
+    transform: none;
+    box-shadow: none;
+}
+
+@media (max-width: 900px) {
+    .coordinator-form-page .dashboard-main {
+        padding: 28px 22px;
+    }
+
+    .coordinator-form-page .form-card {
+        padding: 28px;
+    }
+}
+
+@media (max-width: 700px) {
+    .coordinator-form-page {
+        flex-direction: column;
+    }
+
+    .coordinator-form-page .premium-sidebar {
+        position: relative;
+        top: auto;
+        width: 100%;
+        height: auto;
+        max-height: 42vh;
+        overflow: auto;
+    }
+
+    .coordinator-form-page .sidebar-nav {
+        min-height: 0;
+        overflow: visible;
+    }
+
+    .coordinator-form-page .dashboard-main {
+        padding: 22px 14px;
+    }
+
+    .coordinator-form-content {
+        margin-top: 0;
+    }
+
+    .coordinator-form-page .form-card {
+        padding: 23px 18px;
+        border-radius: 14px;
+    }
+
+    .coordinator-form-page .form-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 0;
+    }
+
+    .coordinator-form-page .form-actions {
+        align-items: stretch;
+        flex-direction: column-reverse;
+    }
+
+    .coordinator-form-page .form-actions .btn {
+        width: 100%;
+    }
+}

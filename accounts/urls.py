@@ -61,6 +61,24 @@ urlpatterns = [
     ),
 
     path(
+        "student/schedule/",
+        views.student_schedule,
+        name="student_schedule"
+    ),
+
+    path(
+        "student/send-message/<int:project_id>/",
+        views.student_send_message,
+        name="student_send_message"
+    ),
+
+    path(
+        "student/discussion/",
+        views.student_discussion,
+        name="student_discussion"
+    ),
+
+    path(
         "student/proposals/",
         views.student_proposals,
         name="student_proposals"
@@ -84,6 +102,12 @@ urlpatterns = [
         name="edit_proposal"
     ),
 
+    path(
+        "student/profile/<int:student_id>/",
+        views.student_profile,
+        name="student_profile"
+    ),
+
 
     # =====================================================
     # WEEKLY PROGRESS
@@ -96,21 +120,33 @@ urlpatterns = [
     ),
 
     path(
+        "student/weekly-reports/",
+        views.student_weekly_reports,
+        name="student_weekly_reports"
+    ),
+
+    path(
+        "student/final-reports/",
+        views.student_final_reports,
+        name="student_final_reports"
+    ),
+
+    path(
         "student/progress/add/",
         views.add_progress,
         name="add_progress"
+    ),
+
+    path(
+        "student/progress/final/",
+        views.add_final_report,
+        name="add_final_report"
     ),
 
 
     # =====================================================
     # COORDINATOR
     # =====================================================
-
-    path(
-        "coordinator/dashboard/",
-        views.coordinator_dashboard,
-        name="coordinator_dashboard"
-    ),
 
 
     # =====================================================
@@ -150,6 +186,37 @@ urlpatterns = [
         views.panel_dashboard,
         name="panel_dashboard"
     ),
+
+    path(
+        "panel/evaluations/",
+        views.panel_evaluations,
+        name="panel_evaluations"
+    ),
+
+    path(
+        "panel/students/",
+        views.panel_students,
+        name="panel_students"
+    ),
+
+    path(
+        "panel/schedule/",
+        views.panel_schedule,
+        name="panel_schedule"
+    ),
+
+    path(
+        "panel/evaluate/<int:project_id>/",
+        views.panel_evaluate,
+        name="panel_evaluate"
+    ),
+
+    path(
+        "panel/send-message/<int:project_id>/",
+        views.panel_send_message,
+        name="panel_send_message"
+    ),
+
 
     path(
         "final-mark/",

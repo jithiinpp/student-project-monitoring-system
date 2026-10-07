@@ -1,11 +1,15 @@
+from decimal import Decimal, InvalidOperation
+
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from django.db.models import Q
 
 from projects.models import (
     ProjectProposal,
     ProjectProgress,
+    ProjectMessage,
 )
 
 from .models import GuideEvaluation
@@ -21,7 +25,7 @@ def guide_required(view_func):
     @login_required
     def wrapper(request, *args, **kwargs):
 
-        if request.user.role != "GUIDE":
+        if not request.user.is_guide:
 
             messages.error(
                 request,
@@ -96,6 +100,9 @@ def dashboard(request):
         .count()
     )
 
+    proposals_pending = projects.filter(status="GUIDE_ASSIGNED").count()
+    total_pending = reports_pending + proposals_pending
+
     # -----------------------------------------------------
     # FINAL REPORTS WAITING FOR REVIEW
     # -----------------------------------------------------
@@ -118,7 +125,7 @@ def dashboard(request):
         ProjectProgress.objects
         .filter(
             project__guide=request.user,
-            report_type="WEEKLY_PROGRESS",
+            report_type__in=["PROGRESS_1", "PROGRESS_2", "PROGRESS_3"],
             status="SUBMITTED"
         )
         .count()
@@ -132,7 +139,7 @@ def dashboard(request):
         ProjectProgress.objects
         .filter(
             project__guide=request.user,
-            report_type="WEEKLY_PROGRESS"
+            report_type__in=["PROGRESS_1", "PROGRESS_2", "PROGRESS_3"]
         )
         .count()
     )
@@ -151,6 +158,12 @@ def dashboard(request):
     )
 
     # -----------------------------------------------------
+    # SCHEDULED REVIEWS
+    # -----------------------------------------------------
+
+    scheduled_reviews = projects.exclude(review_date__isnull=True).order_by("review_date")
+
+    # -----------------------------------------------------
     # SEND DATA TO TEMPLATE
     # -----------------------------------------------------
 
@@ -159,13 +172,14 @@ def dashboard(request):
         "guide/dashboard.html",
         {
             "projects": projects,
+            "scheduled_reviews": scheduled_reviews,
 
             "assigned_count": assigned_count,
             "rejected_count": rejected_count,
             "in_progress_count": in_progress_count,
             "completed_count": completed_count,
 
-            "reports_pending": reports_pending,
+            "reports_pending": total_pending,
             "weekly_reports_pending": weekly_reports_pending,
             "final_reports_pending": final_reports_pending,
 
@@ -195,6 +209,15 @@ def students(request):
         )
     )
 
+    status_filter = request.GET.get('status')
+    if status_filter:
+        if status_filter == "PENDING_REVIEW":
+            projects = projects.filter(
+                Q(progress_reports__status="SUBMITTED") | Q(status="GUIDE_ASSIGNED")
+            ).distinct()
+        else:
+            projects = projects.filter(status=status_filter)
+
     return render(
         request,
         "guide/students.html",
@@ -202,6 +225,38 @@ def students(request):
             "projects": projects
         }
     )
+
+
+@login_required
+@guide_required
+def reports(request):
+    all_reports = (
+        ProjectProgress.objects
+        .filter(
+            project__guide=request.user
+        )
+        .select_related("project", "project__student")
+        .order_by("project", "-submitted_at")
+    )
+    return render(request, "guide/reports.html", {
+        "reports": all_reports,
+        "page_title": "Reports"
+    })
+
+
+@login_required
+@guide_required
+def evaluations(request):
+    projects = ProjectProposal.objects.filter(
+        guide=request.user,
+        progress_reports__report_type="FINAL_REPORT"
+    ).select_related(
+        "student"
+    ).distinct()
+    
+    return render(request, "guide/evaluations.html", {
+        "projects": projects
+    })
 
 
 # =========================================================
@@ -222,6 +277,12 @@ def project_detail(request, proposal_id):
     )
 
     # -----------------------------------------------------
+    # MESSAGES
+    # -----------------------------------------------------
+
+    project_messages = project.messages.select_related("sender").all()
+
+    # -----------------------------------------------------
     # WEEKLY REPORTS
     # -----------------------------------------------------
 
@@ -230,7 +291,7 @@ def project_detail(request, proposal_id):
         .filter(
             project=project,
             student=project.student,
-            report_type="WEEKLY_PROGRESS"
+            report_type__in=["PROGRESS_1", "PROGRESS_2", "PROGRESS_3"]
         )
         .order_by(
             "submitted_at"
@@ -358,6 +419,7 @@ def project_detail(request, proposal_id):
         "guide/project_detail.html",
         {
             "project": project,
+            "project_messages": project_messages,
 
             "weekly_reports": weekly_reports,
             "final_report": final_report,
@@ -383,6 +445,28 @@ def project_detail(request, proposal_id):
             "can_evaluate": can_evaluate,
         }
     )
+
+
+# =========================================================
+# SEND MESSAGE
+# =========================================================
+
+@guide_required
+def send_message(request, proposal_id):
+    if request.method == "POST":
+        project = get_object_or_404(ProjectProposal, id=proposal_id, guide=request.user)
+        message_text = request.POST.get("message", "").strip()
+        if message_text:
+            ProjectMessage.objects.create(
+                project=project,
+                sender=request.user,
+                message=message_text
+            )
+        next_url = request.GET.get('next')
+        if next_url:
+            return redirect(next_url)
+        return redirect("guides:project_detail", proposal_id=project.id)
+    return redirect("guides:dashboard")
 
 
 # =========================================================
@@ -422,9 +506,31 @@ def review_progress(request, progress_id):
     )
 
     feedback = request.POST.get(
-        "guide_feedback",
+        "feedback",
         ""
     ).strip()
+
+    # Extract dynamic categories
+    criteria_titles = request.POST.getlist('criteria_title[]')
+    criteria_marks = request.POST.getlist('criteria_mark[]')
+    
+    detailed_marks = {}
+    total_marks = 0.0
+    
+    if criteria_titles and criteria_marks and len(criteria_titles) == len(criteria_marks):
+        for title, mark in zip(criteria_titles, criteria_marks):
+            title = title.strip()
+            try:
+                mark_val = float(mark)
+                if title:
+                    detailed_marks[title] = mark_val
+                    total_marks += mark_val
+            except ValueError:
+                pass
+                
+    if detailed_marks:
+        progress.detailed_marks = detailed_marks
+        progress.marks = total_marks
 
     # -----------------------------------------------------
     # VALIDATE STATUS
@@ -441,8 +547,8 @@ def review_progress(request, progress_id):
         )
 
         return redirect(
-            "guides:project_detail",
-            proposal_id=progress.project.id
+            "guides:report_detail",
+            progress_id=progress.id
         )
 
     # -----------------------------------------------------
@@ -455,12 +561,16 @@ def review_progress(request, progress_id):
 
     progress.reviewed_at = timezone.now()
 
+    update_fields = [
+        "status",
+        "guide_feedback",
+        "reviewed_at",
+    ]
+    if detailed_marks:
+        update_fields.extend(["marks", "detailed_marks"])
+
     progress.save(
-        update_fields=[
-            "status",
-            "guide_feedback",
-            "reviewed_at",
-        ]
+        update_fields=update_fields
     )
 
     # -----------------------------------------------------
@@ -487,7 +597,7 @@ def review_progress(request, progress_id):
     # WEEKLY REPORT
     # -----------------------------------------------------
 
-    elif progress.report_type == "WEEKLY_PROGRESS":
+    elif progress.report_type in ["PROGRESS_1", "PROGRESS_2", "PROGRESS_3"]:
 
         if status == "REVIEWED":
 
@@ -508,8 +618,8 @@ def review_progress(request, progress_id):
     # -----------------------------------------------------
 
     return redirect(
-        "guides:project_detail",
-        proposal_id=progress.project.id
+        "guides:report_detail",
+        progress_id=progress.id
     )
 
 
@@ -588,7 +698,7 @@ def evaluate_project(request, proposal_id):
         .filter(
             project=project,
             student=project.student,
-            report_type="WEEKLY_PROGRESS"
+            report_type__in=["PROGRESS_1", "PROGRESS_2", "PROGRESS_3"]
         )
         .order_by(
             "submitted_at"
@@ -655,56 +765,91 @@ def evaluate_project(request, proposal_id):
 
     if request.method == "POST":
 
-        if evaluation:
+        feedback = request.POST.get("feedback", "").strip()
+        titles = request.POST.getlist("criteria_title[]")
+        marks = request.POST.getlist("criteria_mark[]")
 
-            form = GuideEvaluationForm(
-                request.POST,
-                instance=evaluation
-            )
+        if len(titles) != len(marks):
+            messages.error(request, "Each mark category must have a matching mark.")
+            return redirect("guides:project_detail", proposal_id=project.id)
 
-        else:
+        detailed_marks = {}
+        total_marks = Decimal("0")
 
-            form = GuideEvaluationForm(
-                request.POST
-            )
+        for title_text, mark_text in zip(titles, marks):
+            title = title_text.strip()
+            mark_text = mark_text.strip()
 
-        # -------------------------------------------------
-        # VALID FORM
-        # -------------------------------------------------
+            if not title and not mark_text:
+                continue
+            if not title or not mark_text:
+                messages.error(
+                    request,
+                    "Enter both a category name and mark for every row.",
+                )
+                return redirect("guides:project_detail", proposal_id=project.id)
+            if title in detailed_marks:
+                messages.error(request, "Mark category names must be unique.")
+                return redirect("guides:project_detail", proposal_id=project.id)
 
-        if form.is_valid():
+            try:
+                mark_value = Decimal(mark_text)
+            except InvalidOperation:
+                messages.error(request, "Enter a valid number for each mark.")
+                return redirect("guides:project_detail", proposal_id=project.id)
 
-            evaluation = form.save(
-                commit=False
-            )
+            if (
+                not mark_value.is_finite()
+                or mark_value < 0
+                or mark_value > 100
+                or mark_value.as_tuple().exponent < -2
+            ):
+                messages.error(
+                    request,
+                    "Each mark must be between 0 and 100 with at most two decimal places.",
+                )
+                return redirect("guides:project_detail", proposal_id=project.id)
 
-            evaluation.project = project
+            detailed_marks[title] = str(mark_value)
+            total_marks += mark_value
 
-            evaluation.guide = request.user
+        if not detailed_marks:
+            messages.error(request, "Add at least one mark category.")
+            return redirect("guides:project_detail", proposal_id=project.id)
 
-            evaluation.save()
+        if total_marks > 100:
+            messages.error(request, "Total marks cannot exceed 100.")
+            return redirect("guides:project_detail", proposal_id=project.id)
 
-            # ---------------------------------------------
-            # PROJECT COMPLETED
-            # ---------------------------------------------
+        if not evaluation:
+            evaluation = GuideEvaluation(project=project, guide=request.user)
+            
+        evaluation.feedback = feedback
+        evaluation.detailed_marks = detailed_marks
+        evaluation.marks = total_marks
+        evaluation.save()
 
-            project.status = "COMPLETED"
+        # ---------------------------------------------
+        # PROJECT COMPLETED
+        # ---------------------------------------------
 
-            project.save(
-                update_fields=[
-                    "status"
-                ]
-            )
+        project.status = "COMPLETED"
 
-            messages.success(
-                request,
-                "Final mark saved successfully. Project marked as completed."
-            )
+        project.save(
+            update_fields=[
+                "status"
+            ]
+        )
 
-            return redirect(
-                "guides:project_detail",
-                proposal_id=project.id
-            )
+        messages.success(
+            request,
+            "Final mark saved successfully. Project marked as completed."
+        )
+
+        return redirect(
+            "guides:project_detail",
+            proposal_id=project.id
+        )
 
     # -----------------------------------------------------
     # GET
@@ -892,3 +1037,30 @@ def reject_project(request, proposal_id):
     return redirect(
         "guides:students"
     )
+
+@login_required
+@guide_required
+def student_reports(request, proposal_id):
+    project = get_object_or_404(ProjectProposal, id=proposal_id, guide=request.user)
+    reports = ProjectProgress.objects.filter(project=project).order_by('-submitted_at')
+    project_messages = project.messages.select_related("sender").all()
+    
+    return render(request, 'guide/student_reports_list.html', {
+        'project': project,
+        'reports': reports,
+        'project_messages': project_messages
+    })
+
+@login_required
+@guide_required
+def report_detail(request, progress_id):
+    report = get_object_or_404(
+        ProjectProgress.objects.select_related('project', 'project__student'), 
+        id=progress_id, 
+        project__guide=request.user
+    )
+    
+    return render(request, 'guide/report_detail.html', {
+        'report': report,
+        'project': report.project
+    })

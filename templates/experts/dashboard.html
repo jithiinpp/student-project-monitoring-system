@@ -1,676 +1,140 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Expert Dashboard | SPMS</title>
-
-    <style>
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f4f7fb;
-            color: #1e293b;
-        }
-
-        /* =========================
-           SIDEBAR
-        ========================= */
-
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 245px;
-            height: 100vh;
-            background: #0f172a;
-            padding: 24px 14px;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: white;
-            font-size: 20px;
-            font-weight: 700;
-            padding: 0 12px 30px;
-        }
-
-        .logo-icon {
-            width: 38px;
-            height: 38px;
-            background: #2563eb;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .logo-icon svg {
-            width: 22px;
-            height: 22px;
-            stroke: white;
-        }
-
-        .nav-title {
-            color: #64748b;
-            font-size: 11px;
-            text-transform: uppercase;
-            font-weight: 700;
-            padding: 10px 12px;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 12px;
-            margin-bottom: 5px;
-            color: #cbd5e1;
-            text-decoration: none;
-            border-radius: 9px;
-            font-size: 14px;
-        }
-
-        .nav-link:hover {
-            background: #1e293b;
-            color: white;
-        }
-
-        .nav-link.active {
-            background: #2563eb;
-            color: white;
-        }
-
-        .nav-icon svg {
-            width: 19px;
-            height: 19px;
-            stroke: currentColor;
-        }
-
-        .logout {
-            position: absolute;
-            bottom: 20px;
-            left: 14px;
-            right: 14px;
-        }
-
-
-        /* =========================
-           MAIN
-        ========================= */
-
-        .main {
-            margin-left: 245px;
-            padding: 35px;
-            min-height: 100vh;
-        }
-
-        .header {
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            font-size: 28px;
-            color: #0f172a;
-            margin-bottom: 7px;
-        }
-
-        .header p {
-            color: #64748b;
-            font-size: 14px;
-        }
-
-
-        /* =========================
-           STAT CARDS
-        ========================= */
-
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 18px;
-            margin-bottom: 30px;
-        }
-
-        .stat-card {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 13px;
-            padding: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .stat-icon {
-            width: 45px;
-            height: 45px;
-            border-radius: 10px;
-            background: #eff6ff;
-            color: #2563eb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .stat-icon svg {
-            width: 22px;
-            height: 22px;
-            stroke: currentColor;
-        }
-
-        .stat-number {
-            font-size: 24px;
-            font-weight: 700;
-            color: #0f172a;
-        }
-
-        .stat-label {
-            color: #64748b;
-            font-size: 12px;
-            margin-top: 3px;
-        }
-
-
-        /* =========================
-           PROPOSALS
-        ========================= */
-
-        .card {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 14px;
-            padding: 24px;
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .card-header h2 {
-            font-size: 18px;
-            color: #0f172a;
-        }
-
-        .view-all {
-            text-decoration: none;
-            color: #2563eb;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .proposal {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 17px 0;
-            border-top: 1px solid #e2e8f0;
-        }
-
-        .proposal-info {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .proposal-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 9px;
-            background: #eff6ff;
-            color: #2563eb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .proposal-icon svg {
-            width: 20px;
-            height: 20px;
-            stroke: currentColor;
-        }
-
-        .proposal-title {
-            font-size: 14px;
-            font-weight: 600;
-            color: #0f172a;
-        }
-
-        .student {
-            color: #64748b;
-            font-size: 12px;
-            margin-top: 4px;
-        }
-
-        .status {
-            padding: 6px 10px;
-            border-radius: 20px;
-            background: #eff6ff;
-            color: #2563eb;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .review-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            margin-left: 10px;
-            padding: 8px 12px;
-            border-radius: 7px;
-            background: #2563eb;
-            color: white;
-            text-decoration: none;
-            font-size: 12px;
-        }
-
-        .review-btn:hover {
-            background: #1d4ed8;
-        }
-
-        @media(max-width: 1000px) {
-
-            .stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-        }
-
-        @media(max-width: 700px) {
-
-            .sidebar {
-                width: 210px;
-            }
-
-            .main {
-                margin-left: 210px;
-                padding: 20px;
-            }
-
-            .stats {
-                grid-template-columns: 1fr;
-            }
-
-            .proposal {
-                align-items: flex-start;
-                gap: 10px;
-            }
-
-        }
-
-    </style>
-
-</head>
-
-<body>
-
-
-<!-- =========================
-     SIDEBAR
-========================= -->
-
-<aside class="sidebar">
-
-    <div class="logo">
-
-        <div class="logo-icon">
-
-            <svg viewBox="0 0 24 24"
-                 fill="none"
-                 stroke-width="2">
-
-                <path d="M12 3L3 7l9 4 9-4-9-4z"/>
-                <path d="M5 10v5c0 2 3 4 7 4s7-2 7-4v-5"/>
-
-            </svg>
-
-        </div>
-
-        SPMS
-
-    </div>
-
-
-    <div class="nav-title">
-        Expert Menu
-    </div>
-
-
-    <a href="{% url 'experts:dashboard' %}"
-       class="nav-link active">
-
-        <span class="nav-icon">
-
-            <svg viewBox="0 0 24 24"
-                 fill="none"
-                 stroke-width="2">
-
-                <rect x="3" y="3" width="7" height="7"/>
-                <rect x="14" y="3" width="7" height="7"/>
-                <rect x="3" y="14" width="7" height="7"/>
-                <rect x="14" y="14" width="7" height="7"/>
-
-            </svg>
-
-        </span>
-
-        Dashboard
-
-    </a>
-
-
-    <a href="{% url 'experts:my_proposals' %}"
-       class="nav-link">
-
-        <span class="nav-icon">
-
-            <svg viewBox="0 0 24 24"
-                 fill="none"
-                 stroke-width="2">
-
-                <path d="M4 4h16v16H4z"/>
-                <path d="M8 8h8"/>
-                <path d="M8 12h8"/>
-                <path d="M8 16h5"/>
-
-            </svg>
-
-        </span>
-
-        My Proposals
-
-    </a>
-
-
-    <a href="{% url 'accounts:logout' %}"
-       class="nav-link logout">
-
-        <span class="nav-icon">
-
-            <svg viewBox="0 0 24 24"
-                 fill="none"
-                 stroke-width="2">
-
-                <path d="M10 17l5-5-5-5"/>
-                <path d="M15 12H3"/>
-                <path d="M21 3v18"/>
-
-            </svg>
-
-        </span>
-
-        Logout
-
-    </a>
-
-</aside>
-
-
-<!-- =========================
-     MAIN
-========================= -->
-
-<main class="main">
-
-
-    <div class="header">
-
-        <h1>Expert Dashboard</h1>
-
-        <p>
-            Review and manage student project proposals assigned to you.
-        </p>
-
-    </div>
-
-
-    <!-- =========================
-         STATISTICS
-    ========================= -->
-
-    <div class="stats">
-
-
-        <div class="stat-card">
-
-            <div class="stat-icon">
-
-                <svg viewBox="0 0 24 24"
-                     fill="none"
-                     stroke-width="2">
-
-                    <path d="M4 4h16v16H4z"/>
-                    <path d="M8 8h8"/>
-                    <path d="M8 12h8"/>
-
-                </svg>
-
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Expert Dashboard | SPMS{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    
+    <!-- SIDEBAR -->
+    {% include 'experts/sidebar.html' %}
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main">
+        
+        <!-- HEADER -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>Expert Dashboard <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-left: 6px; color: #f59e0b;"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg></h1>
+                <p>Review and manage student project proposals assigned to you.</p>
             </div>
-
-            <div>
-
-                <div class="stat-number">
-                    {{ total_proposals }}
-                </div>
-
-                <div class="stat-label">
-                    Total Proposals
-                </div>
-
+            <div class="header-actions">
+                <a href="{% url 'experts:my_proposals' %}" class="btn-primary">
+                    <span>View All Proposals</span>
+                    <span>→</span>
+                </a>
             </div>
+        </header>
 
-        </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-icon">
-
-                <svg viewBox="0 0 24 24"
-                     fill="none"
-                     stroke-width="2">
-
-                    <circle cx="12" cy="12" r="9"/>
-                    <path d="M12 7v5l3 2"/>
-
-                </svg>
-
-            </div>
-
-            <div>
-
-                <div class="stat-number">
-                    {{ assigned_count }}
+        <!-- STATS GRID -->
+        <section class="stats-grid">
+            <a href="{% url 'experts:my_proposals' %}" class="stat-card">
+                <div class="stat-icon-box bg-blue"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="vertical-align: text-bottom; margin-right: 6px;" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></div>
+                <div class="stat-info">
+                    <p class="stat-label">Total Proposals</p>
+                    <h3 class="stat-number">{{ total_proposals|default:"0" }}</h3>
                 </div>
-
-                <div class="stat-label">
-                    Assigned
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-icon">
-
-                <svg viewBox="0 0 24 24"
-                     fill="none"
-                     stroke-width="2">
-
-                    <circle cx="12" cy="12" r="9"/>
-                    <path d="M8 12l3 3 5-6"/>
-
-                </svg>
-
-            </div>
-
-            <div>
-
-                <div class="stat-number">
-                    {{ approved_count }}
-                </div>
-
-                <div class="stat-label">
-                    Approved
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div class="stat-card">
-
-            <div class="stat-icon">
-
-                <svg viewBox="0 0 24 24"
-                     fill="none"
-                     stroke-width="2">
-
-                    <path d="M4 12h16"/>
-                    <path d="M12 4v16"/>
-
-                </svg>
-
-            </div>
-
-            <div>
-
-                <div class="stat-number">
-                    {{ changes_count }}
-                </div>
-
-                <div class="stat-label">
-                    Changes Requested
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-
-    <!-- =========================
-         ASSIGNED PROPOSALS
-    ========================= -->
-
-    <div class="card">
-
-        <div class="card-header">
-
-            <h2>Assigned Proposals</h2>
-
-            <a href="{% url 'experts:my_proposals' %}"
-               class="view-all">
-
-                View All
-
             </a>
-
-        </div>
-
-
-        {% for proposal in proposals|slice:":5" %}
-
-            <div class="proposal">
-
-                <div class="proposal-info">
-
-                    <div class="proposal-icon">
-
-                        <svg viewBox="0 0 24 24"
-                             fill="none"
-                             stroke-width="2">
-
-                            <path d="M4 4h16v16H4z"/>
-                            <path d="M8 8h8"/>
-                            <path d="M8 12h6"/>
-
-                        </svg>
-
-                    </div>
-
-
-                    <div>
-
-                        <div class="proposal-title">
-                            {{ proposal.title }}
-                        </div>
-
-                        <div class="student">
-                            Student:
-                            {{ proposal.student.get_full_name|default:proposal.student.username }}
-                        </div>
-
-                    </div>
-
+            <a href="{% url 'experts:my_proposals' %}?status=EXPERT_ASSIGNED" class="stat-card">
+                <div class="stat-icon-box bg-orange">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    {% if assigned_count > 0 %}
+                        <span class="stat-pulse"></span>
+                    {% endif %}
                 </div>
+                <div class="stat-info">
+                    <p class="stat-label">Pending Review</p>
+                    <h3 class="stat-number">{{ assigned_count|default:"0" }}</h3>
+                </div>
+            </a>
+            <a href="{% url 'experts:my_proposals' %}?status=EXPERT_APPROVED" class="stat-card">
+                <div class="stat-icon-box bg-emerald"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="vertical-align: text-bottom; margin-right: 6px;" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg></div>
+                <div class="stat-info">
+                    <p class="stat-label">Approved</p>
+                    <h3 class="stat-number">{{ approved_count|default:"0" }}</h3>
+                </div>
+            </a>
+            <a href="{% url 'experts:my_proposals' %}?status=CHANGES_REQUESTED" class="stat-card">
+                <div class="stat-icon-box bg-purple"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="vertical-align: text-bottom; margin-right: 6px;" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg></div>
+                <div class="stat-info">
+                    <p class="stat-label">Changes Requested</p>
+                    <h3 class="stat-number">{{ changes_count|default:"0" }}</h3>
+                </div>
+            </a>
+        </section>
 
 
-                <div>
-
-                    <span class="status">
-                        {{ proposal.get_status_display }}
-                    </span>
-
-
-                    <a href="{% url 'experts:proposal_detail' proposal.id %}"
-                       class="review-btn">
-
-                        Review
-
-                        <svg width="13"
-                             height="13"
-                             viewBox="0 0 24 24"
-                             fill="none"
-                             stroke="currentColor"
-                             stroke-width="2">
-
-                            <path d="M9 18l6-6-6-6"/>
-
-                        </svg>
-
+        <!-- UPCOMING SCHEDULED REVIEWS -->
+        {% if scheduled_reviews %}
+        <section class="recent-section" style="margin-bottom: 24px;">
+            <div class="section-heading">
+                <h2>Upcoming Scheduled Reviews</h2>
+            </div>
+            
+            <div class="recent-card">
+                <div class="recent-list">
+                    {% for project in scheduled_reviews %}
+                    <a href="{% url 'experts:proposal_detail' project.id %}" class="recent-item" style="border-left: 4px solid #6366f1;">
+                        <div class="recent-user">
+                            <div class="recent-avatar bg-blue">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                            </div>
+                            <div class="recent-user-info">
+                                <span class="recent-name">{{ project.title }}</span>
+                                <span class="recent-project">Student: {{ project.student.get_full_name|default:project.student.username }}</span>
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <span style="display: block; font-size: 13px; font-weight: 600; color: #1e293b;">{{ project.review_date|date:"l, M j, Y" }}</span>
+                            <span style="display: block; font-size: 11px; color: #64748b; margin-top: 2px;">{{ project.review_date|date:"g:i A" }}</span>
+                        </div>
                     </a>
-
+                    {% endfor %}
                 </div>
-
             </div>
+        </section>
+        {% endif %}
 
-
-        {% empty %}
-
-            <div style="
-                padding:45px 20px;
-                text-align:center;
-                color:#64748b;
-            ">
-
-                No proposals have been assigned to you yet.
-
+        <!-- RECENT ASSIGNED PROPOSALS -->
+        <section class="recent-section">
+            <div class="section-heading">
+                <h2>Assigned Proposals</h2>
+                <a href="{% url 'experts:my_proposals' %}" class="btn-text">View All</a>
             </div>
+            
+            <div class="recent-card">
+                {% if proposals %}
+                    <div class="recent-list">
+                        {% for proposal in proposals|slice:":5" %}
+                        <a href="{% url 'experts:proposal_detail' proposal.id %}" class="recent-item">
+                            <div class="recent-user">
+                                <div class="recent-avatar">
+                                    {{ proposal.student.username|first|upper }}
+                                </div>
+                                <div class="recent-user-info">
+                                    <span class="recent-name">{{ proposal.title }}</span>
+                                    <span class="recent-project">Student: {{ proposal.student.get_full_name|default:proposal.student.username }}</span>
+                                </div>
+                            </div>
+                            <span class="status-badge 
+                                {% if proposal.status == 'EXPERT_APPROVED' %}bg-green
+                                {% elif proposal.status == 'CHANGES_REQUESTED' %}bg-orange
+                                {% elif proposal.status == 'EXPERT_ASSIGNED' %}bg-blue
+                                {% else %}bg-purple{% endif %}">
+                                {{ proposal.get_status_display }}
+                            </span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <span class="empty-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="vertical-align: text-bottom; margin-right: 6px;" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg></span>
+                        <p>No proposals have been assigned to you yet.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
 
-        {% endfor %}
-
-    </div>
-
-</main>
-
-</body>
-</html>
+    </main>
+</div>
+{% endblock %}

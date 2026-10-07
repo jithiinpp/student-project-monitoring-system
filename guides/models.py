@@ -15,7 +15,7 @@ class GuideEvaluation(models.Model):
         on_delete=models.CASCADE,
         related_name="guide_evaluations",
         limit_choices_to={
-            "role": "GUIDE"
+            "is_guide": True
         }
     )
 
@@ -23,6 +23,11 @@ class GuideEvaluation(models.Model):
         max_digits=5,
         decimal_places=2,
         default=0
+    )
+
+    detailed_marks = models.JSONField(
+        default=dict,
+        blank=True
     )
 
     feedback = models.TextField(

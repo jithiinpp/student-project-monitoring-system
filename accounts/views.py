@@ -1,6 +1,9 @@
+from decimal import Decimal, InvalidOperation
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.db.models import Prefetch
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import StudentRegistrationForm
@@ -14,6 +17,8 @@ from projects.forms import (
 from projects.models import (
     ProjectProposal,
     ProjectProgress,
+    PanelEvaluation,
+    ProjectMessage,
 )
 
 from guides.models import GuideEvaluation
@@ -27,8 +32,29 @@ REPORT_ORDER = [
     "PROGRESS_1",
     "PROGRESS_2",
     "PROGRESS_3",
-    "FINAL_REPORT",
 ]
+
+
+def _panel_projects_with_final_reports():
+    final_reports = (
+        ProjectProgress.objects
+        .filter(report_type="FINAL_REPORT")
+        .order_by("-submitted_at")
+    )
+    return (
+        ProjectProposal.objects
+        .filter(progress_reports__report_type="FINAL_REPORT")
+        .select_related("student", "guide", "panel_evaluation")
+        .prefetch_related(
+            Prefetch(
+                "progress_reports",
+                queryset=final_reports,
+                to_attr="panel_final_reports",
+            )
+        )
+        .distinct()
+        .order_by("-updated_at")
+    )
 
 
 # ============================================================
@@ -95,10 +121,10 @@ def register_view(request):
             user = form.save()
 
             # All registrations from this form are students
-            user.role = "STUDENT"
+            user.is_student=True
 
             user.save(
-                update_fields=["role"]
+                update_fields=["is_student"]
             )
 
             messages.success(
@@ -147,80 +173,60 @@ def dashboard_view(request):
 
     user = request.user
 
-    # --------------------------------------------------------
-    # SUPERUSER → COORDINATOR
-    # --------------------------------------------------------
+    roles = []
+    
+    if user.is_superuser or user.is_coordinator:
+        roles.append({
+            "name": "Coordinator",
+            "url_name": "coordinator:dashboard",
+            "icon": '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>',
+            "desc": "Manage students, experts, guides and oversee all projects."
+        })
+        
+    if user.is_expert:
+        roles.append({
+            "name": "Domain Expert",
+            "url_name": "experts:dashboard",
+            "icon": '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 16 16 12 12 8"></polyline><line x1="8" y1="12" x2="16" y2="12"></line></svg>',
+            "desc": "Review proposals and evaluate project viability."
+        })
+        
+    if user.is_guide:
+        roles.append({
+            "name": "Guide",
+            "url_name": "guides:dashboard",
+            "icon": '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>',
+            "desc": "Guide students, approve changes, and monitor weekly progress."
+        })
+        
+    if user.is_panel:
+        roles.append({
+            "name": "Panel Member",
+            "url_name": "accounts:panel_dashboard",
+            "icon": '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>',
+            "desc": "Evaluate final projects and submit marks."
+        })
+        
+    if user.is_student:
+        roles.append({
+            "name": "Student",
+            "url_name": "accounts:student_dashboard",
+            "icon": '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg>',
+            "desc": "Submit proposals, weekly progress, and view grades."
+        })
 
-    if user.is_superuser:
+    if len(roles) > 1:
+        return render(request, "accounts/role_selection.html", {"roles": roles})
+    elif len(roles) == 1:
+        return redirect(roles[0]["url_name"])
 
-        return redirect(
-            "accounts:coordinator_dashboard"
-        )
-
-    # --------------------------------------------------------
-    # COORDINATOR
-    # --------------------------------------------------------
-
-    if user.role == "COORDINATOR":
-
-        return redirect(
-            "accounts:coordinator_dashboard"
-        )
-
-    # --------------------------------------------------------
-    # STUDENT
-    # --------------------------------------------------------
-
-    if user.role == "STUDENT":
-
-        return redirect(
-            "accounts:student_dashboard"
-        )
-
-    # --------------------------------------------------------
-    # DOMAIN EXPERT
-    # --------------------------------------------------------
-
-    if user.role == "EXPERT":
-
-        return redirect(
-            "accounts:expert_dashboard"
-        )
-
-    # --------------------------------------------------------
-    # GUIDE
-    # --------------------------------------------------------
-
-    if user.role == "GUIDE":
-
-        return redirect(
-            "accounts:guide_dashboard"
-        )
-
-    # --------------------------------------------------------
-    # PANEL MEMBER
-    # --------------------------------------------------------
-
-    if user.role == "PANEL":
-
-        return redirect(
-            "accounts:panel_dashboard"
-        )
-
-    # --------------------------------------------------------
     # INVALID ROLE
-    # --------------------------------------------------------
-
     messages.error(
         request,
         "Your account does not have a valid SPMS role."
     )
-
     logout(request)
-
-    return redirect(
-        "accounts:login"
-    )
+    return redirect("accounts:login")
 
 
 # ============================================================
@@ -244,7 +250,7 @@ def student_dashboard(request):
     # ONLY STUDENTS
     # --------------------------------------------------------
 
-    if request.user.role != "STUDENT":
+    if not request.user.is_student:
 
         return redirect(
             "accounts:dashboard"
@@ -283,6 +289,10 @@ def student_dashboard(request):
     # --------------------------------------------------------
     # APPROVED / ACTIVE
     # --------------------------------------------------------
+
+    changes_requested_count = proposals.filter(
+        status="CHANGES_REQUESTED"
+    ).count()
 
     approved_count = proposals.filter(
         status__in=[
@@ -421,7 +431,7 @@ def student_dashboard(request):
         {
             "number": 7,
             "title": "Final Evaluation",
-            "description": "Guide reviews the Final Report and enters the project mark.",
+            "description": "Guide and Panel review the Final Report and enter the project marks.",
             "state":
                 "complete"
                 if current_workflow_step >= 10
@@ -444,8 +454,19 @@ def student_dashboard(request):
     ]
 
     # ========================================================
+    # MESSAGES
+    # ========================================================
+
+    project_messages = []
+    if project:
+        project_messages = project.messages.select_related("sender").all()
+
+    # ========================================================
     # CONTEXT
     # ========================================================
+    
+    from coordinator.models import ScheduleDocument
+    latest_schedule_doc = ScheduleDocument.objects.first()
 
     context = {
 
@@ -454,6 +475,8 @@ def student_dashboard(request):
         "proposal_count": proposal_count,
 
         "pending_count": pending_count,
+
+        "changes_requested_count": changes_requested_count,
 
         "approved_count": approved_count,
 
@@ -470,6 +493,12 @@ def student_dashboard(request):
 
         # Active project
         "project": project,
+        
+        "project_messages": project_messages,
+        
+        "scheduled_reviews": proposals.exclude(review_date__isnull=True).order_by("review_date"),
+        
+        "latest_schedule_doc": latest_schedule_doc,
     }
 
     return render(
@@ -477,6 +506,62 @@ def student_dashboard(request):
         "student/dashboard.html",
         context
     )
+
+
+# =========================================================
+# STUDENT SCHEDULE
+# =========================================================
+
+@login_required
+def student_schedule(request):
+    if not getattr(request.user, 'is_student', False):
+        return redirect("accounts:login")
+        
+    from coordinator.models import ScheduleDocument
+    from projects.models import ProjectProposal
+    
+    latest_schedule_doc = ScheduleDocument.objects.first()
+    
+    scheduled_reviews = ProjectProposal.objects.filter(
+        student=request.user,
+        review_date__isnull=False
+    ).order_by('review_date')
+    
+    context = {
+        "latest_schedule_doc": latest_schedule_doc,
+        "scheduled_reviews": scheduled_reviews,
+    }
+    
+    return render(
+        request,
+        "student/schedule.html",
+        context
+    )
+
+
+# ============================================================
+# STUDENT SEND MESSAGE
+# ============================================================
+
+@login_required
+def student_send_message(request, project_id):
+    if not request.user.is_student:
+        return redirect("accounts:dashboard")
+        
+    if request.method == "POST":
+        project = get_object_or_404(ProjectProposal, id=project_id, student=request.user)
+        message_text = request.POST.get("message", "").strip()
+        if message_text:
+            ProjectMessage.objects.create(
+                project=project,
+                sender=request.user,
+                message=message_text
+            )
+        referer = request.META.get('HTTP_REFERER')
+        if referer:
+            return redirect(referer)
+        return redirect("accounts:student_dashboard")
+    return redirect("accounts:dashboard")
 
 
 # ============================================================
@@ -500,7 +585,7 @@ def student_final_mark(request):
     # ONLY STUDENTS
     # --------------------------------------------------------
 
-    if request.user.role != "STUDENT":
+    if not request.user.is_student:
 
         return redirect(
             "accounts:dashboard"
@@ -523,12 +608,26 @@ def student_final_mark(request):
         .first()
     )
 
+    panel_evaluation = (
+        PanelEvaluation.objects
+        .filter(
+            project__student=request.user
+        )
+        .select_related(
+            "project",
+            "panel_member"
+        )
+        .order_by("-updated_at")
+        .first()
+    )
+
     # --------------------------------------------------------
     # CONTEXT
     # --------------------------------------------------------
 
     context = {
         "evaluation": evaluation,
+        "panel_evaluation": panel_evaluation,
     }
 
     return render(
@@ -559,7 +658,7 @@ def student_proposals(request):
     # ONLY STUDENTS
     # --------------------------------------------------------
 
-    if request.user.role != "STUDENT":
+    if not request.user.is_student:
 
         return redirect(
             "accounts:dashboard"
@@ -572,6 +671,31 @@ def student_proposals(request):
         )
         .order_by("-id")
     )
+
+    filter_type = request.GET.get("filter")
+
+    if filter_type == "under_review":
+        proposals = proposals.filter(
+            status__in=[
+                "SUBMITTED",
+                "EXPERT_ASSIGNED",
+                "CHANGES_REQUESTED"
+            ]
+        )
+    elif filter_type == "approved":
+        proposals = proposals.filter(
+            status__in=[
+                "EXPERT_APPROVED",
+                "COORDINATOR_APPROVED",
+                "GUIDE_ASSIGNED",
+                "IN_PROGRESS",
+                "COMPLETED"
+            ]
+        )
+    elif filter_type == "changes_requested":
+        proposals = proposals.filter(
+            status="CHANGES_REQUESTED"
+        )
 
     proposal_count = proposals.count()
 
@@ -600,7 +724,7 @@ def add_proposal(request):
     # ONLY STUDENTS
     # --------------------------------------------------------
 
-    if request.user.role != "STUDENT":
+    if not request.user.is_student:
 
         return redirect(
             "accounts:dashboard"
@@ -701,7 +825,7 @@ def proposal_detail(request, proposal_id):
     # ONLY STUDENTS
     # --------------------------------------------------------
 
-    if request.user.role != "STUDENT":
+    if not request.user.is_student:
 
         return redirect(
             "accounts:dashboard"
@@ -713,11 +837,14 @@ def proposal_detail(request, proposal_id):
         student=request.user
     )
 
+    latest_change_request = proposal.change_requests.order_by('-created_at').first()
+
     return render(
         request,
         "student/proposal_detail.html",
         {
-            "proposal": proposal
+            "proposal": proposal,
+            "latest_change_request": latest_change_request
         }
     )
 
@@ -743,7 +870,7 @@ def edit_proposal(request, proposal_id):
     # ONLY STUDENTS
     # --------------------------------------------------------
 
-    if request.user.role != "STUDENT":
+    if not request.user.is_student:
 
         return redirect(
             "accounts:dashboard"
@@ -861,7 +988,7 @@ def student_progress(request):
     # ONLY STUDENTS
     # --------------------------------------------------------
 
-    if request.user.role != "STUDENT":
+    if not request.user.is_student:
 
         return redirect(
             "accounts:dashboard"
@@ -1012,12 +1139,20 @@ def student_progress(request):
                 break
 
     # --------------------------------------------------------
+    # MESSAGES
+    # --------------------------------------------------------
+
+    project_messages = project.messages.select_related("sender").all()
+
+    # --------------------------------------------------------
     # CONTEXT
     # --------------------------------------------------------
 
     context = {
 
         "project": project,
+
+        "project_messages": project_messages,
 
         "progress_reports": progress_reports,
 
@@ -1031,6 +1166,104 @@ def student_progress(request):
     return render(
         request,
         "student/progress.html",
+        context
+    )
+
+
+# ============================================================
+# STUDENT WEEKLY REPORTS
+# ============================================================
+
+@login_required
+def student_weekly_reports(request):
+    if not request.user.is_student:
+        return redirect("accounts:dashboard")
+    
+    project = ProjectProposal.objects.filter(
+        student=request.user,
+        status__in=["COORDINATOR_APPROVED", "GUIDE_ASSIGNED", "IN_PROGRESS", "COMPLETED"]
+    ).select_related("guide", "domain_expert").order_by("-updated_at").first()
+    
+    if not project:
+        return render(request, "student/weekly_reports.html", {"project": None, "reports": []})
+        
+    reports = ProjectProgress.objects.filter(
+        project=project,
+        student=request.user,
+        report_type__in=["PROGRESS_1", "PROGRESS_2", "PROGRESS_3"]
+    ).order_by("submitted_at")
+    
+    return render(request, "student/weekly_reports.html", {
+        "project": project,
+        "reports": reports
+    })
+
+# ============================================================
+# STUDENT FINAL REPORTS
+# ============================================================
+
+@login_required
+def student_final_reports(request):
+    if not request.user.is_student:
+        return redirect("accounts:dashboard")
+        
+    project = ProjectProposal.objects.filter(
+        student=request.user,
+        status__in=["COORDINATOR_APPROVED", "GUIDE_ASSIGNED", "IN_PROGRESS", "COMPLETED"]
+    ).select_related("guide", "domain_expert").order_by("-updated_at").first()
+    
+    if not project:
+        return render(request, "student/final_reports.html", {"project": None, "reports": []})
+        
+    reports = ProjectProgress.objects.filter(
+        project=project,
+        student=request.user,
+        report_type="FINAL_REPORT"
+    ).order_by("submitted_at")
+    
+    return render(request, "student/final_reports.html", {
+        "project": project,
+        "reports": reports
+    })
+
+
+# ============================================================
+# STUDENT DISCUSSION
+# ============================================================
+
+@login_required
+def student_discussion(request):
+    if not request.user.is_student:
+        return redirect("accounts:dashboard")
+        
+    project = (
+        ProjectProposal.objects
+        .filter(
+            student=request.user,
+            status__in=[
+                "COORDINATOR_APPROVED",
+                "GUIDE_ASSIGNED",
+                "IN_PROGRESS",
+                "COMPLETED",
+            ]
+        )
+        .select_related("guide")
+        .order_by("-updated_at")
+        .first()
+    )
+    
+    project_messages = []
+    if project:
+        project_messages = project.messages.select_related("sender").all()
+        
+    context = {
+        "project": project,
+        "project_messages": project_messages,
+    }
+    
+    return render(
+        request,
+        "student/discussion.html",
         context
     )
 
@@ -1056,7 +1289,7 @@ def add_progress(request):
     # ONLY STUDENTS
     # --------------------------------------------------------
 
-    if request.user.role != "STUDENT":
+    if not request.user.is_student:
 
         return redirect(
             "accounts:dashboard"
@@ -1245,12 +1478,20 @@ def add_progress(request):
     # POST
     # --------------------------------------------------------
 
+    expected_week_number = {
+        "PROGRESS_1": 1,
+        "PROGRESS_2": 2,
+        "PROGRESS_3": 3,
+    }[target_report_type]
+
     if request.method == "POST":
 
         form = ProjectProgressForm(
             request.POST,
             request.FILES,
-            instance=target_instance
+            instance=target_instance,
+            require_week_number=True,
+            expected_week_number=expected_week_number,
         )
 
         if form.is_valid():
@@ -1309,7 +1550,10 @@ def add_progress(request):
     else:
 
         form = ProjectProgressForm(
-            instance=target_instance
+            instance=target_instance,
+            require_week_number=True,
+            expected_week_number=expected_week_number,
+            initial={"week_number": expected_week_number},
         )
 
     # --------------------------------------------------------
@@ -1343,6 +1587,86 @@ def add_progress(request):
 
 
 # ============================================================
+# ADD / RESUBMIT FINAL REPORT
+# ============================================================
+
+@login_required
+def add_final_report(request):
+
+    if request.user.is_superuser:
+        return redirect("accounts:coordinator_dashboard")
+
+    if not request.user.is_student:
+        return redirect("accounts:dashboard")
+
+    project = (
+        ProjectProposal.objects
+        .filter(
+            student=request.user,
+            status__in=["GUIDE_ASSIGNED", "IN_PROGRESS", "COMPLETED"]
+        )
+        .select_related("guide")
+        .order_by("-updated_at")
+        .first()
+    )
+
+    if not project:
+        messages.error(request, "You cannot upload progress yet. Your project must be approved.")
+        return redirect("accounts:student_progress")
+
+    if not project.guide:
+        messages.error(request, "You cannot upload progress until a guide is assigned.")
+        return redirect("accounts:student_progress")
+
+    if project.status not in ["IN_PROGRESS", "COMPLETED"]:
+        messages.warning(request, "Your Guide must start the project before you can upload the final report.")
+        return redirect("accounts:student_progress")
+
+    target_instance = ProjectProgress.objects.filter(
+        project=project,
+        student=request.user,
+        report_type="FINAL_REPORT"
+    ).first()
+
+    if target_instance and target_instance.status == "REVIEWED":
+        messages.warning(request, "Your Final Report has already been reviewed and cannot be changed.")
+        return redirect("accounts:student_progress")
+
+    if request.method == "POST":
+        form = ProjectProgressForm(request.POST, request.FILES, instance=target_instance)
+        if form.is_valid():
+            progress = form.save(commit=False)
+            progress.project = project
+            progress.student = request.user
+            progress.report_type = "FINAL_REPORT"
+            progress.week_number = None
+            progress.status = "SUBMITTED"
+            progress.reviewed_at = None
+            progress.save()
+
+            if target_instance:
+                messages.success(request, "Final Report resubmitted successfully.")
+            else:
+                messages.success(request, "Final Report submitted successfully.")
+            return redirect("accounts:student_progress")
+        messages.error(request, "Please correct the errors in the form.")
+    else:
+        form = ProjectProgressForm(instance=target_instance)
+
+    return render(
+        request,
+        "student/progress_form.html",
+        {
+            "form": form,
+            "project": project,
+            "report_type": "FINAL_REPORT",
+            "report_name": "Final Report",
+            "is_resubmission": (target_instance is not None),
+        }
+    )
+
+
+# ============================================================
 # COORDINATOR DASHBOARD
 # ============================================================
 
@@ -1352,7 +1676,7 @@ def coordinator_dashboard(request):
     # Superuser allowed
     if not request.user.is_superuser:
 
-        if request.user.role != "COORDINATOR":
+        if not request.user.is_coordinator:
 
             return redirect(
                 "accounts:dashboard"
@@ -1365,7 +1689,7 @@ def coordinator_dashboard(request):
     students = (
         User.objects
         .filter(
-            role="STUDENT"
+            is_student=True
         )
         .order_by("-date_joined")
     )
@@ -1455,7 +1779,7 @@ def expert_dashboard(request):
     # ONLY EXPERTS
     # --------------------------------------------------------
 
-    if request.user.role != "EXPERT":
+    if not request.user.is_expert:
 
         return redirect(
             "accounts:dashboard"
@@ -1507,7 +1831,7 @@ def guide_dashboard(request):
     # ONLY GUIDES
     # --------------------------------------------------------
 
-    if request.user.role != "GUIDE":
+    if not request.user.is_guide:
 
         return redirect(
             "accounts:dashboard"
@@ -1624,7 +1948,7 @@ def guide_students(request):
     # ONLY GUIDES
     # --------------------------------------------------------
 
-    if request.user.role != "GUIDE":
+    if not request.user.is_guide:
 
         return redirect(
             "accounts:dashboard"
@@ -1674,13 +1998,262 @@ def panel_dashboard(request):
     # ONLY PANEL MEMBERS
     # --------------------------------------------------------
 
-    if request.user.role != "PANEL":
+    if not request.user.is_panel:
 
         return redirect(
             "accounts:dashboard"
         )
 
+    projects = _panel_projects_with_final_reports()
+    student_count = User.objects.filter(
+        is_student=True,
+        is_superuser=False,
+    ).count()
+    
+    pending_count = projects.filter(panel_evaluation__isnull=True).count()
+    completed_count = projects.filter(panel_evaluation__isnull=False).count()
+
+    context = {
+        "projects": projects,
+        "total_projects": projects.count(),
+        "student_count": student_count,
+        "pending_count": pending_count,
+        "completed_count": completed_count,
+    }
+
     return render(
         request,
-        "panel/dashboard.html"
+        "panel/dashboard.html",
+        context
     )
+
+# ============================================================
+# PANEL SCHEDULE
+# ============================================================
+
+@login_required
+def panel_schedule(request):
+    if not request.user.is_panel:
+        return redirect("accounts:dashboard")
+        
+    from coordinator.models import ScheduleDocument
+    from projects.models import ProjectProposal
+    
+    latest_schedule_doc = ScheduleDocument.objects.first()
+    
+    scheduled_reviews = ProjectProposal.objects.filter(
+        review_date__isnull=False
+    ).order_by('review_date')
+    
+    context = {
+        "latest_schedule_doc": latest_schedule_doc,
+        "scheduled_reviews": scheduled_reviews,
+    }
+    
+    return render(
+        request,
+        "panel/schedule.html",
+        context
+    )
+
+@login_required
+def panel_evaluations(request):
+    if not request.user.is_panel:
+        return redirect("accounts:dashboard")
+
+    context = {
+        "projects": _panel_projects_with_final_reports(),
+    }
+
+    return render(
+        request,
+        "panel/evaluations.html",
+        context
+    )
+
+@login_required
+def panel_students(request):
+    if not request.user.is_panel:
+        return redirect("accounts:dashboard")
+
+    final_reports = ProjectProgress.objects.filter(
+        report_type="FINAL_REPORT"
+    ).order_by("-submitted_at")
+    student_projects = (
+        ProjectProposal.objects
+        .exclude(status="REJECTED")
+        .select_related("panel_evaluation", "guide")
+        .prefetch_related(
+            Prefetch(
+                "progress_reports",
+                queryset=final_reports,
+                to_attr="panel_final_reports",
+            )
+        )
+        .order_by("-updated_at")
+    )
+    students = (
+        User.objects
+        .filter(is_student=True, is_superuser=False)
+        .prefetch_related(
+            Prefetch(
+                "project_proposals",
+                queryset=student_projects,
+                to_attr="panel_projects",
+            )
+        )
+        .order_by("first_name", "last_name", "username")
+    )
+
+    return render(
+        request,
+        "panel/students.html",
+        {
+            "students": students,
+            "student_count": students.count(),
+        }
+    )
+
+@login_required
+def panel_evaluate(request, project_id):
+    if not request.user.is_panel:
+        return redirect("accounts:dashboard")
+        
+    project = get_object_or_404(
+        ProjectProposal.objects.select_related(
+            "student",
+            "guide",
+            "panel_evaluation",
+        ),
+        id=project_id,
+        progress_reports__report_type="FINAL_REPORT",
+    )
+
+    final_report = project.progress_reports.filter(
+        report_type="FINAL_REPORT"
+    ).order_by("-submitted_at").first()
+    if not final_report:
+        messages.error(request, "This project does not have a final report yet.")
+        return redirect("accounts:panel_dashboard")
+        
+    evaluation = getattr(project, "panel_evaluation", None)
+    
+    if request.method == "POST":
+        feedback = request.POST.get("feedback", "").strip()
+        titles = request.POST.getlist("criteria_title[]")
+        marks = request.POST.getlist("criteria_mark[]")
+
+        if len(titles) != len(marks):
+            messages.error(request, "Each mark category must have a matching mark.")
+            return redirect("accounts:panel_evaluate", project_id=project.id)
+
+        detailed_marks = {}
+        total_marks = Decimal("0")
+
+        for title_text, mark_text in zip(titles, marks):
+            title = title_text.strip()
+            mark_text = mark_text.strip()
+
+            if not title and not mark_text:
+                continue
+            if not title or not mark_text:
+                messages.error(
+                    request,
+                    "Enter both a category name and mark for every row.",
+                )
+                return redirect("accounts:panel_evaluate", project_id=project.id)
+            if title in detailed_marks:
+                messages.error(request, "Mark category names must be unique.")
+                return redirect("accounts:panel_evaluate", project_id=project.id)
+
+            try:
+                mark_value = Decimal(mark_text)
+            except InvalidOperation:
+                messages.error(request, "Enter a valid number for each mark.")
+                return redirect("accounts:panel_evaluate", project_id=project.id)
+
+            if (
+                not mark_value.is_finite()
+                or mark_value < 0
+                or mark_value > 100
+                or mark_value.as_tuple().exponent < -2
+            ):
+                messages.error(
+                    request,
+                    "Each mark must be between 0 and 100 with at most two decimal places.",
+                )
+                return redirect("accounts:panel_evaluate", project_id=project.id)
+
+            detailed_marks[title] = str(mark_value)
+            total_marks += mark_value
+
+        if not detailed_marks:
+            messages.error(request, "Add at least one mark category.")
+            return redirect("accounts:panel_evaluate", project_id=project.id)
+
+        if total_marks > 100:
+            messages.error(request, "Total marks cannot exceed 100.")
+            return redirect("accounts:panel_evaluate", project_id=project.id)
+
+        if not evaluation:
+            evaluation = PanelEvaluation(project=project, panel_member=request.user)
+            
+        evaluation.feedback = feedback
+        evaluation.detailed_marks = detailed_marks
+        evaluation.marks = total_marks
+        evaluation.panel_member = request.user
+        evaluation.save()
+
+        messages.success(request, "Panel evaluation saved successfully.")
+        return redirect("accounts:panel_dashboard")
+    return render(request, "panel/evaluate.html", {
+        "project": project,
+        "final_report": final_report,
+        "evaluation": evaluation,
+    })
+
+@login_required
+def panel_send_message(request, project_id):
+    if not request.user.is_panel:
+        return redirect("accounts:dashboard")
+        
+    if request.method == "POST":
+        project = get_object_or_404(ProjectProposal, id=project_id)
+        message_text = request.POST.get("message", "").strip()
+        if message_text:
+            from projects.models import ProjectMessage
+            ProjectMessage.objects.create(
+                project=project,
+                sender=request.user,
+                message=message_text
+            )
+        referer = request.META.get('HTTP_REFERER')
+        if referer:
+            return redirect(referer)
+        return redirect("accounts:panel_evaluate", project_id=project_id)
+    return redirect("accounts:dashboard")
+
+@login_required
+def student_profile(request, student_id):
+    from django.shortcuts import get_object_or_404
+    from .models import User
+    
+    if not (request.user.is_superuser or request.user.is_coordinator or request.user.is_expert or request.user.is_guide or request.user.is_panel):
+        messages.error(request, "You do not have permission to view this profile.")
+        return redirect("accounts:dashboard")
+        
+    student = get_object_or_404(User, id=student_id, is_student=True)
+    
+    # We could also fetch their active project
+    from projects.models import ProjectProposal
+    project = ProjectProposal.objects.filter(student=student).order_by('-updated_at').first()
+    
+    guides = None
+    if request.user.is_coordinator:
+        guides = User.objects.filter(is_guide=True, is_active=True, is_superuser=False)
+
+    return render(request, "accounts/student_profile.html", {
+        "student": student,
+        "project": project,
+        "guides": guides
+    })

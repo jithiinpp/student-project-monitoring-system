@@ -23,7 +23,7 @@
     <!-- Main CSS -->
     <link
         rel="stylesheet"
-        href="{% static 'css/style.css' %}"
+        href="{% static 'css/style.css' %}?v=1.3"
     >
 
 
@@ -31,11 +31,97 @@
     {% block extra_css %}
     {% endblock %}
 
+    <style>
+        .notification-stack {
+            position: fixed;
+            top: 14px;
+            right: 14px;
+            z-index: 10000;
+            display: flex;
+            width: min(340px, calc(100vw - 28px));
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+        }
+
+        .notification {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            width: 100%;
+            box-sizing: border-box;
+            padding: 10px 12px;
+            border: 1px solid #dfe3ff;
+            border-left: 3px solid #4f5bd5;
+            border-radius: 8px;
+            background: #ffffff;
+            box-shadow: 0 5px 16px rgba(39, 45, 95, 0.12);
+            color: #303858;
+            font-family: 'Inter', sans-serif;
+            font-size: 13px;
+            line-height: 1.4;
+            overflow-wrap: anywhere;
+            pointer-events: auto;
+        }
+
+        .notification.success { border-color: #cdebd7; border-left-color: #168447; background: #fbfffc; }
+        .notification.error { border-color: #f2d1d1; border-left-color: #c53333; background: #fffdfd; }
+        .notification.warning { border-color: #f0dfbd; border-left-color: #a96508; background: #fffefa; }
+        .notification.info { border-color: #dfe3ff; border-left-color: #4f5bd5; background: #ffffff; }
+
+        .notification-copy {
+            min-width: 0;
+            flex: 1;
+        }
+
+        .notification-message {
+            margin: 0;
+            color: inherit;
+            font-size: 13px;
+        }
+
+        .notification-close {
+            flex: 0 0 auto;
+            padding: 0 2px 2px;
+            border: 0;
+            background: transparent;
+            color: #7b849c;
+            font: inherit;
+            font-size: 17px;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .notification-close:hover,
+        .notification-close:focus-visible {
+            color: #343e60;
+        }
+
+        .notification-close:focus-visible {
+            outline: 2px solid #4f5bd5;
+            outline-offset: 2px;
+            border-radius: 3px;
+        }
+
+    </style>
+
 </head>
 
 
 <body>
 
+    {% if messages %}
+    <div class="notification-stack" aria-live="polite" aria-relevant="additions">
+        {% for message in messages %}
+            <div class="notification {{ message.tags }}" role="{% if 'error' in message.tags %}alert{% else %}status{% endif %}" aria-atomic="true">
+                <div class="notification-copy">
+                    <p class="notification-message">{{ message }}</p>
+                </div>
+                <button type="button" class="notification-close" aria-label="Dismiss notification">&times;</button>
+            </div>
+        {% endfor %}
+    </div>
+    {% endif %}
 
     <!-- ============================= -->
     <!-- Sidebar -->
@@ -66,6 +152,23 @@
     {% block extra_js %}
     {% endblock %}
 
+    <script>
+        document.querySelectorAll(".notification").forEach(function(notification) {
+
+            function dismissNotification() {
+                notification.remove();
+            }
+
+            notification.querySelector(".notification-close").addEventListener(
+                "click",
+                dismissNotification
+            );
+            window.setTimeout(
+                dismissNotification,
+                notification.classList.contains("error") ? 9000 : 6000
+            );
+        });
+    </script>
 
 </body>
 

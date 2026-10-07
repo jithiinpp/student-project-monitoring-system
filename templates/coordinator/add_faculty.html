@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Add Faculty | SPMS{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/coordinator_forms.css' %}?v=2">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout coordinator-form-page">
+    {% include 'coordinator/sidebar.html' %}
+
+    <main class="dashboard-main">
+        <div class="coordinator-form-content">
+            <div class="form-card">
+                <div class="form-header">
+                    <div class="coordinator-form-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="10" cy="7" r="4"></circle><path d="M20 8v6"></path><path d="M23 11h-6"></path></svg>
+                    </div>
+                    <div class="form-title-wrapper">
+                        <h1>Add Faculty</h1>
+                        <p>Create a faculty account and save their details before assigning system roles.</p>
+                    </div>
+                </div>
+
+                <form method="post" action="{% url 'coordinator:add_faculty' %}">
+                    {% csrf_token %}
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="username">Username <span aria-hidden="true">*</span></label>
+                            <input type="text" id="username" name="username" value="{{ request.POST.username }}" required autocomplete="username" placeholder="Choose a username">
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Initial Password <span aria-hidden="true">*</span></label>
+                            <input type="password" id="password" name="password" required autocomplete="new-password" placeholder="Set an initial password">
+                        </div>
+                        <div class="form-group">
+                            <label for="first_name">First Name</label>
+                            <input type="text" id="first_name" name="first_name" value="{{ request.POST.first_name }}" autocomplete="given-name" placeholder="First name">
+                        </div>
+                        <div class="form-group">
+                            <label for="last_name">Last Name</label>
+                            <input type="text" id="last_name" name="last_name" value="{{ request.POST.last_name }}" autocomplete="family-name" placeholder="Last name">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" value="{{ request.POST.email }}" autocomplete="email" placeholder="name@example.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone</label>
+                            <input type="tel" id="phone" name="phone" value="{{ request.POST.phone }}" autocomplete="tel" placeholder="Phone number">
+                        </div>
+                        <div class="form-group full">
+                            <label for="department">Department</label>
+                            <input type="text" id="department" name="department" value="{{ request.POST.department }}" placeholder="Department name">
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        <a href="{% url 'coordinator:faculty' %}" class="btn btn-back">Cancel</a>
+                        <button type="submit" class="btn btn-submit">Save Faculty</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}

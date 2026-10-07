@@ -6,19 +6,26 @@ from .models import User
 
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
-
     list_display = (
         "username",
         "email",
         "first_name",
         "last_name",
-        "role",
+        "is_student",
+        "is_coordinator",
+        "is_expert",
+        "is_guide",
+        "is_panel",
         "department",
         "is_active",
     )
 
     list_filter = (
-        "role",
+        "is_student",
+        "is_coordinator",
+        "is_expert",
+        "is_guide",
+        "is_panel",
         "department",
         "is_active",
     )
@@ -36,10 +43,15 @@ class CustomUserAdmin(UserAdmin):
             "SPMS Information",
             {
                 "fields": (
-                    "role",
+                    "is_student",
+                    "is_coordinator",
+                    "is_expert",
+                    "is_guide",
+                    "is_panel",
                     "phone",
                     "roll_number",
                     "department",
+                    "domain_of_expertise",
                     "semester",
                     "batch",
                 )
@@ -52,10 +64,15 @@ class CustomUserAdmin(UserAdmin):
             "SPMS Information",
             {
                 "fields": (
-                    "role",
+                    "is_student",
+                    "is_coordinator",
+                    "is_expert",
+                    "is_guide",
+                    "is_panel",
                     "phone",
                     "roll_number",
                     "department",
+                    "domain_of_expertise",
                     "semester",
                     "batch",
                 )

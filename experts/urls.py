@@ -20,9 +20,21 @@ urlpatterns = [
     ),
 
     path(
+        "students/",
+        views.students,
+        name="students"
+    ),
+
+    path(
         "proposal/<int:proposal_id>/",
         views.proposal_detail,
         name="proposal_detail"
+    ),
+
+    path(
+        "proposal/<int:proposal_id>/send-message/",
+        views.expert_send_message,
+        name="expert_send_message"
     ),
 
     path(

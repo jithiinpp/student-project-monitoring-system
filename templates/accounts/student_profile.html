@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Student Details | SPMS{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    
+    <!-- DYNAMIC SIDEBAR BASED ON ROLE -->
+    {% if request.user.is_superuser or request.user.is_coordinator %}
+        {% include 'coordinator/sidebar.html' %}
+    {% elif request.user.is_guide %}
+        {% include 'guide/sidebar.html' %}
+    {% elif request.user.is_expert %}
+        {% include 'experts/sidebar.html' %}
+    {% elif request.user.is_panel %}
+        {% include 'panel/sidebar.html' %}
+    {% endif %}
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main">
+        
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>Student Details <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle; margin-left: 8px;"><path d="M22 10v6M2 10l10-5 10 5-10 5z"></path><path d="M6 12v5c3 3 9 3 12 0v-5"></path></svg></h1>
+                <p>Complete profile information for {{ student.get_full_name|default:student.username }}</p>
+            </div>
+            <div class="header-actions">
+                <button onclick="window.history.back()" class="btn-secondary">
+                    <span>←</span>
+                    <span>Back to List</span>
+                </button>
+            </div>
+        </header>
+
+        <section class="recent-section">
+            <div class="recent-card" style="padding: 30px; display: flex; flex-direction: column; gap: 24px;">
+                
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: bold; box-shadow: 0 4px 10px rgba(37,99,235,0.2);">
+                        {{ student.first_name|first|default:student.username|first|upper }}
+                    </div>
+                    <div>
+                        <h2 style="margin: 0 0 5px; font-size: 24px; color: #0f172a;">{{ student.get_full_name|default:student.username }}</h2>
+                        <span style="background: rgba(59, 130, 246, 0.1); color: #3b82f6; padding: 4px 12px; border-radius: 20px; font-size: 13px; font-weight: 600;">
+                            {{ student.department|default:"Department Not Specified" }}
+                        </span>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; border-top: 1px solid var(--border-color); padding-top: 24px;">
+                    
+                    <div>
+                        <p style="font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin: 0 0 5px;">Roll Number</p>
+                        <p style="font-size: 15px; color: #1e293b; font-weight: 500; margin: 0;">{{ student.roll_number|default:"-" }}</p>
+                    </div>
+
+                    <div>
+                        <p style="font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin: 0 0 5px;">Email Address</p>
+                        <p style="font-size: 15px; color: #1e293b; font-weight: 500; margin: 0;">{{ student.email|default:"-" }}</p>
+                    </div>
+
+                    <div>
+                        <p style="font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin: 0 0 5px;">Phone Number</p>
+                        <p style="font-size: 15px; color: #1e293b; font-weight: 500; margin: 0;">{{ student.phone|default:"-" }}</p>
+                    </div>
+
+                    <div>
+                        <p style="font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin: 0 0 5px;">Semester</p>
+                        <p style="font-size: 15px; color: #1e293b; font-weight: 500; margin: 0;">{{ student.semester|default:"-" }}</p>
+                    </div>
+                    
+                    <div>
+                        <p style="font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin: 0 0 5px;">Batch</p>
+                        <p style="font-size: 15px; color: #1e293b; font-weight: 500; margin: 0;">{{ student.batch|default:"-" }}</p>
+                    </div>
+
+                    <div>
+                        <p style="font-size: 12px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; margin: 0 0 5px;">Username</p>
+                        <p style="font-size: 15px; color: #1e293b; font-weight: 500; margin: 0;">{{ student.username }}</p>
+                    </div>
+                </div>
+
+                {% if project %}
+                <div style="border-top: 1px solid var(--border-color); padding-top: 24px; display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+                    <!-- Project Info -->
+                    <div>
+                        <h3 style="margin: 0 0 15px; font-size: 18px; color: #0f172a;">Active Project</h3>
+                        <div style="background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; height: 100%;">
+                            <h4 style="margin: 0 0 10px; font-size: 16px; color: #1e293b;">{{ project.title }}</h4>
+                            <p style="margin: 0 0 15px; font-size: 14px; color: #475569;">{{ project.description|truncatewords:30 }}</p>
+                            
+                            <div style="display: flex; gap: 15px;">
+                                <span class="status-badge 
+                                    {% if project.status == 'COMPLETED' %}bg-green
+                                    {% elif project.status == 'IN_PROGRESS' %}bg-blue
+                                    {% else %}bg-purple{% endif %}">
+                                    Status: {{ project.get_status_display }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Guide Info -->
+                    <div>
+                        <h3 style="margin: 0 0 15px; font-size: 18px; color: #0f172a;">Guide Information</h3>
+                        <div style="background: #f8fafc; padding: 20px; border-radius: 12px; border: 1px solid #e2e8f0; height: 100%;">
+                            {% if project.guide %}
+                                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background: #dbeafe; color: #3b82f6; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold;">
+                                        {{ project.guide.first_name|first|default:project.guide.username|first|upper }}
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 600; font-size: 15px; color: #1e293b;">{{ project.guide.get_full_name|default:project.guide.username }}</div>
+                                        <div style="font-size: 13px; color: #64748b;">{{ project.guide.email|default:"No Email Provided" }}</div>
+                                    </div>
+                                </div>
+                                <div style="margin-bottom: 15px;">
+                                    <span style="background: #dcfce7; color: #166534; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">
+                                        Guide Status: Assigned
+                                    </span>
+                                </div>
+                            {% else %}
+                                <div style="margin-bottom: 15px; padding: 15px 0;">
+                                    <p style="margin: 0 0 10px; font-size: 15px; color: #475569; font-weight: 500;">Guide: Not Assigned</p>
+                                    <span style="background: #fef9c3; color: #854d0e; padding: 4px 10px; border-radius: 20px; font-size: 12px; font-weight: 600;">
+                                        Waiting for Guide Assignment
+                                    </span>
+                                </div>
+                            {% endif %}
+
+                            {% if request.user.is_superuser or request.user.is_coordinator %}
+                                {% if project.status == "COORDINATOR_APPROVED" or project.status == "GUIDE_REJECTED" or project.status == "GUIDE_ASSIGNED" or project.status == "IN_PROGRESS" %}
+                                <div style="border-top: 1px solid #e2e8f0; margin-top: 15px; padding-top: 15px;">
+                                    <form action="{% url 'coordinator:assign_guide' project.id %}" method="POST" style="display: flex; flex-direction: column; gap: 10px;" onsubmit="{% if project.guide %}return confirm('Are you sure you want to change this student\'s assigned guide?');{% endif %}">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="next" value="{{ request.path }}">
+                                        <label style="font-size: 13px; font-weight: 600; color: #475569;">{% if project.guide %}Change Guide{% else %}Assign Guide{% endif %}</label>
+                                        <div style="display: flex; gap: 10px;">
+                                            <select name="guide" required class="form-input" style="flex: 1; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13px;">
+                                                <option value="">-- Select Guide --</option>
+                                                {% for g in guides %}
+                                                <option value="{{ g.id }}" {% if project.guide.id == g.id %}selected{% endif %}>
+                                                    {{ g.get_full_name|default:g.username }} {% if g.department %}({{ g.department }}){% endif %}
+                                                </option>
+                                                {% endfor %}
+                                            </select>
+                                            <button type="submit" class="btn-primary" style="padding: 8px 16px; border-radius: 6px; font-size: 13px;">
+                                                Save
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+        </section>
+
+    </main>
+</div>
+{% endblock %}

@@ -18,7 +18,7 @@ Proposal Details | SPMS
 
 body {
     margin: 0;
-    background: #f4f7fb;
+    background: #edf2f9;
     font-family: Arial, Helvetica, sans-serif;
     color: #1f2937;
 }
@@ -39,7 +39,7 @@ body {
 .spms-sidebar {
     width: 252px;
     min-height: 100vh;
-    background: #111827;
+    background: #27276f;
     color: #ffffff;
     position: fixed;
     left: 0;
@@ -69,14 +69,14 @@ body {
     height: 46px;
     flex-shrink: 0;
     border-radius: 12px;
-    background: #2563eb;
+    background: #4f5bd5;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #ffffff;
     font-size: 22px;
     font-weight: 700;
-    box-shadow: 0 6px 16px rgba(37,99,235,0.25);
+    box-shadow: 0 6px 16px rgba(79, 91, 213,0.25);
 }
 
 .sidebar-brand h2 {
@@ -123,9 +123,9 @@ body {
 }
 
 .sidebar-link.active {
-    background: #2563eb;
+    background: #4f5bd5;
     color: #ffffff;
-    box-shadow: 0 6px 16px rgba(37,99,235,0.25);
+    box-shadow: 0 6px 16px rgba(79, 91, 213,0.25);
 }
 
 .sidebar-link span:first-child {
@@ -159,7 +159,7 @@ body {
     height: 37px;
     flex-shrink: 0;
     border-radius: 50%;
-    background: #2563eb;
+    background: #4f5bd5;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -215,7 +215,7 @@ body {
     width: calc(100% - 252px);
     min-height: 100vh;
     padding: 32px;
-    background: #f4f7fb;
+    background: #edf2f9;
 }
 
 /* =========================================================
@@ -269,7 +269,7 @@ body {
 
 .proposal-number {
     display: inline-block;
-    color: #2563eb;
+    color: #4f5bd5;
     font-size: 11px;
     font-weight: 700;
     text-transform: uppercase;
@@ -300,9 +300,9 @@ body {
 }
 
 .status-submitted {
-    background: #eff6ff;
-    color: #2563eb;
-    border: 1px solid #dbeafe;
+    background: #eef2ff;
+    color: #4f5bd5;
+    border: 1px solid #dce2fa;
 }
 
 .status-under_review {
@@ -314,13 +314,13 @@ body {
 .status-expert_recommended {
     background: #ecfdf5;
     color: #059669;
-    border: 1px solid #d1fae5;
+    border: 1px solid #dce2fa;
 }
 
 .status-coordinator_approved {
     background: #ecfdf5;
     color: #059669;
-    border: 1px solid #d1fae5;
+    border: 1px solid #dce2fa;
 }
 
 .status-rejected {
@@ -409,17 +409,17 @@ body {
 }
 
 .primary-button {
-    background: #2563eb;
+    background: #4f5bd5;
     color: #ffffff;
-    border: 1px solid #2563eb;
+    border: 1px solid #4f5bd5;
 }
 
 .primary-button:hover {
-    background: #1d4ed8;
+    background: #34358f;
     color: #ffffff;
-    border-color: #1d4ed8;
+    border-color: #34358f;
     transform: translateY(-1px);
-    box-shadow: 0 5px 14px rgba(37,99,235,0.20);
+    box-shadow: 0 5px 14px rgba(79, 91, 213,0.20);
 }
 
 .secondary-button {
@@ -545,109 +545,7 @@ body {
 
     <!-- SIDEBAR -->
 
-    <aside class="spms-sidebar">
-
-        <div class="sidebar-brand">
-
-            <div class="brand-logo">
-                S
-            </div>
-
-            <div>
-
-                <h2>
-                    SPMS
-                </h2>
-
-                <span>
-                    Student Portal
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <nav class="sidebar-nav">
-
-
-            <a href="{% url 'accounts:student_dashboard' %}"
-               class="sidebar-link">
-
-                <span>🏠</span>
-                <span>Dashboard</span>
-
-            </a>
-
-
-            <a href="{% url 'accounts:student_proposals' %}"
-               class="sidebar-link active">
-
-                <span>📁</span>
-                <span>My Proposals</span>
-
-            </a>
-
-
-            <a href="{% url 'accounts:add_proposal' %}"
-               class="sidebar-link">
-
-                <span>➕</span>
-                <span>Submit Proposal</span>
-
-            </a>
-
-
-            <a href="{% url 'accounts:student_proposals' %}"
-               class="sidebar-link">
-
-                <span>📊</span>
-                <span>Project Status</span>
-
-            </a>
-
-
-        </nav>
-
-
-        <div class="sidebar-bottom">
-
-
-            <div class="student-mini-profile">
-
-                <div class="profile-avatar">
-
-                    {{ request.user.first_name|first|default:request.user.username|first|upper }}
-
-                </div>
-
-
-                <div class="profile-info">
-
-                    <strong>
-                        {{ request.user.get_full_name|default:request.user.username }}
-                    </strong>
-
-                    <span>
-                        Student
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <a href="{% url 'accounts:logout' %}"
-               class="sidebar-logout">
-
-                <span>🚪</span>
-                Logout
-
-            </a>
-
-        </div>
-
-    </aside>
+    {% include 'student/sidebar.html' %}
 
 
     <!-- MAIN CONTENT -->

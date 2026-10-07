@@ -1,0 +1,293 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Evaluate Project | SPMS{% endblock %}
+
+{% block extra_css %}
+<style>
+    .panel-evaluation-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1.5fr) minmax(340px, 1fr);
+        align-items: start;
+        gap: 24px;
+        margin-top: 24px;
+    }
+
+    .panel-mark-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 92px 30px;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .panel-mark-row input {
+        width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
+        padding: 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 7px;
+        font: inherit;
+    }
+
+    .panel-mark-row input:focus {
+        border-color: #6366f1;
+        outline: 3px solid rgba(99, 102, 241,  0.14);
+    }
+
+    .panel-remove-mark {
+        display: inline-flex;
+        width: 28px;
+        height: 28px;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+        border: 1px solid #fecaca;
+        border-radius: 6px;
+        background: #fff;
+        color: #b91c1c;
+        font-size: 17px;
+        line-height: 1;
+        cursor: pointer;
+    }
+
+    .panel-remove-mark:hover {
+        background: #fef2f2;
+    }
+
+    .panel-mark-total {
+        display: flex;
+        justify-content: space-between;
+        margin: 4px 0 16px;
+        padding: 11px 12px;
+        border-radius: 7px;
+        background: #f1f5f9;
+        color: #334155;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .panel-mark-total.is-over-limit {
+        background: #fef2f2;
+        color: #b91c1c;
+    }
+
+    @media (max-width: 1050px) {
+        .panel-evaluation-layout {
+            grid-template-columns: minmax(0, 1fr);
+        }
+    }
+
+    @media (max-width: 420px) {
+        .panel-mark-row {
+            grid-template-columns: minmax(0, 1fr) 76px 28px;
+            gap: 6px;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    
+    <!-- SIDEBAR -->
+    {% include 'panel/sidebar.html' %}
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main">
+        
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>{{ project.title }}</h1>
+                <p>Student: {{ project.student.get_full_name|default:project.student.username }}</p>
+            </div>
+            <div class="header-actions">
+                <a href="{% url 'accounts:panel_students' %}" class="btn-secondary">
+                    <span>←</span>
+                    <span>Back to Students</span>
+                </a>
+            </div>
+        </header>
+
+        <div class="panel-evaluation-layout">
+            
+            <!-- LEFT COLUMN: Final Report -->
+            <div>
+                <div class="recent-card" style="padding: 24px;">
+                    <h2 style="font-size: 20px; font-weight: 700; margin-bottom: 16px;">Final Report Submission</h2>
+                    
+                    {% if final_report %}
+                        <div style="border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 16px; background: rgba(0,0,0,0.02); border-bottom: 1px solid var(--border-color);">
+                                <div>
+                                    <h3 style="font-size: 14px; font-weight: 700; color: var(--text-main);">{{ final_report.title }}</h3>
+                                    <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Submitted: {{ final_report.submitted_at|date:"d M Y, h:i A" }}</p>
+                                </div>
+                                <span class="status-badge 
+                                    {% if final_report.status == 'REVIEWED' %}bg-green
+                                    {% elif final_report.status == 'CHANGES_REQUIRED' %}bg-orange
+                                    {% else %}bg-purple{% endif %}" style="font-size: 11px; padding: 4px 8px;">
+                                    {{ final_report.get_status_display }}
+                                </span>
+                            </div>
+                            <div style="padding: 16px;">
+                                <h4 style="font-size: 12px; color: var(--text-muted); text-transform: uppercase; margin: 0 0 8px;">Student's final report</h4>
+                                <p style="font-size: 13px; color: var(--text-main); line-height: 1.6; white-space: pre-wrap;">{{ final_report.description }}</p>
+                                
+                                {% if final_report.document %}
+                                <a href="{{ final_report.document.url }}" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="display: inline-flex; margin-top: 12px; padding: 6px 12px; font-size: 12px;">
+                                    <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: text-bottom; margin-right: 6px;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="2"></circle></svg></span> View Document
+                                </a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="empty-state">
+                            <span class="empty-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="vertical-align: text-bottom; margin-right: 6px;" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="7"></circle><polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88"></polyline></svg></span>
+                            <p>Final report not submitted yet.</p>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: Project Info & Evaluation -->
+            <div>
+                <!-- PROJECT INFO -->
+                <div class="recent-card" style="padding: 24px; margin-bottom: 24px;">
+                    <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">Project Information</h3>
+                    
+                    <span class="status-badge bg-green" style="display: inline-block; margin-bottom: 24px; padding: 6px 12px; font-size: 12px;">
+                        {{ project.get_status_display }}
+                    </span>
+                    
+                    {% if project.review_date %}
+                    <div style="margin-bottom: 24px; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 12px; border-radius: 8px; color: #34358f;">
+                        <div style="font-weight: 600; font-size: 12px; margin-bottom: 2px; text-transform: uppercase;">Scheduled Review</div>
+                        <div style="font-size: 14px;">{{ project.review_date|date:"l, F j, Y - g:i A" }}</div>
+                    </div>
+                    {% endif %}
+                    
+                    <div style="margin-bottom: 16px;">
+                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Guide</p>
+                        <p style="font-size: 14px; font-weight: 600;">
+                            {% if project.guide %}
+                                {{ project.guide.get_full_name|default:project.guide.username }}
+                            {% else %}
+                                Not assigned
+                            {% endif %}
+                        </p>
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 4px;">Technologies</p>
+                        <div style="display: flex; gap: 6px; flex-wrap: wrap;">
+                            {% for tech in project.technologies.split %}
+                            <span style="background: rgba(99, 102, 241, 0.1); color: var(--primary-main); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;">{{ tech }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FINAL EVALUATION -->
+                <div class="recent-card" style="padding: 24px;">
+                    <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">Panel Evaluation</h3>
+                    <form method="post" action="{% url 'accounts:panel_evaluate' project.id %}">
+                        {% csrf_token %}
+                        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
+                            Add mark categories. Their combined total must not exceed 100.
+                        </p>
+
+                        <div id="dynamic-fields-container" style="display: flex; flex-direction: column; gap: 9px; margin-bottom: 12px;">
+                            {% if evaluation.detailed_marks %}
+                                {% for category, mark in evaluation.detailed_marks.items %}
+                                    <div class="panel-mark-row">
+                                        <input type="text" name="criteria_title[]" value="{{ category }}" placeholder="Category" aria-label="Mark category" required>
+                                        <input type="number" name="criteria_mark[]" value="{{ mark }}" min="0" max="100" step="0.01" placeholder="Mark" aria-label="Mark value" required>
+                                        <button type="button" class="panel-remove-mark" aria-label="Remove {{ category }}" title="Remove category">&times;</button>
+                                    </div>
+                                {% endfor %}
+                            {% elif evaluation %}
+                                <div class="panel-mark-row">
+                                    <input type="text" name="criteria_title[]" value="Final Mark" placeholder="Category" aria-label="Mark category" required>
+                                    <input type="number" name="criteria_mark[]" value="{{ evaluation.marks }}" min="0" max="100" step="0.01" placeholder="Mark" aria-label="Mark value" required>
+                                    <button type="button" class="panel-remove-mark" aria-label="Remove Final Mark" title="Remove category">&times;</button>
+                                </div>
+                            {% else %}
+                                <div class="panel-mark-row">
+                                    <input type="text" name="criteria_title[]" placeholder="Category" aria-label="Mark category" required>
+                                    <input type="number" name="criteria_mark[]" min="0" max="100" step="0.01" placeholder="Mark" aria-label="Mark value" required>
+                                    <button type="button" class="panel-remove-mark" aria-label="Remove mark category" title="Remove category">&times;</button>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <div id="panel-mark-total" class="panel-mark-total" role="status" aria-live="polite">
+                            <span>Total mark</span>
+                            <span><span id="panel-mark-total-value">0</span> / 100</span>
+                        </div>
+
+                        <button type="button" id="add-field-btn" class="btn-secondary" style="display: flex; width: 100%; justify-content: center; margin-bottom: 16px; padding: 10px; border: 1px dashed var(--primary-main); color: var(--primary-main); background: rgba(99, 102, 241, 0.05);">
+                            + Add Mark Category
+                        </button>
+
+                        <div class="form-group" style="margin-bottom: 16px;">
+                            <label for="panel-feedback" style="display: block; font-size: 11px; font-weight: 600; margin-bottom: 4px;">Overall Remarks</label>
+                            <textarea id="panel-feedback" name="feedback" class="form-input" rows="3" style="width: 100%; border: 1px solid var(--border-color); border-radius: 6px; padding: 8px; resize: vertical;">{% if evaluation %}{{ evaluation.feedback }}{% endif %}</textarea>
+                        </div>
+
+                        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">
+                            {% if evaluation %}Update Final Report Marks{% else %}Save Final Report Marks{% endif %}
+                        </button>
+                    </form>
+
+                    <script>
+                        const markFields = document.getElementById("dynamic-fields-container");
+                        const totalValue = document.getElementById("panel-mark-total-value");
+                        const totalDisplay = document.getElementById("panel-mark-total");
+
+                        function updatePanelMarkTotal() {
+                            let total = 0;
+                            markFields.querySelectorAll('input[name="criteria_mark[]"]').forEach(function (input) {
+                                const value = Number.parseFloat(input.value);
+                                if (Number.isFinite(value)) {
+                                    total += value;
+                                }
+                            });
+                            totalValue.textContent = total.toFixed(2).replace(/\.00$/, "");
+                            totalDisplay.classList.toggle("is-over-limit", total > 100);
+                        }
+
+                        document.getElementById("add-field-btn").addEventListener("click", function () {
+                            const row = document.createElement("div");
+                            row.className = "panel-mark-row";
+                            row.innerHTML = `
+                                <input type="text" name="criteria_title[]" placeholder="Category" aria-label="Mark category" required>
+                                <input type="number" name="criteria_mark[]" min="0" max="100" step="0.01" placeholder="Mark" aria-label="Mark value" required>
+                                <button type="button" class="panel-remove-mark" aria-label="Remove mark category" title="Remove category">&times;</button>
+                            `;
+                            markFields.appendChild(row);
+                            row.querySelector('input[name="criteria_title[]"]').focus();
+                            updatePanelMarkTotal();
+                        });
+
+                        markFields.addEventListener("input", updatePanelMarkTotal);
+                        markFields.addEventListener("click", function (event) {
+                            if (event.target instanceof Element) {
+                                const removeButton = event.target.closest(".panel-remove-mark");
+                                if (removeButton) {
+                                    removeButton.closest(".panel-mark-row").remove();
+                                    updatePanelMarkTotal();
+                                }
+                            }
+                        });
+                        updatePanelMarkTotal();
+                    </script>
+                </div>
+            </div>
+            </div>
+
+        </div>
+
+    </main>
+</div>
+{% endblock %}

@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Add {{ role_title }} | SPMS{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/coordinator_forms.css' %}?v=2">
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout coordinator-form-page">
+    {% include 'coordinator/sidebar.html' %}
+
+    <main class="dashboard-main">
+        <div class="coordinator-form-content">
+            <div class="form-card">
+                <div class="form-header">
+                    <div class="coordinator-form-icon" aria-hidden="true">
+                        <svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="10" cy="7" r="4"></circle><path d="M20 8v6"></path><path d="M23 11h-6"></path></svg>
+                    </div>
+                    <div class="form-title-wrapper">
+                        <h1>Assign {{ role_title }}</h1>
+                        <p>Select an existing faculty account. Their saved contact and department details are used automatically.</p>
+                    </div>
+                </div>
+
+                <form method="post" action="{% url submit_url %}">
+                    {% csrf_token %}
+                    <div class="form-grid">
+                        <div class="form-group full">
+                            <label for="faculty_id">Faculty Member <span aria-hidden="true">*</span></label>
+                            <select id="faculty_id" name="faculty_id" required>
+                                <option value="">Select a faculty member</option>
+                                {% for member in faculty %}
+                                <option
+                                    value="{{ member.id }}"
+                                    data-name="{{ member.get_full_name|default:member.username }}"
+                                    data-username="{{ member.username }}"
+                                    data-department="{{ member.department|default:'Not provided' }}"
+                                    data-email="{{ member.email|default:'Not provided' }}"
+                                    data-role-is-guide="{{ member.is_guide|yesno:'true,false' }}"
+                                    data-role-is-expert="{{ member.is_expert|yesno:'true,false' }}"
+                                    data-role-is-panel="{{ member.is_panel|yesno:'true,false' }}"
+                                    {% if selected_faculty_id == member.id|stringformat:"s" %}selected{% endif %}
+                                >
+                                    {{ member.get_full_name|default:member.username }} ({{ member.username }})
+                                </option>
+                                {% endfor %}
+                            </select>
+                            {% if not faculty %}
+                            <p class="faculty-empty-message">
+                                No eligible faculty accounts are available.
+                                <a href="{% url 'coordinator:add_faculty' %}">Add a faculty account first</a>.
+                            </p>
+                            {% endif %}
+                        </div>
+
+                        <div id="faculty-details" class="faculty-details form-group full" hidden>
+                            <div class="faculty-details-heading">Selected faculty details</div>
+                            <strong id="faculty-name"></strong>
+                            <div id="faculty-username" class="faculty-detail-line"></div>
+                            <div id="faculty-department" class="faculty-detail-line"></div>
+                            <div id="faculty-email" class="faculty-detail-line"></div>
+                        </div>
+
+                        <fieldset class="form-group full faculty-role-fieldset">
+                            <legend>Assign Roles</legend>
+                            <p class="faculty-role-help">The role for this page is included. Select any additional roles to assign to this faculty member.</p>
+                            <div class="faculty-role-options">
+                                {% for role_choice in role_choices %}
+                                <label class="faculty-role-option{% if role_choice.primary %} primary{% endif %}">
+                                    <input
+                                        type="checkbox"
+                                        {% if not role_choice.primary %}name="additional_roles" value="{{ role_choice.key }}"{% endif %}
+                                        data-role-checkbox="{{ role_choice.key }}"
+                                        {% if role_choice.selected %}checked{% endif %}
+                                        {% if role_choice.primary %}disabled aria-label="{{ role_choice.title }} role for this page"{% endif %}
+                                    >
+                                    <span>{{ role_choice.title }}{% if role_choice.primary %} (this page){% endif %}</span>
+                                </label>
+                                {% endfor %}
+                            </div>
+                        </fieldset>
+
+                        <div id="expert-domain-group" class="form-group full" {% if not show_expert_domain %}hidden{% endif %}>
+                            <label for="domain_of_expertise">Domain of Expertise <span aria-hidden="true">*</span></label>
+                            <input
+                                type="text"
+                                id="domain_of_expertise"
+                                name="domain_of_expertise"
+                                value="{{ domain_of_expertise }}"
+                                placeholder="E.g. Artificial Intelligence, Web Development"
+                                {% if show_expert_domain %}required{% endif %}
+                            >
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        {% if role == "is_expert" %}
+                            <a href="{% url 'coordinator:experts' %}" class="btn btn-back">Cancel</a>
+                        {% elif role == "is_guide" %}
+                            <a href="{% url 'coordinator:guides' %}" class="btn btn-back">Cancel</a>
+                        {% else %}
+                            <a href="{% url 'coordinator:panels' %}" class="btn btn-back">Cancel</a>
+                        {% endif %}
+                        <button type="submit" class="btn btn-submit" {% if not faculty %}disabled{% endif %}>
+                            Assign {{ role_title }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const facultySelect = document.getElementById("faculty_id");
+const facultyDetails = document.getElementById("faculty-details");
+const roleCheckboxes = Array.from(document.querySelectorAll("[data-role-checkbox]"));
+const expertRoleGroup = document.getElementById("expert-domain-group");
+const expertDomain = document.getElementById("domain_of_expertise");
+
+function syncRoleChoices(resetOptional) {
+    const option = facultySelect.selectedOptions[0];
+    roleCheckboxes.forEach(function(checkbox) {
+        if (checkbox.closest(".faculty-role-option").classList.contains("primary")) {
+            return;
+        }
+        const roleName = checkbox.dataset.roleCheckbox.slice(3);
+        const roleFlag = "roleIs" + roleName.charAt(0).toUpperCase() + roleName.slice(1);
+        const alreadyHasRole = option && option.value
+            && option.dataset[roleFlag] === "true";
+
+        if (alreadyHasRole) {
+            checkbox.checked = true;
+            checkbox.disabled = true;
+        } else {
+            checkbox.disabled = !option || !option.value;
+            if (resetOptional) {
+                checkbox.checked = false;
+            }
+        }
+    });
+    updateExpertDomainVisibility();
+}
+
+function updateExpertDomainVisibility() {
+    const expertCheckbox = roleCheckboxes.find(function(checkbox) {
+        return checkbox.dataset.roleCheckbox === "is_expert";
+    });
+    const expertAlreadyAssigned = facultySelect.selectedOptions[0]
+        && facultySelect.selectedOptions[0].dataset.roleIsExpert === "true";
+    const needsExpertDomain = {% if role == "is_expert" %}true{% else %}Boolean(expertCheckbox && expertCheckbox.checked && !expertAlreadyAssigned){% endif %};
+
+    expertRoleGroup.hidden = !needsExpertDomain;
+    expertDomain.required = needsExpertDomain;
+}
+
+function showFacultyDetails() {
+    const option = facultySelect.selectedOptions[0];
+    if (!option || !option.value) {
+        facultyDetails.hidden = true;
+        return;
+    }
+
+    document.getElementById("faculty-name").textContent = option.dataset.name;
+    document.getElementById("faculty-username").textContent = "Username: " + option.dataset.username;
+    document.getElementById("faculty-department").textContent = "Department: " + option.dataset.department;
+    document.getElementById("faculty-email").textContent = "Email: " + option.dataset.email;
+    facultyDetails.hidden = false;
+}
+
+facultySelect.addEventListener("change", showFacultyDetails);
+facultySelect.addEventListener("change", function() {
+    syncRoleChoices(true);
+});
+showFacultyDetails();
+syncRoleChoices(false);
+</script>
+{% endblock %}

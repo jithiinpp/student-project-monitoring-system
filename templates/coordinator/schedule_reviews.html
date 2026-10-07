@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+
+{% block title %}Schedule Reviews | SPMS{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    
+    <!-- SIDEBAR -->
+    {% include 'coordinator/sidebar.html' %}
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main">
+        
+        <!-- HEADER -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>Schedule Reviews</h1>
+                <p>Manage panel review dates for completed projects.</p>
+            </div>
+            <div class="header-actions">
+                <a href="{% url 'coordinator:dashboard' %}" class="btn-secondary">
+                    <span>←</span>
+                    <span>Back to Dashboard</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- GLOBAL SCHEDULE DOCUMENT -->
+        <div class="content-card" style="margin-bottom: 24px;">
+            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                <h2 class="card-title">Overall Schedule Document</h2>
+                {% if latest_doc %}
+                <span class="status-badge bg-green">Document Active</span>
+                {% endif %}
+            </div>
+            <div class="card-body" style="padding: 24px;">
+                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 16px;">
+                    Upload a global schedule document (e.g. PDF or Excel) containing the full review timetable. This document will be shown as a notification on the dashboards of all students and panel members.
+                </p>
+                
+                <form method="POST" enctype="multipart/form-data" style="display: flex; gap: 16px; align-items: center; background: #f8fafc; padding: 16px; border-radius: 8px; border: 1px solid #e2e8f0;">
+                    {% csrf_token %}
+                    <input type="file" name="schedule_doc" id="schedule_doc" required style="flex-grow: 1; padding: 8px; border: 1px dashed #cbd5e1; border-radius: 6px; background: white;">
+                    <button type="submit" class="btn-primary" style="padding: 10px 20px;">
+                        Upload Schedule
+                    </button>
+                </form>
+
+                {% if latest_doc %}
+                <div style="margin-top: 16px; padding: 12px 16px; background: #eef2ff; border-radius: 8px; border: 1px solid #c7d2fe; display: flex; justify-content: space-between; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <div style="width: 32px; height: 32px; background: #6366f1; color: white; border-radius: 6px; display: flex; align-items: center; justify-content: center;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        </div>
+                        <div>
+                            <div style="font-size: 14px; font-weight: 600; color: #1e293b;">Latest Uploaded Document</div>
+                            <div style="font-size: 12px; color: #64748b;">Uploaded on {{ latest_doc.uploaded_at|date:"M d, Y g:i A" }}</div>
+                        </div>
+                    </div>
+                    <a href="{{ latest_doc.document.url }}" target="_blank" class="btn-secondary" style="font-size: 13px; padding: 6px 12px;">View Document</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+    <div class="content-card">
+        <div class="card-header">
+            <h2 class="card-title">Completed Projects Ready for Review</h2>
+        </div>
+
+        {% if proposals %}
+        <div class="table-wrapper">
+            <table class="premium-table">
+                <thead>
+                    <tr>
+                        <th style="width: 50px; text-align: center;">#</th>
+                        <th>Student</th>
+                        <th>Project & Guide</th>
+                        <th>Current Schedule</th>
+                        <th style="text-align: right; padding-right: 24px;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for proposal in proposals %}
+                    <tr>
+                        <td style="text-align: center; color: var(--text-muted); font-weight: 500;">
+                            {{ forloop.counter }}
+                        </td>
+                        
+                        <!-- Student -->
+                        <td>
+                            <a href="{% url 'accounts:student_profile' proposal.student.id %}" class="user-cell" style="text-decoration: none; cursor: pointer;">
+                                <div class="user-avatar">
+                                    {% if proposal.student.first_name %}
+                                        {{ proposal.student.first_name|first|upper }}
+                                    {% else %}
+                                        {{ proposal.student.username|first|upper }}
+                                    {% endif %}
+                                </div>
+                                <div class="user-info">
+                                    <span class="user-name">{{ proposal.student.get_full_name|default:proposal.student.username }}</span>
+                                    <span class="user-roll" style="color: #64748b; font-size: 12px;">Roll: {{ proposal.student.roll_number|default:"N/A" }}</span>
+                                </div>
+                            </a>
+                        </td>
+
+                        <!-- Project & Guide -->
+                        <td>
+                            <div class="project-cell" style="display: flex; flex-direction: column; gap: 4px;">
+                                <span class="project-title" style="font-weight: 600; color: #0f172a;">{{ proposal.title }}</span>
+                                <span style="font-size: 12px; color: #64748b;">
+                                    Guide: {{ proposal.guide.get_full_name|default:proposal.guide.username|default:"N/A" }}
+                                </span>
+                            </div>
+                        </td>
+
+                        <!-- Schedule Info -->
+                        <td>
+                            {% if proposal.review_date %}
+                            <div style="display: inline-flex; flex-direction: column; background: #f0fdf4; border: 1px solid #bbf7d0; padding: 6px 12px; border-radius: 6px; color: #34358f;">
+                                <span style="font-size: 13px; font-weight: 600;">{{ proposal.review_date|date:"M j, Y" }}</span>
+                                <span style="font-size: 11px;">{{ proposal.review_date|date:"g:i A" }}</span>
+                            </div>
+                            {% else %}
+                            <span style="color: #ef4444; font-size: 13px; font-weight: 500;">Not Scheduled</span>
+                            {% endif %}
+                        </td>
+
+                        <!-- Action -->
+                        <td style="text-align: right; padding-right: 24px;">
+                            <form method="post" action="{% url 'coordinator:schedule_review' proposal.id %}" style="display: flex; gap: 8px; justify-content: flex-end; align-items: center;">
+                                {% csrf_token %}
+                                <input type="datetime-local" name="review_date" style="padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 12px; font-family: inherit; width: 170px;" required {% if proposal.review_date %}value="{{ proposal.review_date|date:'Y-m-d\TH:i' }}"{% endif %}>
+                                <button type="submit" class="btn-primary" style="padding: 6px 12px; font-size: 12px; border-radius: 6px; background: #4f5bd5; color: white; border: none; cursor: pointer; font-weight: 600;">
+                                    Save
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        
+        <div class="empty-state" style="padding: 60px 20px; text-align: center;">
+            <div class="empty-icon" style="margin: 0 auto 16px; width: 64px; height: 64px; background: #f1f5f9; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #94a3b8;">
+                <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+            </div>
+            <h3 style="margin: 0 0 8px; font-size: 18px; color: #0f172a;">No Completed Projects</h3>
+            <p style="margin: 0; color: #64748b; font-size: 14px; max-width: 400px; margin: 0 auto;">There are currently no projects marked as 'Completed' by their guides that are waiting for a panel review.</p>
+        </div>
+        
+        {% endif %}
+    </div>
+
+    </main>
+</div>
+
+
+{% endblock %}

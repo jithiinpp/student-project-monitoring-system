@@ -3,308 +3,197 @@
 {% block title %}Project Proposals{% endblock %}
 
 {% block content %}
-
-<style>
-    .page {
-        padding: 30px;
-    }
-
-    .page-header {
-        margin-bottom: 20px;
-    }
-
-    .page-header h2 {
-        margin: 0;
-        font-size: 24px;
-        color: #222;
-    }
-
-    .page-header p {
-        margin-top: 5px;
-        color: #777;
-        font-size: 14px;
-    }
-
-    .table-box {
-        background: white;
-        border: 1px solid #ddd;
-        border-radius: 6px;
-        overflow-x: auto;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    th {
-        background: #f5f6f8;
-        padding: 13px;
-        text-align: left;
-        font-size: 13px;
-        color: #555;
-        border-bottom: 1px solid #ddd;
-    }
-
-    td {
-        padding: 13px;
-        font-size: 13px;
-        color: #333;
-        border-bottom: 1px solid #eee;
-    }
-
-    tr:last-child td {
-        border-bottom: none;
-    }
-
-    .status {
-        padding: 5px 9px;
-        border-radius: 4px;
-        font-size: 11px;
-        font-weight: 600;
-        display: inline-block;
-    }
-
-    .submitted {
-        background: #e8f1ff;
-        color: #2563eb;
-    }
-
-    .expert {
-        background: #fff4d6;
-        color: #946200;
-    }
-
-    .changes {
-        background: #ffe5e5;
-        color: #c62828;
-    }
-
-    .approved {
-        background: #e4f7e9;
-        color: #16803c;
-    }
-
-    .coordinator {
-        background: #eee8ff;
-        color: #6842c2;
-    }
-
-    .guide {
-        background: #e4f5f7;
-        color: #087f8c;
-    }
-
-    .rejected {
-        background: #ffe5e5;
-        color: #c62828;
-    }
-
-    .progress {
-        background: #e8f7ef;
-        color: #18794e;
-    }
-
-    .completed {
-        background: #dff5df;
-        color: #267326;
-    }
-
-    .view-btn {
-        color: #2563eb;
-        text-decoration: none;
-        font-size: 12px;
-        font-weight: 600;
-    }
-
-    .view-btn:hover {
-        text-decoration: underline;
-    }
-
-    .empty {
-        padding: 40px;
-        text-align: center;
-        color: #777;
-    }
-</style>
-
-
-<div class="page">
-
-    <div class="page-header">
-        <h2>Project Proposals</h2>
-        <p>View and manage student project proposals.</p>
-    </div>
-
-
-    <div class="table-box">
-
-        {% if proposals %}
-
-        <table>
-
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Student</th>
-                    <th>Project</th>
-                    <th>Type</th>
-                    <th>Expert</th>
-                    <th>Guide</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                {% for proposal in proposals %}
-
-                <tr>
-
-                    <td>
-                        {{ forloop.counter }}
-                    </td>
-
-                    <td>
-                        {{ proposal.student.get_full_name|default:proposal.student.username }}
-                    </td>
-
-                    <td>
-                        <strong>{{ proposal.title }}</strong>
-                        <br>
-                        <small>
-                            {{ proposal.domain|default:"No domain" }}
-                        </small>
-                    </td>
-
-                    <td>
-                        {% if proposal.project_type %}
-                            <span class="status {{ proposal.project_type|lower }}">
-                                {{ proposal.get_project_type_display }}
-                            </span>
-                        {% else %}
-                            —
-                        {% endif %}
-                    </td>
-
-                    <td>
-                        {% if proposal.domain_expert %}
-                            {{ proposal.domain_expert.get_full_name|default:proposal.domain_expert.username }}
-                        {% else %}
-                            —
-                        {% endif %}
-                    </td>
-
-                    <td>
-                        {% if proposal.guide %}
-                            {{ proposal.guide.get_full_name|default:proposal.guide.username }}
-                        {% else %}
-                            —
-                        {% endif %}
-                    </td>
-
-
-                    <!-- STATUS -->
-
-                    <td>
-
-                        {% if proposal.status == "SUBMITTED" %}
-
-                            <span class="status submitted">
-                                Submitted
-                            </span>
-
-                        {% elif proposal.status == "EXPERT_ASSIGNED" %}
-
-                            <span class="status expert">
-                                Expert Assigned
-                            </span>
-
-                        {% elif proposal.status == "CHANGES_REQUESTED" %}
-
-                            <span class="status changes">
-                                Changes Requested
-                            </span>
-
-                        {% elif proposal.status == "EXPERT_APPROVED" %}
-
-                            <span class="status approved">
-                                Expert Approved
-                            </span>
-
-                        {% elif proposal.status == "COORDINATOR_APPROVED" %}
-
-                            <span class="status coordinator">
-                                Coordinator Approved
-                            </span>
-
-                        {% elif proposal.status == "GUIDE_ASSIGNED" %}
-
-                            <span class="status guide">
-                                Guide Assigned
-                            </span>
-
-                        {% elif proposal.status == "GUIDE_REJECTED" %}
-
-                            <span class="status rejected">
-                                Guide Rejected
-                            </span>
-
-                        {% elif proposal.status == "IN_PROGRESS" %}
-
-                            <span class="status progress">
-                                In Progress
-                            </span>
-
-                        {% elif proposal.status == "COMPLETED" %}
-
-                            <span class="status completed">
-                                Completed
-                            </span>
-
-                        {% else %}
-
-                            <span class="status submitted">
-                                {{ proposal.get_status_display }}
-                            </span>
-
-                        {% endif %}
-
-                    </td>
-
-
-                    <!-- ACTION -->
-
-                    <td>
-
-                        <a
-                            href="{% url 'coordinator:proposal_detail' proposal.id %}"
-                            class="view-btn"
-                        >
-                            View
-                        </a>
-
-                    </td>
-
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
-        {% else %}
-
-            <div class="empty">
-                No project proposals found.
+<div class="dashboard-layout">
+    
+    <!-- SIDEBAR -->
+    {% include 'coordinator/sidebar.html' %}
+
+    <!-- MAIN CONTENT -->
+    <main class="dashboard-main">
+        
+        <!-- HEADER -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>Project Proposals</h1>
+                <p>View and manage all student project proposals, expert assignments, and statuses.</p>
             </div>
+        </header>
 
+        <!-- CARDS / TABLE CONTENT -->
+    <div class="content-card">
+        <div class="card-header">
+            <h2 class="card-title">All Proposals</h2>
+        </div>
+
+        {% if grouped_proposals %}
+        <div class="table-wrapper">
+            <table class="premium-table">
+                <thead>
+                    <tr>
+                        <th style="width: 50px; text-align: center;">#</th>
+                        <th style="width: 50px; text-align: center;"></th>
+                        <th>Project Details</th>
+                        <th>Type</th>
+                        <th>Staff Assigned</th>
+                        <th>Status</th>
+                        <th style="text-align: right;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for group in grouped_proposals %}
+                    <!-- Student Header Row -->
+                    <tr class="student-header-row" onclick="toggleStudentRows('student-{{ group.student.id }}')" style="cursor: pointer; user-select: none; transition: background 0.2s;">
+                        <td colspan="7" style="background: #f8fafc; border-bottom: 2px solid var(--primary-light); padding: 12px 24px;">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div class="user-cell">
+                                    <div class="user-avatar" style="width: 32px; height: 32px; font-size: 14px;">
+                                        {% if group.student.first_name %}
+                                            {{ group.student.first_name|first|upper }}
+                                        {% else %}
+                                            {{ group.student.username|first|upper }}
+                                        {% endif %}
+                                    </div>
+                                    <div class="user-info">
+                                        <span class="user-name" style="font-size: 15px;">{{ group.student.get_full_name|default:group.student.username }}</span>
+                                        <span class="user-roll">@{{ group.student.username }} • {{ group.proposals|length }} Proposal{% if group.proposals|length > 1 %}s{% endif %}</span>
+                                    </div>
+                                </div>
+                                <div class="toggle-icon" id="icon-student-{{ group.student.id }}" style="transition: transform 0.3s; color: var(--text-muted);">
+                                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    
+                    <!-- Proposals for this student -->
+                    {% for proposal in group.proposals %}
+                    <tr class="student-{{ group.student.id }}" style="display: none; background: #ffffff;">
+                        <td style="text-align: center; color: var(--text-muted); font-weight: 600; font-size: 12px;">
+                            {{ forloop.parentloop.counter }}.{{ forloop.counter }}
+                        </td>
+                        
+                        <td style="text-align: center; color: #cbd5e1; font-size: 18px;">
+                            ↳
+                        </td>
+
+                        <!-- Project Details -->
+                        <td>
+                            <div class="project-cell">
+                                <span class="project-title">{{ proposal.title }}</span>
+                                {% if proposal.domain %}
+                                    <span class="domain-pill">{{ proposal.domain }}</span>
+                                {% else %}
+                                    <span class="domain-pill empty-domain">No Domain Set</span>
+                                {% endif %}
+                            </div>
+                        </td>
+
+                        <!-- Type -->
+                        <td>
+                            {% if proposal.project_type %}
+                                <span class="type-badge type-{{ proposal.project_type|lower }}">
+                                    {{ proposal.get_project_type_display }}
+                                </span>
+                            {% else %}
+                                <span style="color: var(--text-muted); font-size: 13px;">—</span>
+                            {% endif %}
+                        </td>
+
+                        <!-- Staff Assigned (Expert/Guide) -->
+                        <td>
+                            <div class="staff-cell">
+                                <div class="staff-row">
+                                    <span class="staff-label">Expert:</span>
+                                    {% if proposal.domain_expert %}
+                                        <span class="staff-name">{{ proposal.domain_expert.get_full_name|default:proposal.domain_expert.username }}</span>
+                                    {% else %}
+                                        <span class="staff-none">Unassigned</span>
+                                    {% endif %}
+                                </div>
+                                <div class="staff-row">
+                                    <span class="staff-label">Guide:</span>
+                                    {% if proposal.guide %}
+                                        <span class="staff-name">{{ proposal.guide.get_full_name|default:proposal.guide.username }}</span>
+                                    {% else %}
+                                        <span class="staff-none">Unassigned</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </td>
+
+                        <!-- Status -->
+                        <td>
+                            {% if proposal.status == "SUBMITTED" %}
+                                <span class="status-badge status-submitted">Submitted</span>
+                            {% elif proposal.status == "EXPERT_ASSIGNED" %}
+                                <span class="status-badge status-expert-assigned">Expert Assigned</span>
+                            {% elif proposal.status == "CHANGES_REQUESTED" %}
+                                <span class="status-badge status-changes">Changes Requested</span>
+                            {% elif proposal.status == "EXPERT_APPROVED" %}
+                                <span class="status-badge status-expert-approved">Expert Approved</span>
+                            {% elif proposal.status == "COORDINATOR_APPROVED" %}
+                                <span class="status-badge status-coordinator">Coordinator Approved</span>
+                            {% elif proposal.status == "GUIDE_ASSIGNED" %}
+                                <span class="status-badge status-guide">Guide Assigned</span>
+                            {% elif proposal.status == "GUIDE_REJECTED" %}
+                                <span class="status-badge status-rejected">Guide Rejected</span>
+                            {% elif proposal.status == "REJECTED" %}
+                                <span class="status-badge status-rejected">Rejected</span>
+                            {% elif proposal.status == "IN_PROGRESS" %}
+                                <span class="status-badge status-progress">In Progress</span>
+                            {% elif proposal.status == "COMPLETED" %}
+                                <span class="status-badge status-completed">Completed</span>
+                            {% else %}
+                                <span class="status-badge status-submitted">{{ proposal.get_status_display }}</span>
+                            {% endif %}
+                        </td>
+
+                        <!-- Action -->
+                        <td style="text-align: right;">
+                            <a href="{% url 'coordinator:proposal_detail' proposal.id %}" class="btn-action">
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <div class="empty-icon">
+                <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+            </div>
+            <h2 class="empty-title">No Proposals Found</h2>
+            <p class="empty-desc">There are currently no project proposals submitted by students.</p>
+        </div>
         {% endif %}
-
     </div>
 
+    </main>
 </div>
 
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function toggleStudentRows(studentClass) {
+        const rows = document.querySelectorAll('.' + studentClass);
+        const icon = document.getElementById('icon-' + studentClass);
+        
+        if (rows.length > 0) {
+            const isHidden = rows[0].style.display === 'none';
+            
+            rows.forEach(row => {
+                row.style.display = isHidden ? 'table-row' : 'none';
+            });
+            
+            if (icon) {
+                icon.style.transform = isHidden ? 'rotate(180deg)' : 'rotate(0deg)';
+            }
+        }
+    }
+</script>
 {% endblock %}

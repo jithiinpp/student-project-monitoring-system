@@ -22,7 +22,7 @@ def expert_required(view_func):
             return view_func(request, *args, **kwargs)
 
         # Only Domain Expert
-        if request.user.role != "EXPERT":
+        if not request.user.is_expert:
 
             messages.error(
                 request,
@@ -52,7 +52,7 @@ def dashboard(request):
             "student",
             "domain_expert"
         )
-        .order_by("-updated_at")
+        .order_by("submitted_at")
     )
 
     total_proposals = proposals.count()
@@ -62,11 +62,18 @@ def dashboard(request):
     ).count()
 
     approved_count = proposals.filter(
-        status="EXPERT_APPROVED"
+        status__in=[
+            "EXPERT_APPROVED",
+            "COORDINATOR_APPROVED",
+            "GUIDE_ASSIGNED",
+            "GUIDE_REJECTED",
+            "IN_PROGRESS",
+            "COMPLETED"
+        ]
     ).count()
 
     changes_count = proposals.filter(
-        status="CHANGES_REQUESTED"
+        status__in=["CHANGES_REQUESTED", "CHANGES_SENT_TO_STUDENT"]
     ).count()
 
     submitted_count = proposals.filter(
@@ -85,6 +92,8 @@ def dashboard(request):
         "changes_count": changes_count,
 
         "submitted_count": submitted_count,
+        
+        "scheduled_reviews": proposals.exclude(review_date__isnull=True).order_by("review_date"),
     }
 
     return render(
@@ -110,14 +119,41 @@ def my_proposals(request):
             "student",
             "domain_expert"
         )
-        .order_by("-updated_at")
+        .order_by("submitted_at")
     )
+
+    status_filter = request.GET.get('status')
+    if status_filter:
+        if status_filter == "EXPERT_APPROVED":
+            proposals = proposals.filter(
+                status__in=[
+                    "EXPERT_APPROVED",
+                    "COORDINATOR_APPROVED",
+                    "GUIDE_ASSIGNED",
+                    "GUIDE_REJECTED",
+                    "IN_PROGRESS",
+                    "COMPLETED"
+                ]
+            )
+        elif status_filter == "CHANGES_REQUESTED":
+            proposals = proposals.filter(
+                status__in=["CHANGES_REQUESTED", "CHANGES_SENT_TO_STUDENT"]
+            )
+        else:
+            proposals = proposals.filter(status=status_filter)
+
+    # Note: assigned_count is calculated BEFORE filtering, so we need a base query
+    base_proposals = ProjectProposal.objects.filter(domain_expert=request.user)
+    assigned_count = base_proposals.filter(
+        status="EXPERT_ASSIGNED"
+    ).count()
 
     return render(
         request,
         "experts/proposals.html",
         {
-            "proposals": proposals
+            "proposals": proposals,
+            "assigned_count": assigned_count
         }
     )
 
@@ -150,14 +186,38 @@ def proposal_detail(request, proposal_id):
         .order_by("-created_at")
     )
 
+    project_messages = proposal.messages.select_related("sender").all()
+
     return render(
         request,
         "experts/proposal_detail.html",
         {
             "proposal": proposal,
             "change_requests": change_requests,
+            "project_messages": project_messages,
         }
     )
+
+# =========================================================
+# EXPERT SEND MESSAGE
+# =========================================================
+
+@expert_required
+def expert_send_message(request, proposal_id):
+    if request.method == "POST":
+        proposal = get_object_or_404(ProjectProposal, id=proposal_id, domain_expert=request.user)
+        message_text = request.POST.get("message", "").strip()
+        if message_text:
+            from projects.models import ProjectMessage
+            ProjectMessage.objects.create(
+                project=proposal,
+                sender=request.user,
+                message=message_text
+            )
+        referer = request.META.get('HTTP_REFERER')
+        if referer:
+            return redirect(referer)
+    return redirect("experts:proposal_detail", proposal_id=proposal_id)
 
 
 # =========================================================
@@ -282,7 +342,7 @@ def review_proposal(request, proposal_id):
         ProposalChangeRequest.objects.create(
             proposal=proposal,
             expert=request.user,
-            message=comments,
+            comments=comments,
             status="PENDING"
         )
 
@@ -326,4 +386,26 @@ def review_proposal(request, proposal_id):
     return redirect(
         "experts:proposal_detail",
         proposal_id=proposal.id
+    )
+
+@expert_required
+def students(request):
+    """
+    List all students assigned to this domain expert.
+    """
+    proposals = (
+        ProjectProposal.objects
+        .filter(domain_expert=request.user)
+        .select_related("student")
+        .order_by("-updated_at")
+    )
+    
+    # Extract unique students from the proposals
+    # Since each student only has one proposal in SPMS typically, we can just pass the proposals, 
+    # but let's pass the proposals so we have project details too.
+    
+    return render(
+        request,
+        "experts/students.html",
+        {"proposals": proposals}
     )

@@ -18,7 +18,7 @@ Student Dashboard | SPMS
 
 body {
     margin: 0;
-    background: #f4f7fb;
+    background: #edf2f9;
     font-family: Arial, Helvetica, sans-serif;
     color: #1e293b;
 }
@@ -42,7 +42,7 @@ body {
     width: 260px;
     min-height: 100vh;
 
-    background: #0f172a;
+    background: #27276f;
     color: #ffffff;
 
     position: fixed;
@@ -83,7 +83,7 @@ body {
 
     border-radius: 12px;
 
-    background: #2563eb;
+    background: #34358f;
 
     display: flex;
     align-items: center;
@@ -147,10 +147,10 @@ body {
 }
 
 .sidebar-link.active {
-    background: #2563eb;
+    background: #34358f;
     color: #ffffff;
 
-    box-shadow: 0 5px 15px rgba(37, 99, 235, 0.25);
+    box-shadow: 0 5px 15px rgba(79, 91, 213, 0.25);
 }
 
 
@@ -217,7 +217,7 @@ body {
 
     border-radius: 50%;
 
-    background: #2563eb;
+    background: #34358f;
 
     display: flex;
     align-items: center;
@@ -386,7 +386,7 @@ body {
 
     border-radius: 50%;
 
-    background: #2563eb;
+    background: #34358f;
 
     color: white;
 
@@ -413,8 +413,8 @@ body {
 
     background: linear-gradient(
         135deg,
-        #1d4ed8,
-        #2563eb
+        #4f5bd5,
+        #34358f
     );
 
     color: white;
@@ -429,7 +429,7 @@ body {
     position: relative;
 
     box-shadow:
-        0 12px 30px rgba(37, 99, 235, 0.20);
+        0 12px 30px rgba(79, 91, 213, 0.20);
 }
 
 .welcome-card::after {
@@ -554,9 +554,9 @@ body {
 
     border-radius: 12px;
 
-    background: #eff6ff;
+    background: #eef2ff;
 
-    color: #2563eb;
+    color: #34358f;
 
     display: flex;
     align-items: center;
@@ -682,9 +682,9 @@ body {
 
     border-radius: 12px;
 
-    background: #eff6ff;
+    background: #eef2ff;
 
-    color: #2563eb;
+    color: #34358f;
 
     display: flex;
     align-items: center;
@@ -729,7 +729,7 @@ body {
     right: 18px;
     bottom: 18px;
 
-    color: #2563eb;
+    color: #34358f;
 
     display: flex;
     align-items: center;
@@ -784,9 +784,9 @@ body {
 
     border-radius: 15px;
 
-    background: #eff6ff;
+    background: #eef2ff;
 
-    color: #2563eb;
+    color: #34358f;
 
     display: flex;
     align-items: center;
@@ -857,27 +857,27 @@ body {
 }
 
 .progress-btn-primary {
-    background: #2563eb;
+    background: #34358f;
 
     color: white;
 }
 
 .progress-btn-primary:hover {
-    background: #1d4ed8;
+    background: #4f5bd5;
 
     color: white;
 }
 
 .progress-btn-secondary {
-    background: #eff6ff;
+    background: #eef2ff;
 
-    color: #2563eb;
+    color: #34358f;
 }
 
 .progress-btn-secondary:hover {
-    background: #dbeafe;
+    background: #dce2fa;
 
-    color: #1d4ed8;
+    color: #4f5bd5;
 }
 
 
@@ -930,9 +930,9 @@ body {
 
     border-radius: 20px;
 
-    background: #eff6ff;
+    background: #eef2ff;
 
-    color: #2563eb;
+    color: #34358f;
 
     font-size: 12px;
 
@@ -1020,7 +1020,7 @@ body {
 }
 
 .workflow-step.active .workflow-number {
-    background: #2563eb;
+    background: #34358f;
 
     color: white;
 }
@@ -1245,242 +1245,7 @@ body {
          SIDEBAR
     ====================================================== -->
 
-    <aside class="spms-sidebar">
-
-
-        <!-- BRAND -->
-
-        <div class="sidebar-brand">
-
-            <div class="brand-logo">
-                S
-            </div>
-
-            <div>
-
-                <h2>
-                    SPMS
-                </h2>
-
-                <span>
-                    Student Portal
-                </span>
-
-            </div>
-
-        </div>
-
-
-        <!-- NAVIGATION -->
-
-        <nav class="sidebar-nav">
-
-
-            <!-- DASHBOARD -->
-
-            <a href="{% url 'accounts:student_dashboard' %}"
-               class="sidebar-link active">
-
-                <span class="sidebar-icon">
-
-                    <!-- Dashboard Icon -->
-                    <svg viewBox="0 0 24 24">
-                        <rect x="3" y="3" width="7" height="7"></rect>
-                        <rect x="14" y="3" width="7" height="7"></rect>
-                        <rect x="3" y="14" width="7" height="7"></rect>
-                        <rect x="14" y="14" width="7" height="7"></rect>
-                    </svg>
-
-                </span>
-
-                <span>
-                    Dashboard
-                </span>
-
-            </a>
-
-
-            <!-- MY PROPOSALS -->
-
-            <a href="{% url 'accounts:student_proposals' %}"
-               class="sidebar-link">
-
-                <span class="sidebar-icon">
-
-                    <!-- Folder Icon -->
-                    <svg viewBox="0 0 24 24">
-                        <path d="M3 6.5A2.5 2.5 0 0 1 5.5 4H10l2 2h6.5A2.5 2.5 0 0 1 21 8.5v8A2.5 2.5 0 0 1 18.5 19h-13A2.5 2.5 0 0 1 3 16.5z"></path>
-                        <path d="M3 9h18"></path>
-                    </svg>
-
-                </span>
-
-                <span>
-                    My Proposals
-                </span>
-
-            </a>
-
-
-            <!-- SUBMIT PROPOSAL -->
-
-            <a href="{% url 'accounts:add_proposal' %}"
-               class="sidebar-link">
-
-                <span class="sidebar-icon">
-
-                    <!-- Plus Document Icon -->
-                    <svg viewBox="0 0 24 24">
-                        <path d="M6 3h8l4 4v5"></path>
-                        <path d="M14 3v5h5"></path>
-                        <path d="M6 3a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"></path>
-                        <path d="M16 15v6"></path>
-                        <path d="M13 18h6"></path>
-                    </svg>
-
-                </span>
-
-                <span>
-                    Submit Proposal
-                </span>
-
-            </a>
-
-
-            <!-- PROJECT STATUS -->
-
-            <a href="{% url 'accounts:student_proposals' %}"
-               class="sidebar-link">
-
-                <span class="sidebar-icon">
-
-                    <!-- Chart Icon -->
-                    <svg viewBox="0 0 24 24">
-                        <path d="M4 19V5"></path>
-                        <path d="M4 19h16"></path>
-                        <path d="M8 16v-5"></path>
-                        <path d="M12 16V8"></path>
-                        <path d="M16 16v-9"></path>
-                    </svg>
-
-                </span>
-
-                <span>
-                    Project Status
-                </span>
-
-            </a>
-
-
-            <!-- PROGRESS REPORTS -->
-
-            <a href="{% url 'accounts:student_progress' %}"
-               class="sidebar-link">
-
-                <span class="sidebar-icon">
-
-                    <!-- Document Icon -->
-                    <svg viewBox="0 0 24 24">
-                        <path d="M6 3h8l4 4v14H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2z"></path>
-                        <path d="M14 3v5h5"></path>
-                        <path d="M8 13h8"></path>
-                        <path d="M8 17h6"></path>
-                    </svg>
-
-                </span>
-
-                <span>
-                    Progress Reports
-                </span>
-
-            </a>
-
-
-            <!-- FINAL MARK -->
-
-            <a href="{% url 'accounts:student_final_mark' %}"
-               class="sidebar-link">
-
-                <span class="sidebar-icon">
-
-                    <!-- Award / Final Mark Icon -->
-                    <svg viewBox="0 0 24 24">
-                        <circle cx="12" cy="8" r="5"></circle>
-                        <path d="M9 12.5L8 21l4-2 4 2-1-8.5"></path>
-                        <path d="M12 5.5l.8 1.6 1.7.2-1.2 1.2.3 1.7-1.6-.8-1.6.8.3-1.7-1.2-1.2 1.7-.2z"></path>
-                    </svg>
-
-                </span>
-
-                <span>
-                    Final Mark
-                </span>
-
-            </a>
-
-
-        </nav>
-
-
-        <!-- SIDEBAR BOTTOM -->
-
-        <div class="sidebar-bottom">
-
-
-            <!-- STUDENT PROFILE -->
-
-            <div class="student-mini-profile">
-
-                <div class="profile-avatar">
-
-                    {{ request.user.first_name|first|default:request.user.username|first|upper }}
-
-                </div>
-
-
-                <div class="profile-info">
-
-                    <strong>
-
-                        {{ request.user.get_full_name|default:request.user.username }}
-
-                    </strong>
-
-                    <span>
-                        Student
-                    </span>
-
-                </div>
-
-            </div>
-
-
-            <!-- LOGOUT -->
-
-            <a href="{% url 'accounts:logout' %}"
-               class="sidebar-logout">
-
-                <span class="logout-icon">
-
-                    <!-- Logout Icon -->
-                    <svg viewBox="0 0 24 24">
-                        <path d="M10 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h4"></path>
-                        <path d="M14 8l4 4-4 4"></path>
-                        <path d="M9 12h9"></path>
-                    </svg>
-
-                </span>
-
-                <span>
-                    Logout
-                </span>
-
-            </a>
-
-
-        </div>
-
-    </aside>
+    {% include 'student/sidebar.html' %}
 
 
     <!-- =====================================================

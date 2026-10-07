@@ -1,0 +1,86 @@
+:root:has(.premium-sidebar),
+:root:has(.coordinator-theme-page) {
+    --sidebar-bg: #27276f;
+    --sidebar-nav: #34358f;
+    --sidebar-hover: #34358f;
+    --sidebar-active: #4f5bd5;
+    --primary-main: #4f5bd5;
+    --primary-dark: #34358f;
+    --bg-main: #edf2f9;
+    --card-bg: #ffffff;
+    --text-main: #0f172a;
+    --text-muted: #64748b;
+    --border-color: rgba(226, 232, 240, 0.9);
+}
+
+body:has(.premium-sidebar),
+body:has(.coordinator-theme-page) {
+    background-color: #edf2f9;
+}
+
+.coordinator-theme-page {
+    min-height: 100vh;
+    background-color: #edf2f9;
+}
+
+body:has(.premium-sidebar) .premium-sidebar {
+    background: #27276f;
+}
+
+body:has(.premium-sidebar) .brand-logo {
+    background: linear-gradient(135deg, #4f5bd5, #34358f);
+    box-shadow: 0 4px 10px rgba(79, 91, 213, 0.3);
+}
+
+body:has(.premium-sidebar) .nav-item:hover {
+    background: #34358f;
+}
+
+body:has(.premium-sidebar) .nav-item.active {
+    background: #4f5bd5;
+    box-shadow: 0 4px 12px rgba(79, 91, 213, 0.3);
+}
+
+body:has(.premium-sidebar) .btn-primary,
+body:has(.premium-sidebar) .btn-submit,
+body:has(.coordinator-theme-page) .btn-primary,
+body:has(.coordinator-theme-page) .btn-submit {
+    background: #4f5bd5;
+    box-shadow: 0 4px 10px rgba(79, 91, 213, 0.2);
+}
+
+body:has(.premium-sidebar) .btn-primary:hover,
+body:has(.premium-sidebar) .btn-submit:hover,
+body:has(.coordinator-theme-page) .btn-primary:hover,
+body:has(.coordinator-theme-page) .btn-submit:hover {
+    background: #34358f;
+    box-shadow: 0 6px 12px rgba(79, 91, 213, 0.28);
+}
+
+body:has(.premium-sidebar) .stat-icon-box.bg-blue,
+body:has(.coordinator-theme-page) .stat-icon-box.bg-blue {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+body:has(.premium-sidebar) .btn-success,
+body:has(.coordinator-theme-page) .btn-success {
+    background: #4f5bd5;
+}
+
+body:has(.premium-sidebar) .btn-success:hover,
+body:has(.coordinator-theme-page) .btn-success:hover {
+    background: #34358f;
+}
+
+body:has(.premium-sidebar) .form-input:focus,
+body:has(.premium-sidebar) input:focus,
+body:has(.premium-sidebar) select:focus,
+body:has(.premium-sidebar) textarea:focus,
+body:has(.coordinator-theme-page) .form-input:focus,
+body:has(.coordinator-theme-page) input:focus,
+body:has(.coordinator-theme-page) select:focus,
+body:has(.coordinator-theme-page) textarea:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.14);
+}

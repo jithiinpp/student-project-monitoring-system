@@ -1,0 +1,228 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}All Students | SPMS{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    {% include 'panel/sidebar.html' %}
+
+    <main class="dashboard-main">
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>All Students</h1>
+                <p>Student names, departments, and register numbers are listed below. Expand a student for more details.</p>
+            </div>
+        </header>
+
+        <section class="stats-grid" style="margin-bottom: 24px; display: grid; grid-template-columns: 1fr; gap: 24px; max-width: 400px;">
+            <div class="stat-card">
+                <div class="stat-info">
+                    <p class="stat-label">Total Students</p>
+                    <h3 class="stat-number">{{ student_count }}</h3>
+                </div>
+            </div>
+        </section>
+
+        <section class="recent-section">
+            <div class="recent-card">
+                <div style="padding: 24px; border-bottom: 1px solid var(--border-color);">
+                    <input type="search" id="searchInput" placeholder="Search students by name, register number, or department..." class="form-input" style="max-width: 440px;" oninput="searchStudents()">
+                </div>
+
+                {% if students %}
+                    <div id="studentList">
+                        {% for student in students %}
+                        <article class="panel-student-card" style="padding: 20px 24px; border-bottom: 1px solid var(--border-color);">
+                            <div style="display: grid; grid-template-columns: minmax(180px, 1.4fr) minmax(150px, 1fr) minmax(150px, 1fr) auto; align-items: center; gap: 16px;">
+                                <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+                                    <div class="recent-avatar" style="flex: 0 0 40px; background: linear-gradient(135deg, #6366f1, #4f5bd5); color: white;">
+                                        {{ student.first_name|first|default:student.username|first|upper }}
+                                    </div>
+                                    <div style="min-width: 0;">
+                                        <span class="recent-name" style="display: block; color: #0f172a;">{{ student.get_full_name|default:student.username }}</span>
+                                        <span style="font-size: 12px; color: #64748b;">Student name</span>
+                                    </div>
+                                </div>
+                                <div>
+                                    <span style="display: block; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Department</span>
+                                    <span style="color: #334155;">{{ student.department|default:"Not set" }}</span>
+                                </div>
+                                <div>
+                                    <span style="display: block; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase;">Register Number</span>
+                                    <span style="color: #334155;">{{ student.roll_number|default:"Not set" }}</span>
+                                </div>
+                                <details class="student-more-details">
+                                    <summary>More details</summary>
+                                    <div class="student-extra-details">
+                                        <div>
+                                            <span>Username</span>
+                                            <strong>{{ student.username }}</strong>
+                                        </div>
+                                        <div>
+                                            <span>Email</span>
+                                            <strong>{{ student.email|default:"Not provided" }}</strong>
+                                        </div>
+                                        <div>
+                                            <span>Batch</span>
+                                            <strong>{{ student.batch|default:"Not set" }}</strong>
+                                        </div>
+                                        <div>
+                                            <span>Semester</span>
+                                            <strong>{{ student.semester|default:"Not set" }}</strong>
+                                        </div>
+                                        <div>
+                                            <span>Phone</span>
+                                            <strong>{{ student.phone|default:"Not provided" }}</strong>
+                                        </div>
+                                    </div>
+
+                                    <div class="student-projects">
+                                        <h3>Projects and final reports</h3>
+                                        {% for project in student.panel_projects %}
+                                            <div class="student-project">
+                                                <div>
+                                                    <strong>{{ project.title }}</strong>
+                                                    <span>
+                                                        {% if project.panel_final_reports %}
+                                                            Final report: {{ project.panel_final_reports.0.get_status_display }}
+                                                        {% else %}
+                                                            Final report not submitted
+                                                        {% endif %}
+                                                    </span>
+                                                </div>
+                                                {% if project.panel_final_reports %}
+                                                    <span class="status-badge {% if project.panel_evaluation %}bg-green{% else %}bg-orange{% endif %}">
+                                                        {% if project.panel_evaluation %}Marks entered{% else %}Marks pending{% endif %}
+                                                    </span>
+                                                    <a href="{% url 'accounts:panel_evaluate' project.id %}" class="btn-primary" style="padding: 6px 12px; font-size: 12px; border-radius: 6px; text-decoration: none;">
+                                                        {% if project.panel_evaluation %}View / Edit Marks{% else %}View Final Report{% endif %}
+                                                    </a>
+                                                {% else %}
+                                                    <span class="status-badge bg-purple">Not ready for panel review</span>
+                                                {% endif %}
+                                            </div>
+                                        {% empty %}
+                                            <p class="no-student-projects">No projects submitted yet.</p>
+                                        {% endfor %}
+                                    </div>
+                                </details>
+                            </div>
+                        </article>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="empty-state">
+                        <p>No student accounts are available.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+    </main>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    .student-more-details summary {
+        padding: 8px 10px;
+        border: 1px solid var(--border-color);
+        border-radius: 7px;
+        color: var(--primary-main, #4f5bd5);
+        cursor: pointer;
+        font-size: 13px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .student-extra-details {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 12px;
+        margin-top: 14px;
+        padding: 14px;
+        border-radius: 8px;
+        background: #f8fafc;
+    }
+
+    .student-extra-details div,
+    .student-project > div {
+        display: grid;
+        gap: 4px;
+    }
+
+    .student-extra-details span,
+    .student-project span {
+        color: #64748b;
+        font-size: 12px;
+    }
+
+    .student-extra-details strong,
+    .student-project strong {
+        color: #334155;
+        font-size: 13px;
+        overflow-wrap: anywhere;
+    }
+
+    .student-projects {
+        display: grid;
+        gap: 10px;
+        margin-top: 14px;
+    }
+
+    .student-projects h3 {
+        margin: 0;
+        color: #0f172a;
+        font-size: 14px;
+    }
+
+    .student-project {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        padding: 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+    }
+
+    .student-project > div {
+        min-width: 150px;
+        flex: 1;
+    }
+
+    .no-student-projects {
+        margin: 0;
+        color: #64748b;
+        font-size: 13px;
+    }
+
+    @media (max-width: 700px) {
+        .panel-student-card > div:first-child {
+            grid-template-columns: 1fr 1fr !important;
+        }
+
+        .student-more-details {
+            grid-column: 1 / -1;
+        }
+    }
+
+    @media (max-width: 420px) {
+        .panel-student-card > div:first-child {
+            grid-template-columns: 1fr !important;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function searchStudents() {
+    const query = document.getElementById("searchInput").value.toLowerCase();
+    document.querySelectorAll("#studentList .panel-student-card").forEach(function (student) {
+        student.style.display = student.innerText.toLowerCase().includes(query) ? "" : "none";
+    });
+}
+</script>
+{% endblock %}

@@ -1,129 +1,14 @@
-{% load static %}
+{% extends "base.html" %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% block title %}
+Final Mark | SPMS
+{% endblock %}
 
-    <title>Final Mark | SPMS</title>
+{% block content %}
 
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+<style>
 
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: #f4f7fb;
-            color: #1e293b;
-        }
-
-        /* =========================
-           SIDEBAR
-        ========================= */
-
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 250px;
-            height: 100vh;
-            background: #0f172a;
-            padding: 25px 15px;
-            z-index: 1000;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: white;
-            font-size: 21px;
-            font-weight: 700;
-            padding: 0 12px 30px;
-        }
-
-        .logo-icon {
-            width: 38px;
-            height: 38px;
-            background: #2563eb;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .logo-icon svg {
-            width: 21px;
-            height: 21px;
-            stroke: white;
-        }
-
-        .nav-title {
-            color: #64748b;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            padding: 10px 12px;
-            margin-bottom: 8px;
-        }
-
-        .sidebar-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            text-decoration: none;
-            color: #cbd5e1;
-            padding: 12px;
-            border-radius: 9px;
-            margin-bottom: 5px;
-            font-size: 14px;
-            transition: 0.2s;
-        }
-
-        .sidebar-link:hover {
-            background: #1e293b;
-            color: white;
-        }
-
-        .sidebar-link.active {
-            background: #2563eb;
-            color: white;
-        }
-
-        .sidebar-icon {
-            width: 21px;
-            height: 21px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .sidebar-icon svg {
-            width: 19px;
-            height: 19px;
-            stroke: currentColor;
-        }
-
-        .logout {
-            position: absolute;
-            bottom: 20px;
-            left: 15px;
-            right: 15px;
-        }
-
-        /* =========================
-           MAIN
-        ========================= */
-
-        .main {
-            margin-left: 250px;
-            min-height: 100vh;
-            padding: 35px;
-        }
+        .spms-main {
 
         .page-header {
             margin-bottom: 28px;
@@ -166,8 +51,8 @@
             width: 48px;
             height: 48px;
             border-radius: 12px;
-            background: #eff6ff;
-            color: #2563eb;
+            background: #eef2ff;
+            color: #4f5bd5;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -197,8 +82,8 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            background: #eff6ff;
-            border: 1px solid #dbeafe;
+            background: #eef2ff;
+            border: 1px solid #dce2fa;
             border-radius: 14px;
             padding: 28px;
             margin-bottom: 25px;
@@ -211,7 +96,7 @@
         }
 
         .mark-number {
-            color: #2563eb;
+            color: #4f5bd5;
             font-size: 52px;
             font-weight: 800;
             margin-top: 5px;
@@ -227,7 +112,7 @@
             height: 65px;
             border-radius: 50%;
             background: white;
-            color: #2563eb;
+            color: #4f5bd5;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -309,8 +194,8 @@
             height: 65px;
             margin: 0 auto 18px;
             border-radius: 50%;
-            background: #eff6ff;
-            color: #2563eb;
+            background: #eef2ff;
+            color: #4f5bd5;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -334,12 +219,7 @@
         }
 
         @media (max-width: 800px) {
-            .sidebar {
-                width: 220px;
-            }
-
-            .main {
-                margin-left: 220px;
+            .spms-main {
                 padding: 25px;
             }
 
@@ -348,144 +228,12 @@
             }
         }
     </style>
-</head>
+</style>
 
-<body>
+<div class="spms-layout">
+    {% include 'student/sidebar.html' %}
 
-<!-- =========================
-     SIDEBAR
-========================= -->
-
-<aside class="sidebar">
-
-    <div class="logo">
-
-        <div class="logo-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-                <path d="M12 3L3 7l9 4 9-4-9-4z"/>
-                <path d="M5 10v5c0 2 3 4 7 4s7-2 7-4v-5"/>
-            </svg>
-        </div>
-
-        SPMS
-    </div>
-
-    <div class="nav-title">
-        Student Menu
-    </div>
-
-    <a href="{% url 'accounts:student_dashboard' %}"
-       class="sidebar-link">
-
-        <span class="sidebar-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-                <rect x="3" y="3" width="7" height="7"/>
-                <rect x="14" y="3" width="7" height="7"/>
-                <rect x="3" y="14" width="7" height="7"/>
-                <rect x="14" y="14" width="7" height="7"/>
-            </svg>
-        </span>
-
-        Dashboard
-    </a>
-
-
-    <a href="{% url 'accounts:student_proposals' %}"
-       class="sidebar-link">
-
-        <span class="sidebar-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-                <path d="M4 4h16v16H4z"/>
-                <path d="M8 8h8M8 12h8M8 16h5"/>
-            </svg>
-        </span>
-
-        My Proposals
-    </a>
-
-
-    <a href="{% url 'accounts:add_proposal' %}"
-       class="sidebar-link">
-
-        <span class="sidebar-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-                <circle cx="12" cy="12" r="9"/>
-                <path d="M12 8v8M8 12h8"/>
-            </svg>
-        </span>
-
-        Submit Proposal
-    </a>
-
-
-    <a href="{% url 'accounts:student_proposals' %}"
-       class="sidebar-link">
-
-        <span class="sidebar-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-                <path d="M4 19V5"/>
-                <path d="M4 19h16"/>
-                <path d="M7 15l4-4 3 2 5-6"/>
-            </svg>
-        </span>
-
-        Project Status
-    </a>
-
-
-    <a href="{% url 'accounts:student_progress' %}"
-       class="sidebar-link">
-
-        <span class="sidebar-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-                <path d="M6 3h9l3 3v15H6z"/>
-                <path d="M15 3v4h4"/>
-                <path d="M9 12h6M9 16h6"/>
-            </svg>
-        </span>
-
-        Progress Reports
-    </a>
-
-
-    <!-- FINAL MARK -->
-
-    <a href="{% url 'accounts:student_final_mark' %}"
-       class="sidebar-link active">
-
-        <span class="sidebar-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-                <circle cx="12" cy="12" r="9"/>
-                <path d="M12 7l1.6 3.3 3.6.5-2.6 2.5.6 3.5-3.2-1.7-3.2 1.7.6-3.5-2.6-2.5 3.6-.5L12 7z"/>
-            </svg>
-        </span>
-
-        Final Mark
-    </a>
-
-
-    <a href="{% url 'accounts:logout' %}"
-       class="sidebar-link logout">
-
-        <span class="sidebar-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
-                <path d="M10 17l5-5-5-5"/>
-                <path d="M15 12H3"/>
-                <path d="M21 3v18"/>
-            </svg>
-        </span>
-
-        Logout
-    </a>
-
-</aside>
-
-
-<!-- =========================
-     MAIN CONTENT
-========================= -->
-
-<main class="main">
+<main class="spms-main">
 
     <div class="page-header">
         <h1>Final Mark</h1>
@@ -493,7 +241,7 @@
     </div>
 
 
-    {% if evaluation %}
+    {% if evaluation or panel_evaluation %}
 
         <div class="mark-card">
 
@@ -507,18 +255,18 @@
                 </div>
 
                 <div>
-                    <h2>{{ evaluation.project.title }}</h2>
+                    <h2>{% if evaluation %}{{ evaluation.project.title }}{% else %}{{ panel_evaluation.project.title }}{% endif %}</h2>
                     <span>Final Project Evaluation</span>
                 </div>
 
             </div>
 
-
+            {% if evaluation %}
             <div class="mark-section">
 
                 <div>
                     <div class="mark-label">
-                        Final Project Mark
+                        Guide Final Mark
                     </div>
 
                     <div class="mark-number">
@@ -538,6 +286,26 @@
 
             </div>
 
+            <div class="evaluation-breakdown">
+                <h3>Guide Mark Breakdown</h3>
+                {% if evaluation.detailed_marks %}
+                    {% for category, mark in evaluation.detailed_marks.items %}
+                    <div class="mark-row">
+                        <span>{{ category }}</span>
+                        <strong>{{ mark }}</strong>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="mark-row">
+                        <span>Final Mark</span>
+                        <strong>{{ evaluation.marks }}</strong>
+                    </div>
+                {% endif %}
+                <div class="mark-row mark-row-total">
+                    <span>Guide Total</span>
+                    <strong>{{ evaluation.marks }} / 100</strong>
+                </div>
+            </div>
 
             <div class="details">
 
@@ -572,7 +340,6 @@
 
             </div>
 
-
             <div class="feedback">
 
                 <h3>Guide Feedback</h3>
@@ -584,7 +351,51 @@
                 {% endif %}
 
             </div>
+            {% endif %}
 
+            {% if panel_evaluation %}
+            <div class="mark-section panel-mark-section">
+                <div>
+                    <div class="mark-label">Panel Final Mark</div>
+                    <div class="mark-number">
+                        {{ panel_evaluation.marks }}
+                        <span class="mark-total">/ 100</span>
+                    </div>
+                </div>
+                <div class="mark-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2">
+                        <circle cx="12" cy="12" r="9"/>
+                        <path d="M12 7l1.6 3.3 3.6.5-2.6 2.5.6 3.5-3.2-1.7-3.2 1.7.6-3.5-2.6-2.5 3.6-.5L12 7z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="evaluation-breakdown">
+                <h3>Panel Mark Breakdown</h3>
+                {% if panel_evaluation.detailed_marks %}
+                    {% for category, mark in panel_evaluation.detailed_marks.items %}
+                    <div class="mark-row">
+                        <span>{{ category }}</span>
+                        <strong>{{ mark }}</strong>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="mark-row">
+                        <span>Final Mark</span>
+                        <strong>{{ panel_evaluation.marks }}</strong>
+                    </div>
+                {% endif %}
+                <div class="mark-row mark-row-total">
+                    <span>Panel Total</span>
+                    <strong>{{ panel_evaluation.marks }} / 100</strong>
+                </div>
+            </div>
+            {% if panel_evaluation.feedback %}
+            <div class="feedback">
+                <h3>Panel Feedback</h3>
+                <p>{{ panel_evaluation.feedback }}</p>
+            </div>
+            {% endif %}
+            {% endif %}
         </div>
 
 
@@ -605,7 +416,7 @@
             <h2>Final Mark Not Available</h2>
 
             <p>
-                Your guide has not submitted the final project mark yet.
+                Your guide and panel have not submitted final project marks yet.
             </p>
 
         </div>
@@ -613,6 +424,61 @@
     {% endif %}
 
 </main>
+</div>
 
-</body>
-</html>
+<style>
+    .evaluation-breakdown {
+        margin: 20px 0 25px;
+        padding: 18px;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        background: #ffffff;
+    }
+
+    .evaluation-breakdown h3 {
+        margin: 0 0 12px;
+        color: #0f172a;
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+    .mark-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 10px 0;
+        border-bottom: 1px solid #e2e8f0;
+        color: #334155;
+        font-size: 14px;
+    }
+
+    .mark-row strong {
+        color: #0f172a;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .mark-row-total {
+        border-bottom: 0;
+        color: #34358f;
+        font-size: 15px;
+        font-weight: 700;
+    }
+
+    .panel-mark-section {
+        background: #f5f3ff;
+        border-color: #ddd6fe;
+    }
+
+    .panel-mark-section .mark-number,
+    .panel-mark-section .mark-icon {
+        color: #6d28d9;
+    }
+
+    @media (max-width: 520px) {
+        .evaluation-breakdown {
+            padding: 14px;
+        }
+    }
+</style>
+
+{% endblock %}

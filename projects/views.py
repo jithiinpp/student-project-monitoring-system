@@ -12,7 +12,7 @@ def student_proposals(request):
     if request.user.is_superuser:
         return redirect("accounts:coordinator_dashboard")
 
-    if request.user.role != "STUDENT":
+    if not request.user.is_student:
         return redirect("accounts:dashboard")
 
     proposals = ProjectProposal.objects.filter(
@@ -38,7 +38,7 @@ def add_proposal(request):
     if request.user.is_superuser:
         return redirect("accounts:coordinator_dashboard")
 
-    if request.user.role != "STUDENT":
+    if not request.user.is_student:
         return redirect("accounts:dashboard")
 
     # Count student's existing proposals
@@ -107,7 +107,7 @@ def proposal_detail(request, proposal_id):
     if request.user.is_superuser:
         return redirect("accounts:coordinator_dashboard")
 
-    if request.user.role != "STUDENT":
+    if not request.user.is_student:
         return redirect("accounts:dashboard")
 
     proposal = get_object_or_404(

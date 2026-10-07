@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Discussion | SPMS{% endblock %}
+
+{% block content %}
+<div class="spms-layout">
+    
+    <!-- SIDEBAR -->
+    {% include 'student/sidebar.html' %}
+
+    <!-- MAIN CONTENT -->
+    <main class="spms-main">
+
+        <!-- HEADER -->
+        <header style="background: white; padding: 25px 40px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1 style="margin: 0; font-size: 24px; color: #0f172a;">Project Discussion</h1>
+                <p style="margin: 5px 0 0; color: #64748b; font-size: 14px;">Communicate with your assigned project guide, coordinator, expert, or panel members.</p>
+            </div>
+            
+            {% if project.guide %}
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <div style="text-align: right;">
+                    <div style="font-weight: 600; font-size: 14px; color: #0f172a;">{{ project.guide.get_full_name|default:project.guide.username }}</div>
+                    <div style="font-size: 12px; color: #64748b;">Guide</div>
+                </div>
+                <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #34358f, #4f5bd5); color: white; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: bold; box-shadow: 0 4px 10px rgba(79, 91, 213,0.2);">
+                    {{ project.guide.first_name|first|default:project.guide.username|first|upper }}
+                </div>
+            </div>
+            {% endif %}
+        </header>
+
+        <!-- PAGE CONTENT -->
+        <div style="padding: 40px; max-width: 1000px; margin: 0 auto;">
+
+            {% if project %}
+            <div style="background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0; overflow: hidden; display: flex; flex-direction: column; height: calc(100vh - 200px); min-height: 500px;">
+                
+                <!-- Chat Window -->
+                <div style="flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px;" id="chat-window">
+                    {% for msg in project_messages %}
+                        <div style="display: flex; flex-direction: column; max-width: 80%; {% if msg.sender == request.user %}align-self: flex-end;{% else %}align-self: flex-start;{% endif %}">
+                            <div style="background: {% if msg.sender == request.user %}#eef2ff{% else %}#f8fafc{% endif %}; padding: 15px; border-radius: 12px; {% if msg.sender == request.user %}border-bottom-right-radius: 4px; border: 1px solid #c7d2fe;{% else %}border-bottom-left-radius: 4px; border: 1px solid #e2e8f0;{% endif %} box-shadow: 0 1px 2px rgba(0,0,0,0.05);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; gap: 15px;">
+                                    <span style="font-size: 12px; font-weight: 700; color: {% if msg.sender == request.user %}#4f5bd5{% else %}#475569{% endif %};">{{ msg.sender.get_full_name|default:msg.sender.username }}</span>
+                                    <span style="font-size: 11px; color: #64748b;">{{ msg.created_at|date:"d M Y, h:i A" }}</span>
+                                </div>
+                                <p style="font-size: 14px; color: #1e293b; margin: 0; line-height: 1.5;">{{ msg.message|linebreaksbr }}</p>
+                            </div>
+                        </div>
+                    {% empty %}
+                        <div style="text-align: center; padding: 40px 0; color: #64748b; font-size: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#cbd5e1" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 15px;"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                            <p style="margin: 0;">No messages yet.</p>
+                            <p style="margin: 5px 0 0; color: #94a3b8;">Wait for your guide or coordinator to send a message.</p>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Input Area (Removed to make read-only) -->
+                <!-- <div style="padding: 20px 25px; border-top: 1px solid #e2e8f0; background: #f8fafc;">
+                     ...
+                </div> -->
+            </div>
+            
+            <script>
+                // Auto-scroll to bottom of chat window
+                window.onload = function() {
+                    var chatWindow = document.getElementById("chat-window");
+                    if (chatWindow) {
+                        chatWindow.scrollTop = chatWindow.scrollHeight;
+                    }
+                }
+            </script>
+            
+            {% else %}
+            <div style="background: white; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); border: 1px solid #e2e8f0; padding: 50px 30px; text-align: center;">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 20px;"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="9" y1="3" x2="9" y2="21"></line></svg>
+                <h3 style="font-size: 18px; color: #0f172a; margin: 0 0 10px;">No Active Project</h3>
+                <p style="color: #64748b; margin: 0;">You do not have an active project to discuss. Please submit a project proposal first.</p>
+            </div>
+            {% endif %}
+            
+        </div>
+    </main>
+</div>
+{% endblock %}
