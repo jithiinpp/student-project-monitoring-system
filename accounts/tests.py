@@ -402,6 +402,52 @@ class PanelFinalReportTests(TestCase):
         self.assertContains(response, "Panel Mark Breakdown")
         self.assertNotContains(response, "Guide Mark Breakdown")
 
+    def test_student_can_see_weekly_and_final_report_marks_without_final_evaluation(self):
+        self.final_report.marks = 72
+        self.final_report.detailed_marks = {"Final Report Quality": "72"}
+        self.final_report.status = "REVIEWED"
+        self.final_report.save(
+            update_fields=["marks", "detailed_marks", "status"]
+        )
+        ProjectProgress.objects.create(
+            project=self.project,
+            student=self.student,
+            report_type="PROGRESS_1",
+            week_number=1,
+            title="Week 1 progress",
+            description="Progress update.",
+            status="REVIEWED",
+            marks=65,
+            detailed_marks={"Weekly Progress": "65"},
+        )
+        ProjectProgress.objects.create(
+            project=self.project,
+            student=self.student,
+            report_type="PROGRESS_2",
+            week_number=2,
+            title="Week 2 progress",
+            description="Second progress update.",
+            status="REVIEWED",
+            marks=80,
+            detailed_marks={"Implementation": "80"},
+        )
+        self.client.force_login(self.student)
+
+        response = self.client.get(reverse("accounts:student_final_mark"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Weekly and Final Report Marks")
+        self.assertContains(response, "Week 1")
+        self.assertContains(response, "65.00 / 20")
+        self.assertContains(response, "Week 2")
+        self.assertContains(response, "Week 2 progress")
+        self.assertContains(response, "80.00 / 20")
+        self.assertContains(response, "Final Report")
+        self.assertContains(response, "72.00 / 100")
+        self.assertContains(response, "Weekly Progress")
+        self.assertContains(response, "Implementation")
+        self.assertContains(response, "Final Report Quality")
+
     def test_student_report_pages_display_guide_suggestions(self):
         self.final_report.guide_feedback = "Final report guide suggestion."
         self.final_report.save(update_fields=["guide_feedback"])
@@ -413,6 +459,8 @@ class PanelFinalReportTests(TestCase):
             title="Week 1 progress",
             description="Progress update.",
             guide_feedback="Weekly report guide suggestion.",
+            marks=65,
+            detailed_marks={"Weekly Progress": "65"},
         )
         self.client.force_login(self.student)
 
@@ -424,6 +472,9 @@ class PanelFinalReportTests(TestCase):
         )
 
         self.assertEqual(weekly_response.status_code, 200)
+        self.assertContains(weekly_response, "Week 1")
+        self.assertContains(weekly_response, "Score: 65.00 / 20")
+        self.assertContains(weekly_response, "Weekly Progress")
         self.assertContains(weekly_response, "Weekly report guide suggestion.")
         self.assertEqual(final_response.status_code, 200)
         self.assertContains(final_response, "Final report guide suggestion.")

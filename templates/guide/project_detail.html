@@ -1395,25 +1395,50 @@
                                     {% endif %}
 
 
-                                    {% if report.status == "SUBMITTED" %}
+                                    {% if report.status == "SUBMITTED" or report.status == "REVIEWED" %}
 
                                         <form
                                             method="post"
                                             action="{% url 'guides:review_progress' report.id %}"
-                                            class="review-form"
+                                            class="review-form report-mark-form"
                                         >
 
                                             {% csrf_token %}
 
                                             <label class="form-label">
-                                                Review Feedback
+                                                Report Mark and Feedback
                                             </label>
 
                                             <textarea
                                                 name="feedback"
                                                 placeholder="Enter your feedback for the student..."
-                                            ></textarea>
+                                            >{{ report.guide_feedback }}</textarea>
 
+                                            <div class="evaluation-form-group">
+                                                <label>Weekly Report Mark Categories (out of 20)</label>
+                                                <div class="report-mark-fields">
+                                                    {% if report.detailed_marks %}
+                                                        {% for category, mark in report.detailed_marks.items %}
+                                                            <div class="guide-mark-row">
+                                                                <input type="text" name="criteria_title[]" value="{{ category }}" placeholder="Category" aria-label="Mark category">
+                                                                <input type="number" name="criteria_mark[]" value="{{ mark }}" min="0" max="20" step="0.01" placeholder="Mark" aria-label="Mark value">
+                                                                <button type="button" class="guide-remove-mark" aria-label="Remove mark category" title="Remove category">&times;</button>
+                                                            </div>
+                                                        {% endfor %}
+                                                    {% else %}
+                                                        <div class="guide-mark-row">
+                                                            <input type="text" name="criteria_title[]" placeholder="Category" aria-label="Mark category">
+                                                            <input type="number" name="criteria_mark[]" min="0" max="20" step="0.01" placeholder="Mark" aria-label="Mark value">
+                                                            <button type="button" class="guide-remove-mark" aria-label="Remove mark category" title="Remove category">&times;</button>
+                                                        </div>
+                                                    {% endif %}
+                                                </div>
+                                                <div class="guide-mark-total" role="status" aria-live="polite">
+                                                    <span>Total mark</span>
+                                                    <span><span class="report-mark-total">0</span> / 20</span>
+                                                </div>
+                                                <button type="button" class="guide-add-mark report-add-mark">+ Add Mark Category</button>
+                                            </div>
 
                                             <div class="review-actions">
 
@@ -1423,7 +1448,7 @@
                                                     value="REVIEWED"
                                                     class="review-button approve-button"
                                                 >
-                                                    Mark as Reviewed
+                                                    {% if report.status == "REVIEWED" %}Save Mark{% else %}Mark as Reviewed{% endif %}
                                                 </button>
 
 
@@ -1573,12 +1598,12 @@
                                 {% endif %}
 
 
-                                {% if final_report.status == "SUBMITTED" %}
+                                {% if final_report.status == "SUBMITTED" or final_report.status == "REVIEWED" %}
 
                                     <form
                                         method="post"
                                         action="{% url 'guides:review_progress' final_report.id %}"
-                                        class="review-form"
+                                        class="review-form report-mark-form"
                                     >
 
                                         {% csrf_token %}
@@ -1590,8 +1615,33 @@
                                         <textarea
                                             name="feedback"
                                             placeholder="Enter your final report feedback..."
-                                        ></textarea>
+                                        >{{ final_report.guide_feedback }}</textarea>
 
+                                        <div class="evaluation-form-group">
+                                        <label>Final Report Mark Categories (out of 100)</label>
+                                            <div class="report-mark-fields">
+                                                {% if final_report.detailed_marks %}
+                                                    {% for category, mark in final_report.detailed_marks.items %}
+                                                        <div class="guide-mark-row">
+                                                            <input type="text" name="criteria_title[]" value="{{ category }}" placeholder="Category" aria-label="Mark category">
+                                                            <input type="number" name="criteria_mark[]" value="{{ mark }}" min="0" max="100" step="0.01" placeholder="Mark" aria-label="Mark value">
+                                                            <button type="button" class="guide-remove-mark" aria-label="Remove mark category" title="Remove category">&times;</button>
+                                                        </div>
+                                                    {% endfor %}
+                                                {% else %}
+                                                    <div class="guide-mark-row">
+                                                        <input type="text" name="criteria_title[]" placeholder="Category" aria-label="Mark category">
+                                                        <input type="number" name="criteria_mark[]" min="0" max="100" step="0.01" placeholder="Mark" aria-label="Mark value">
+                                                        <button type="button" class="guide-remove-mark" aria-label="Remove mark category" title="Remove category">&times;</button>
+                                                    </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="guide-mark-total" role="status" aria-live="polite">
+                                                <span>Total mark</span>
+                                                <span><span class="report-mark-total">0</span> / 100</span>
+                                            </div>
+                                            <button type="button" class="guide-add-mark report-add-mark">+ Add Mark Category</button>
+                                        </div>
 
                                         <div class="review-actions">
 
@@ -1601,7 +1651,7 @@
                                                 value="REVIEWED"
                                                 class="review-button approve-button"
                                             >
-                                                Approve Final Report
+                                                {% if final_report.status == "REVIEWED" %}Save Mark{% else %}Approve Final Report{% endif %}
                                             </button>
 
 
@@ -1989,6 +2039,46 @@ if (guideMarkFields) {
     });
     updateGuideMarkTotal();
 }
+
+document.querySelectorAll(".report-mark-form").forEach(function (form) {
+    const fields = form.querySelector(".report-mark-fields");
+    const totalValue = form.querySelector(".report-mark-total");
+    const addButton = form.querySelector(".report-add-mark");
+
+    function updateTotal() {
+        let total = 0;
+        fields.querySelectorAll('input[name="criteria_mark[]"]').forEach(function (input) {
+            const value = Number.parseFloat(input.value);
+            if (Number.isFinite(value)) total += value;
+        });
+        totalValue.textContent = total.toFixed(2).replace(/\.00$/, "");
+    }
+
+    addButton.addEventListener("click", function () {
+        const row = document.createElement("div");
+        row.className = "guide-mark-row";
+        row.innerHTML = `
+            <input type="text" name="criteria_title[]" placeholder="Category" aria-label="Mark category">
+            <input type="number" name="criteria_mark[]" min="0" max="${form.closest('.final-report-card') ? 100 : 20}" step="0.01" placeholder="Mark" aria-label="Mark value">
+            <button type="button" class="guide-remove-mark" aria-label="Remove mark category" title="Remove category">&times;</button>
+        `;
+        fields.appendChild(row);
+        row.querySelector('input[name="criteria_title[]"]').focus();
+        updateTotal();
+    });
+
+    fields.addEventListener("input", updateTotal);
+    fields.addEventListener("click", function (event) {
+        if (event.target instanceof Element) {
+            const removeButton = event.target.closest(".guide-remove-mark");
+            if (removeButton) {
+                removeButton.closest(".guide-mark-row").remove();
+                updateTotal();
+            }
+        }
+    });
+    updateTotal();
+});
 
 function showRejectBox() {
 

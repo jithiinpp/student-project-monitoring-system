@@ -513,24 +513,64 @@ def review_progress(request, progress_id):
     # Extract dynamic categories
     criteria_titles = request.POST.getlist('criteria_title[]')
     criteria_marks = request.POST.getlist('criteria_mark[]')
-    
+
+    max_report_mark = (
+        Decimal("20")
+        if progress.report_type in ["PROGRESS_1", "PROGRESS_2", "PROGRESS_3"]
+        else Decimal("100")
+    )
     detailed_marks = {}
-    total_marks = 0.0
-    
-    if criteria_titles and criteria_marks and len(criteria_titles) == len(criteria_marks):
-        for title, mark in zip(criteria_titles, criteria_marks):
-            title = title.strip()
+    total_marks = Decimal("0")
+
+    if criteria_titles or criteria_marks:
+        if len(criteria_titles) != len(criteria_marks):
+            messages.error(request, "Each mark category must have a matching mark.")
+            return redirect("guides:report_detail", progress_id=progress.id)
+
+        for title_text, mark_text in zip(criteria_titles, criteria_marks):
+            title = title_text.strip()
+            mark_value_text = mark_text.strip()
+
+            if not title and not mark_value_text:
+                continue
+            if not title or not mark_value_text:
+                messages.error(request, "Enter both a category name and mark for every row.")
+                return redirect("guides:report_detail", progress_id=progress.id)
+            if title in detailed_marks:
+                messages.error(request, "Mark category names must be unique.")
+                return redirect("guides:report_detail", progress_id=progress.id)
+
             try:
-                mark_val = float(mark)
-                if title:
-                    detailed_marks[title] = mark_val
-                    total_marks += mark_val
-            except ValueError:
-                pass
-                
-    if detailed_marks:
-        progress.detailed_marks = detailed_marks
-        progress.marks = total_marks
+                mark_value = Decimal(mark_value_text)
+            except InvalidOperation:
+                messages.error(request, "Enter a valid number for each mark.")
+                return redirect("guides:report_detail", progress_id=progress.id)
+
+            if (
+                not mark_value.is_finite()
+                or mark_value < 0
+                or mark_value > max_report_mark
+                or mark_value.as_tuple().exponent < -2
+            ):
+                messages.error(
+                    request,
+                    f"Each mark must be between 0 and {max_report_mark} with at most two decimal places.",
+                )
+                return redirect("guides:report_detail", progress_id=progress.id)
+
+            detailed_marks[title] = str(mark_value)
+            total_marks += mark_value
+
+        if detailed_marks:
+            if total_marks > max_report_mark:
+                messages.error(
+                    request,
+                    f"Total marks cannot exceed {max_report_mark}.",
+                )
+                return redirect("guides:report_detail", progress_id=progress.id)
+
+            progress.detailed_marks = detailed_marks
+            progress.marks = total_marks
 
     # -----------------------------------------------------
     # VALIDATE STATUS

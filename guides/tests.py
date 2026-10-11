@@ -133,6 +133,103 @@ class ReportDetailTests(TestCase):
         final_report.refresh_from_db()
         self.assertEqual(final_report.status, "REVIEWED")
 
+    def test_guide_can_score_weekly_report_with_mark_categories(self):
+        self.report.status = "SUBMITTED"
+        self.report.save(update_fields=["status"])
+
+        detail_response = self.client.get(
+            reverse("guides:project_detail", args=[self.project.id])
+        )
+        self.assertEqual(detail_response.status_code, 200)
+        self.assertContains(detail_response, "Weekly Report Mark Categories")
+        self.assertContains(detail_response, "Categories (out of 20)")
+
+        report_detail_response = self.client.get(
+            reverse("guides:report_detail", args=[self.report.id])
+        )
+        self.assertContains(report_detail_response, 'max="20"')
+        self.assertContains(report_detail_response, "/ 20")
+
+        response = self.client.post(
+            reverse("guides:review_progress", args=[self.report.id]),
+            {
+                "status": "REVIEWED",
+                "feedback": "Good progress.",
+                "criteria_title[]": ["Participation", "Documentation"],
+                "criteria_mark[]": ["12", "8"],
+            },
+        )
+
+        self.assertRedirects(
+            response,
+            reverse("guides:report_detail", args=[self.report.id]),
+        )
+        self.report.refresh_from_db()
+        self.assertEqual(self.report.status, "REVIEWED")
+        self.assertEqual(self.report.marks, 20)
+        self.assertEqual(
+            self.report.detailed_marks,
+            {"Participation": "12", "Documentation": "8"},
+        )
+
+    def test_weekly_report_marks_cannot_exceed_20_but_final_report_allows_100(self):
+        response = self.client.post(
+            reverse("guides:review_progress", args=[self.report.id]),
+            {
+                "status": "REVIEWED",
+                "criteria_title[]": ["Weekly score"],
+                "criteria_mark[]": ["21"],
+            },
+        )
+        self.assertRedirects(
+            response,
+            reverse("guides:report_detail", args=[self.report.id]),
+        )
+        self.report.refresh_from_db()
+        self.assertIsNone(self.report.marks)
+        self.assertEqual(self.report.status, "SUBMITTED")
+
+        final_report = ProjectProgress.objects.create(
+            project=self.project,
+            student=self.student,
+            report_type="FINAL_REPORT",
+            title="Final report",
+            description="Completed project summary.",
+        )
+        response = self.client.post(
+            reverse("guides:review_progress", args=[final_report.id]),
+            {
+                "status": "REVIEWED",
+                "criteria_title[]": ["Final score"],
+                "criteria_mark[]": ["100"],
+            },
+        )
+        self.assertRedirects(
+            response,
+            reverse("guides:report_detail", args=[final_report.id]),
+        )
+        final_report.refresh_from_db()
+        self.assertEqual(final_report.marks, 100)
+
+    def test_guide_can_review_report_without_entering_marks(self):
+        response = self.client.post(
+            reverse("guides:review_progress", args=[self.report.id]),
+            {
+                "status": "REVIEWED",
+                "feedback": "Reviewed without a score.",
+                "criteria_title[]": [""],
+                "criteria_mark[]": [""],
+            },
+        )
+
+        self.assertRedirects(
+            response,
+            reverse("guides:report_detail", args=[self.report.id]),
+        )
+        self.report.refresh_from_db()
+        self.assertEqual(self.report.status, "REVIEWED")
+        self.assertIsNone(self.report.marks)
+
     def test_guide_cannot_save_invalid_or_over_limit_mark_categories(self):
         self.report.status = "REVIEWED"
         self.report.save(update_fields=["status"])

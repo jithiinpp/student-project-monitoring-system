@@ -166,6 +166,54 @@
         box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
     }
 
+    .guide-mark-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 100px 32px;
+        gap: 8px;
+        margin-bottom: 9px;
+    }
+
+    .guide-mark-row input {
+        min-width: 0;
+        padding: 9px 10px;
+        border: 1px solid #cbd5e1;
+        border-radius: 7px;
+        font: inherit;
+    }
+
+    .guide-mark-total {
+        display: flex;
+        justify-content: space-between;
+        margin: 4px 0 12px;
+        padding: 10px 12px;
+        border-radius: 7px;
+        background: #f1f5f9;
+        color: #334155;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .guide-add-mark,
+    .guide-remove-mark {
+        border: 1px solid #c7d2fe;
+        border-radius: 7px;
+        background: #eef2ff;
+        color: #4f46e5;
+        font: inherit;
+        font-weight: 700;
+        cursor: pointer;
+    }
+
+    .guide-add-mark {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .guide-remove-mark {
+        min-width: 32px;
+        font-size: 18px;
+    }
+
     .report-detail-actions {
         display: flex;
         flex-wrap: wrap;
@@ -284,7 +332,7 @@
 
                     {% if report.detailed_marks %}
                         <div class="report-detail-feedback">
-                            <h3>Marks</h3>
+                            <h3>Marks ({{ report.marks }} / {% if report.report_type == "FINAL_REPORT" %}100{% else %}20{% endif %})</h3>
                             {% for category, mark in report.detailed_marks.items %}
                                 <div>{{ category }}: {{ mark }}</div>
                             {% endfor %}
@@ -292,7 +340,7 @@
                     {% elif report.marks is not None %}
                         <div class="report-detail-feedback">
                             <h3>Marks</h3>
-                            <div>{{ report.marks }}</div>
+                            <div>{{ report.marks }} / {% if report.report_type == "FINAL_REPORT" %}100{% else %}20{% endif %}</div>
                         </div>
                     {% endif %}
 
@@ -303,8 +351,8 @@
                         </div>
                     {% endif %}
 
-                    {% if report.status == "SUBMITTED" %}
-                        <form method="post" action="{% url 'guides:review_progress' report.id %}" class="report-detail-review">
+                    {% if report.status == "SUBMITTED" or report.status == "REVIEWED" %}
+                        <form method="post" action="{% url 'guides:review_progress' report.id %}" class="report-detail-review" data-mark-form>
                             {% csrf_token %}
                             <label for="guide-feedback">Review feedback</label>
                             <textarea
@@ -313,9 +361,35 @@
                                 placeholder="Enter your feedback for the student..."
                             >{{ report.guide_feedback }}</textarea>
 
+                            <div style="margin-top: 20px;">
+                                <label style="display:block; margin-bottom: 8px; font-weight:700; color: var(--text-main);">Mark categories</label>
+                                <div class="mark-form-fields" data-mark-fields>
+                                    {% if report.detailed_marks %}
+                                        {% for category, mark in report.detailed_marks.items %}
+                                            <div class="guide-mark-row">
+                                                <input type="text" name="criteria_title[]" value="{{ category }}" placeholder="Category" aria-label="Mark category">
+                                                <input type="number" name="criteria_mark[]" value="{{ mark }}" min="0" max="{% if report.report_type == 'FINAL_REPORT' %}100{% else %}20{% endif %}" step="0.01" placeholder="Mark" aria-label="Mark value">
+                                                <button type="button" class="guide-remove-mark" aria-label="Remove {{ category }}" title="Remove category">&times;</button>
+                                            </div>
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="guide-mark-row">
+                                            <input type="text" name="criteria_title[]" value="{% if report.marks is not None %}Report Mark{% endif %}" placeholder="Category" aria-label="Mark category">
+                                            <input type="number" name="criteria_mark[]" value="{{ report.marks|default_if_none:'' }}" min="0" max="{% if report.report_type == 'FINAL_REPORT' %}100{% else %}20{% endif %}" step="0.01" placeholder="Mark" aria-label="Mark value">
+                                            <button type="button" class="guide-remove-mark" aria-label="Remove mark category" title="Remove category">&times;</button>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="guide-mark-total" role="status" aria-live="polite">
+                                    <span>Total mark</span>
+                                    <span><span data-mark-total>0</span> / {% if report.report_type == "FINAL_REPORT" %}100{% else %}20{% endif %}</span>
+                                </div>
+                                <button type="button" class="guide-add-mark" data-add-mark>+ Add Mark Category</button>
+                            </div>
+
                             <div class="report-detail-actions">
                                 <button type="submit" name="status" value="REVIEWED" class="report-detail-approve">
-                                    Mark as reviewed
+                                    {% if report.status == "REVIEWED" %}Save Mark{% else %}Mark as reviewed{% endif %}
                                 </button>
                                 <button type="submit" name="status" value="CHANGES_REQUIRED" class="report-detail-request-changes">
                                     Request changes
@@ -328,4 +402,39 @@
         </section>
     </main>
 </div>
+<script>
+document.querySelectorAll('[data-mark-form]').forEach(function (form) {
+    const fields = form.querySelector('[data-mark-fields]');
+    const totalEl = form.querySelector('[data-mark-total]');
+    if (!fields || !totalEl) return;
+    const maxMark = fields.querySelector('input[name="criteria_mark[]"]').max;
+
+    function updateTotal() {
+        let total = 0;
+        fields.querySelectorAll('input[name="criteria_mark[]"]').forEach(function (input) {
+            const value = Number.parseFloat(input.value);
+            if (Number.isFinite(value)) total += value;
+        });
+        totalEl.textContent = total.toFixed(2).replace(/\.00$/, '');
+    }
+
+    form.querySelector('[data-add-mark]').addEventListener('click', function () {
+        const row = document.createElement('div');
+        row.className = 'guide-mark-row';
+        row.innerHTML = '<input type="text" name="criteria_title[]" placeholder="Category" aria-label="Mark category"> <input type="number" name="criteria_mark[]" min="0" max="' + maxMark + '" step="0.01" placeholder="Mark" aria-label="Mark value"> <button type="button" class="guide-remove-mark" aria-label="Remove mark category" title="Remove category">&times;</button>';
+        fields.appendChild(row);
+        row.querySelector('input[name="criteria_title[]"]').focus();
+        updateTotal();
+    });
+
+    fields.addEventListener('input', updateTotal);
+    fields.addEventListener('click', function (event) {
+        const button = event.target.closest('.guide-remove-mark');
+        if (!button) return;
+        button.closest('.guide-mark-row').remove();
+        updateTotal();
+    });
+    updateTotal();
+});
+</script>
 {% endblock %}

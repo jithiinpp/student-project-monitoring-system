@@ -621,6 +621,44 @@ def student_final_mark(request):
         .first()
     )
 
+    if evaluation:
+        mark_project = evaluation.project
+    elif panel_evaluation:
+        mark_project = panel_evaluation.project
+    else:
+        mark_project = (
+            ProjectProposal.objects
+            .filter(
+                student=request.user,
+                status__in=[
+                    "COORDINATOR_APPROVED",
+                    "GUIDE_ASSIGNED",
+                    "IN_PROGRESS",
+                    "COMPLETED",
+                ],
+            )
+            .order_by("-updated_at")
+            .first()
+        )
+
+    report_marks = (
+        ProjectProgress.objects
+        .filter(
+            project=mark_project,
+            student=request.user,
+            report_type__in=[
+                "PROGRESS_1",
+                "PROGRESS_2",
+                "PROGRESS_3",
+                "FINAL_REPORT",
+            ],
+        )
+        .select_related("project")
+        .order_by("submitted_at")
+        if mark_project
+        else ProjectProgress.objects.none()
+    )
+
     # --------------------------------------------------------
     # CONTEXT
     # --------------------------------------------------------
@@ -628,6 +666,8 @@ def student_final_mark(request):
     context = {
         "evaluation": evaluation,
         "panel_evaluation": panel_evaluation,
+        "mark_project": mark_project,
+        "report_marks": report_marks,
     }
 
     return render(

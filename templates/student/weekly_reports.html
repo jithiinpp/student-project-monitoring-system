@@ -313,7 +313,7 @@ Weekly Reports - SPMS
                 <div class="report-title">
 
                     <h3>
-                        {{ report.get_report_type_display }}
+                        {{ report.week_label|default:report.get_report_type_display }}
                     </h3>
 
 
@@ -375,11 +375,11 @@ Weekly Reports - SPMS
 
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                             <strong style="margin: 0;">
-                                Guide Feedback
+                                {% if report.marks is not None %}Weekly Report Mark{% else %}Guide Feedback{% endif %}
                             </strong>
                             {% if report.marks is not None %}
                             <strong style="margin: 0; color: #4f5bd5;">
-                                Score: {{ report.marks }} / 10
+                                Score: {{ report.marks }} / 20
                             </strong>
                             {% endif %}
                         </div>
@@ -388,6 +388,17 @@ Weekly Reports - SPMS
                         <p>
                             {{ report.guide_feedback|linebreaks }}
                         </p>
+                        {% endif %}
+
+                        {% if report.detailed_marks %}
+                            <div style="margin-top: 12px; border-top: 1px solid #e8edf4; padding-top: 10px;">
+                                {% for category, mark in report.detailed_marks.items %}
+                                    <div style="display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; color: #64748b; font-size: 13px;">
+                                        <span>{{ category }}</span>
+                                        <strong style="color: #1f2937;">{{ mark }}</strong>
+                                    </div>
+                                {% endfor %}
+                            </div>
                         {% endif %}
 
                     </div>
