@@ -306,6 +306,45 @@ class PanelFinalReportTests(TestCase):
         self.assertEqual(evaluation.detailed_marks, {"Keep": "82"})
         self.assertEqual(evaluation.marks, 82)
 
+    def test_panel_can_save_marks_for_three_separate_reviews(self):
+        for review_number, mark in ((1, "65"), (2, "78"), (3, "91")):
+            with self.subTest(review_number=review_number):
+                response = self.client.post(
+                    reverse(
+                        "accounts:panel_evaluate_review",
+                        args=[self.project.id, review_number],
+                    ),
+                    {
+                        "criteria_title[]": ["Review score"],
+                        "criteria_mark[]": [mark],
+                        "feedback": f"Review {review_number} feedback.",
+                    },
+                )
+                self.assertRedirects(
+                    response,
+                    reverse("accounts:panel_dashboard"),
+                )
+
+        self.assertEqual(
+            list(
+                PanelEvaluation.objects.filter(project=self.project)
+                .order_by("review_number")
+                .values_list("review_number", "marks")
+            ),
+            [(1, 65), (2, 78), (3, 91)],
+        )
+
+        response = self.client.get(
+            reverse(
+                "accounts:panel_evaluate_review",
+                args=[self.project.id, 2],
+            )
+        )
+        self.assertContains(response, "Panel Review 2")
+        self.assertContains(response, 'aria-current="page"')
+        self.assertContains(response, "Review 1")
+        self.assertContains(response, "Review 3")
+
     def test_panel_cannot_submit_marks_over_100(self):
         response = self.client.post(
             reverse("accounts:panel_evaluate", args=[self.project.id]),
@@ -401,6 +440,47 @@ class PanelFinalReportTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Panel Mark Breakdown")
         self.assertNotContains(response, "Guide Mark Breakdown")
+
+    def test_student_final_mark_page_lists_all_three_panel_review_marks(self):
+        for review_number, mark in ((1, 65), (2, 78), (3, 91)):
+            PanelEvaluation.objects.create(
+                project=self.project,
+                panel_member=self.panel_member,
+                review_number=review_number,
+                marks=mark,
+                detailed_marks={"Review score": str(mark)},
+            )
+        self.client.force_login(self.student)
+
+        response = self.client.get(reverse("accounts:student_final_mark"))
+
+        self.assertEqual(response.status_code, 200)
+        for review_number, mark in ((1, "65.00"), (2, "78.00"), (3, "91.00")):
+            self.assertContains(
+                response,
+                f"Panel Review {review_number} Mark",
+            )
+            self.assertContains(response, f"{mark} / 100")
+
+    def test_student_final_mark_page_shows_pending_panel_review_slots(self):
+        PanelEvaluation.objects.create(
+            project=self.project,
+            panel_member=self.panel_member,
+            review_number=1,
+            marks=65,
+        )
+        self.client.force_login(self.student)
+
+        response = self.client.get(reverse("accounts:student_final_mark"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Panel Review 1 Mark")
+        self.assertContains(response, "Panel Review 2 Mark")
+        self.assertContains(response, "Panel Review 3 Mark")
+        self.assertEqual(len(response.context["panel_reviews"]), 3)
+        self.assertIsNotNone(response.context["panel_reviews"][0]["evaluation"])
+        self.assertIsNone(response.context["panel_reviews"][1]["evaluation"])
+        self.assertIsNone(response.context["panel_reviews"][2]["evaluation"])
 
     def test_student_can_see_weekly_and_final_report_marks_without_final_evaluation(self):
         self.final_report.marks = 72

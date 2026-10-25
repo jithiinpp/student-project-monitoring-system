@@ -188,10 +188,20 @@
                     </div>
                 </div>
 
-                <!-- FINAL EVALUATION -->
+                <!-- PANEL REVIEW -->
                 <div class="recent-card" style="padding: 24px;">
-                    <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">Panel Evaluation</h3>
-                    <form method="post" action="{% url 'accounts:panel_evaluate' project.id %}">
+                    <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 16px;">Panel Review {{ review_number }}</h3>
+                    <nav aria-label="Panel review rounds" style="display: flex; gap: 8px; margin-bottom: 18px;">
+                        {% for number in review_numbers %}
+                            <a href="{% url 'accounts:panel_evaluate_review' project.id number %}"
+                               class="btn-secondary"
+                               aria-current="{% if number == review_number %}page{% else %}false{% endif %}"
+                               style="padding: 7px 12px; {% if number == review_number %}background: #4f5bd5; color: #fff;{% endif %}">
+                                Review {{ number }}
+                            </a>
+                        {% endfor %}
+                    </nav>
+                    <form method="post" action="{% url 'accounts:panel_evaluate_review' project.id review_number %}">
                         {% csrf_token %}
                         <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
                             Add mark categories. Their combined total must not exceed 100.
@@ -236,7 +246,7 @@
                         </div>
 
                         <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">
-                            {% if evaluation %}Update Final Report Marks{% else %}Save Final Report Marks{% endif %}
+                            {% if evaluation %}Update Review {{ review_number }} Marks{% else %}Save Review {{ review_number }} Marks{% endif %}
                         </button>
                     </form>
 

@@ -92,11 +92,11 @@
                                                     </span>
                                                 </div>
                                                 {% if project.panel_final_reports %}
-                                                    <span class="status-badge {% if project.panel_evaluation %}bg-green{% else %}bg-orange{% endif %}">
-                                                        {% if project.panel_evaluation %}Marks entered{% else %}Marks pending{% endif %}
+                                                    <span class="status-badge {% if project.panel_review_list %}bg-green{% else %}bg-orange{% endif %}">
+                                                        {% if project.panel_review_list %}Marks entered{% else %}Marks pending{% endif %}
                                                     </span>
                                                     <a href="{% url 'accounts:panel_evaluate' project.id %}" class="btn-primary" style="padding: 6px 12px; font-size: 12px; border-radius: 6px; text-decoration: none;">
-                                                        {% if project.panel_evaluation %}View / Edit Marks{% else %}View Final Report{% endif %}
+                                                        {% if project.panel_review_list %}View / Edit Marks{% else %}View Final Report{% endif %}
                                                     </a>
                                                 {% else %}
                                                     <span class="status-badge bg-purple">Not ready for panel review</span>

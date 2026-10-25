@@ -313,10 +313,21 @@ class ProjectProgress(models.Model):
 
 class PanelEvaluation(models.Model):
 
-    project = models.OneToOneField(
+    REVIEW_CHOICES = [
+        (1, "Review 1"),
+        (2, "Review 2"),
+        (3, "Review 3"),
+    ]
+
+    project = models.ForeignKey(
         ProjectProposal,
         on_delete=models.CASCADE,
-        related_name="panel_evaluation"
+        related_name="panel_reviews"
+    )
+
+    review_number = models.PositiveSmallIntegerField(
+        choices=REVIEW_CHOICES,
+        default=1
     )
 
     panel_member = models.ForeignKey(
@@ -349,8 +360,17 @@ class PanelEvaluation(models.Model):
         auto_now=True
     )
 
+    class Meta:
+        ordering = ["review_number"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["project", "review_number"],
+                name="unique_panel_review_per_project",
+            )
+        ]
+
     def __str__(self):
-        return f"Panel Evaluation for {self.project.title}"
+        return f"Panel Review {self.review_number} for {self.project.title}"
 
 
 # =========================================================

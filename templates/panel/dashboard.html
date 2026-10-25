@@ -76,13 +76,13 @@
                                     Report: {{ final_report.get_status_display }}
                                 </span>
                             {% endwith %}
-                            {% if project.panel_evaluation %}
+                            {% if project.panel_review_list %}
                                 <span class="status-badge bg-green">Marks entered</span>
                             {% else %}
                                 <span class="status-badge bg-orange">Mark pending</span>
                             {% endif %}
                             <span class="btn-text">
-                                {% if project.panel_evaluation %}View / Edit{% else %}View report{% endif %}
+                                {% if project.panel_review_list %}View / Edit{% else %}View report{% endif %}
                                 &rarr;
                             </span>
                         </div>

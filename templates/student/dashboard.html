@@ -1524,7 +1524,7 @@ body {
                             </h3>
 
                             <p>
-                                {{ project.domain|default:"Project domain not specified" }}
+                                Project #{{ project.id }} &middot; {{ project.domain|default:"Domain not specified" }}
                             </p>
 
                         </div>
@@ -1540,7 +1540,6 @@ body {
 
 
                     <div class="project-details">
-
 
                         <!-- DOMAIN -->
 
@@ -1620,7 +1619,6 @@ body {
                             </strong>
 
                         </div>
-
 
                     </div>
 
@@ -1758,9 +1756,9 @@ body {
                 </a>
 
 
-                <!-- PROJECT STATUS -->
+                <!-- WEEKLY REPORTS -->
 
-                <a href="{% url 'accounts:student_proposals' %}"
+                <a href="{% url 'accounts:student_weekly_reports' %}"
                    class="action-card">
 
                     <div class="action-icon">
@@ -1779,11 +1777,11 @@ body {
                     <div>
 
                         <h3>
-                            Project Status
+                            Weekly Reports
                         </h3>
 
                         <p>
-                            Track expert, coordinator and Guide decisions.
+                            View weekly submissions and guide feedback.
                         </p>
 
                     </div>
@@ -1800,9 +1798,9 @@ body {
                 </a>
 
 
-                <!-- PROGRESS REPORTS -->
+                <!-- FINAL REPORTS -->
 
-                <a href="{% url 'accounts:student_progress' %}"
+                <a href="{% url 'accounts:student_final_reports' %}"
                    class="action-card">
 
                     <div class="action-icon">
@@ -1819,11 +1817,11 @@ body {
                     <div>
 
                         <h3>
-                            Progress Reports
+                            Final Reports
                         </h3>
 
                         <p>
-                            Submit Progress 1, 2, 3 and the Final Report.
+                            View your final report and review status.
                         </p>
 
                     </div>
@@ -1843,7 +1841,6 @@ body {
             </div>
 
         </section>
-
 
         <!-- =================================================
              PROJECT PROGRESS

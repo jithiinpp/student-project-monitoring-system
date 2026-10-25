@@ -241,7 +241,7 @@ Final Mark | SPMS
     </div>
 
 
-    {% if evaluation or panel_evaluation or report_marks %}
+    {% if evaluation or panel_evaluations or report_marks %}
 
         <div class="mark-card">
 
@@ -353,13 +353,17 @@ Final Mark | SPMS
             </div>
             {% endif %}
 
-            {% if panel_evaluation %}
+            {% for panel_review in panel_reviews %}
             <div class="mark-section panel-mark-section">
                 <div>
-                    <div class="mark-label">Panel Final Mark</div>
+                    <div class="mark-label">Panel Review {{ panel_review.number }} Mark</div>
                     <div class="mark-number">
-                        {{ panel_evaluation.marks }}
-                        <span class="mark-total">/ 100</span>
+                        {% if panel_review.evaluation %}
+                            {{ panel_review.evaluation.marks }}
+                            <span class="mark-total">/ 100</span>
+                        {% else %}
+                            Not marked yet
+                        {% endif %}
                     </div>
                 </div>
                 <div class="mark-icon">
@@ -369,33 +373,35 @@ Final Mark | SPMS
                     </svg>
                 </div>
             </div>
+            {% if panel_review.evaluation %}
             <div class="evaluation-breakdown">
-                <h3>Panel Mark Breakdown</h3>
-                {% if panel_evaluation.detailed_marks %}
-                    {% for category, mark in panel_evaluation.detailed_marks.items %}
-                    <div class="mark-row">
-                        <span>{{ category }}</span>
-                        <strong>{{ mark }}</strong>
-                    </div>
+                <h3>Panel Mark Breakdown (Review {{ panel_review.number }})</h3>
+                {% if panel_review.evaluation.detailed_marks %}
+                    {% for category, mark in panel_review.evaluation.detailed_marks.items %}
+                        <div class="mark-row">
+                            <span>{{ category }}</span>
+                            <strong>{{ mark }}</strong>
+                        </div>
                     {% endfor %}
                 {% else %}
                     <div class="mark-row">
                         <span>Final Mark</span>
-                        <strong>{{ panel_evaluation.marks }}</strong>
+                        <strong>{{ panel_review.evaluation.marks }}</strong>
                     </div>
                 {% endif %}
                 <div class="mark-row mark-row-total">
-                    <span>Panel Total</span>
-                    <strong>{{ panel_evaluation.marks }} / 100</strong>
+                    <span>Panel Total (Review {{ panel_review.number }})</span>
+                    <strong>{{ panel_review.evaluation.marks }} / 100</strong>
                 </div>
             </div>
-            {% if panel_evaluation.feedback %}
+            {% if panel_review.evaluation.feedback %}
             <div class="feedback">
-                <h3>Panel Feedback</h3>
-                <p>{{ panel_evaluation.feedback }}</p>
+                <h3>Panel Review {{ panel_review.number }} Feedback</h3>
+                <p>{{ panel_review.evaluation.feedback }}</p>
             </div>
             {% endif %}
             {% endif %}
+            {% endfor %}
 
             {% if report_marks %}
               <div class="evaluation-breakdown" style="margin-top: 22px;">

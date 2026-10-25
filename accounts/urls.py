@@ -212,6 +212,12 @@ urlpatterns = [
     ),
 
     path(
+        "panel/evaluate/<int:project_id>/review/<int:review_number>/",
+        views.panel_evaluate,
+        name="panel_evaluate_review"
+    ),
+
+    path(
         "panel/send-message/<int:project_id>/",
         views.panel_send_message,
         name="panel_send_message"

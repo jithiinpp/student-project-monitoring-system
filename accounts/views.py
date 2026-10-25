@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Prefetch
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
 from .forms import StudentRegistrationForm
@@ -44,7 +45,14 @@ def _panel_projects_with_final_reports():
     return (
         ProjectProposal.objects
         .filter(progress_reports__report_type="FINAL_REPORT")
-        .select_related("student", "guide", "panel_evaluation")
+        .select_related("student", "guide")
+        .prefetch_related(
+            Prefetch(
+                "panel_reviews",
+                queryset=PanelEvaluation.objects.order_by("review_number"),
+                to_attr="panel_review_list",
+            )
+        )
         .prefetch_related(
             Prefetch(
                 "progress_reports",
@@ -608,7 +616,7 @@ def student_final_mark(request):
         .first()
     )
 
-    panel_evaluation = (
+    panel_evaluations = (
         PanelEvaluation.objects
         .filter(
             project__student=request.user
@@ -617,14 +625,13 @@ def student_final_mark(request):
             "project",
             "panel_member"
         )
-        .order_by("-updated_at")
-        .first()
+        .order_by("review_number")
     )
 
     if evaluation:
         mark_project = evaluation.project
-    elif panel_evaluation:
-        mark_project = panel_evaluation.project
+    elif panel_evaluations.exists():
+        mark_project = panel_evaluations.first().project
     else:
         mark_project = (
             ProjectProposal.objects
@@ -663,9 +670,26 @@ def student_final_mark(request):
     # CONTEXT
     # --------------------------------------------------------
 
+    panel_evaluation_list = (
+        list(panel_evaluations.filter(project=mark_project))
+        if mark_project
+        else []
+    )
+    panel_evaluations_by_number = {
+        panel_evaluation.review_number: panel_evaluation
+        for panel_evaluation in panel_evaluation_list
+    }
+
     context = {
         "evaluation": evaluation,
-        "panel_evaluation": panel_evaluation,
+        "panel_evaluations": panel_evaluation_list,
+        "panel_reviews": [
+            {
+                "number": review_number,
+                "evaluation": panel_evaluations_by_number.get(review_number),
+            }
+            for review_number in (1, 2, 3)
+        ],
         "mark_project": mark_project,
         "report_marks": report_marks,
     }
@@ -2050,8 +2074,8 @@ def panel_dashboard(request):
         is_superuser=False,
     ).count()
     
-    pending_count = projects.filter(panel_evaluation__isnull=True).count()
-    completed_count = projects.filter(panel_evaluation__isnull=False).count()
+    pending_count = projects.filter(panel_reviews__isnull=True).distinct().count()
+    completed_count = projects.filter(panel_reviews__isnull=False).distinct().count()
 
     context = {
         "projects": projects,
@@ -2122,7 +2146,14 @@ def panel_students(request):
     student_projects = (
         ProjectProposal.objects
         .exclude(status="REJECTED")
-        .select_related("panel_evaluation", "guide")
+        .select_related("guide")
+        .prefetch_related(
+            Prefetch(
+                "panel_reviews",
+                queryset=PanelEvaluation.objects.order_by("review_number"),
+                to_attr="panel_review_list",
+            )
+        )
         .prefetch_related(
             Prefetch(
                 "progress_reports",
@@ -2155,15 +2186,17 @@ def panel_students(request):
     )
 
 @login_required
-def panel_evaluate(request, project_id):
+def panel_evaluate(request, project_id, review_number=1):
     if not request.user.is_panel:
         return redirect("accounts:dashboard")
+
+    if review_number not in (1, 2, 3):
+        raise Http404
         
     project = get_object_or_404(
         ProjectProposal.objects.select_related(
             "student",
             "guide",
-            "panel_evaluation",
         ),
         id=project_id,
         progress_reports__report_type="FINAL_REPORT",
@@ -2176,7 +2209,19 @@ def panel_evaluate(request, project_id):
         messages.error(request, "This project does not have a final report yet.")
         return redirect("accounts:panel_dashboard")
         
-    evaluation = getattr(project, "panel_evaluation", None)
+    evaluation = PanelEvaluation.objects.filter(
+        project=project,
+        review_number=review_number,
+    ).first()
+
+    def review_redirect():
+        if review_number == 1:
+            return redirect("accounts:panel_evaluate", project_id=project.id)
+        return redirect(
+            "accounts:panel_evaluate_review",
+            project_id=project.id,
+            review_number=review_number,
+        )
     
     if request.method == "POST":
         feedback = request.POST.get("feedback", "").strip()
@@ -2185,7 +2230,7 @@ def panel_evaluate(request, project_id):
 
         if len(titles) != len(marks):
             messages.error(request, "Each mark category must have a matching mark.")
-            return redirect("accounts:panel_evaluate", project_id=project.id)
+            return review_redirect()
 
         detailed_marks = {}
         total_marks = Decimal("0")
@@ -2201,16 +2246,16 @@ def panel_evaluate(request, project_id):
                     request,
                     "Enter both a category name and mark for every row.",
                 )
-                return redirect("accounts:panel_evaluate", project_id=project.id)
+                return review_redirect()
             if title in detailed_marks:
                 messages.error(request, "Mark category names must be unique.")
-                return redirect("accounts:panel_evaluate", project_id=project.id)
+                return review_redirect()
 
             try:
                 mark_value = Decimal(mark_text)
             except InvalidOperation:
                 messages.error(request, "Enter a valid number for each mark.")
-                return redirect("accounts:panel_evaluate", project_id=project.id)
+                return review_redirect()
 
             if (
                 not mark_value.is_finite()
@@ -2222,21 +2267,25 @@ def panel_evaluate(request, project_id):
                     request,
                     "Each mark must be between 0 and 100 with at most two decimal places.",
                 )
-                return redirect("accounts:panel_evaluate", project_id=project.id)
+                return review_redirect()
 
             detailed_marks[title] = str(mark_value)
             total_marks += mark_value
 
         if not detailed_marks:
             messages.error(request, "Add at least one mark category.")
-            return redirect("accounts:panel_evaluate", project_id=project.id)
+            return review_redirect()
 
         if total_marks > 100:
             messages.error(request, "Total marks cannot exceed 100.")
-            return redirect("accounts:panel_evaluate", project_id=project.id)
+            return review_redirect()
 
         if not evaluation:
-            evaluation = PanelEvaluation(project=project, panel_member=request.user)
+            evaluation = PanelEvaluation(
+                project=project,
+                review_number=review_number,
+                panel_member=request.user,
+            )
             
         evaluation.feedback = feedback
         evaluation.detailed_marks = detailed_marks
@@ -2244,12 +2293,17 @@ def panel_evaluate(request, project_id):
         evaluation.panel_member = request.user
         evaluation.save()
 
-        messages.success(request, "Panel evaluation saved successfully.")
+        messages.success(
+            request,
+            f"Panel Review {review_number} marks saved successfully.",
+        )
         return redirect("accounts:panel_dashboard")
     return render(request, "panel/evaluate.html", {
         "project": project,
         "final_report": final_report,
         "evaluation": evaluation,
+        "review_number": review_number,
+        "review_numbers": (1, 2, 3),
     })
 
 @login_required
