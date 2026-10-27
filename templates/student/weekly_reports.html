@@ -291,10 +291,10 @@ Weekly Reports - SPMS
 
         </div>
 
-        {% if project.status == "IN_PROGRESS" or project.status == "COMPLETED" %}
+        {% if can_upload and project.status == "IN_PROGRESS" %}
             <div style="display: flex; gap: 12px;">
                 <a href="{% url 'accounts:add_progress' %}" class="add-btn">
-                    Upload Weekly Report
+                    Upload Week {{ next_week_number }} Report
                 </a>
             </div>
         {% endif %}
@@ -312,9 +312,7 @@ Weekly Reports - SPMS
 
                 <div class="report-title">
 
-                    <h3>
-                        {{ report.week_label|default:report.get_report_type_display }}
-                    </h3>
+                    <h3>{{ report.week_label|default:report.get_report_type_display }}</h3>
 
 
                     {% if report.status == "SUBMITTED" %}
@@ -369,15 +367,15 @@ Weekly Reports - SPMS
                 {% endif %}
 
 
-                {% if report.guide_feedback or report.marks is not None %}
+                {% if report.guide_feedback or report.status == "REVIEWED" and report.marks is not None %}
 
                     <div class="feedback">
 
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
                             <strong style="margin: 0;">
-                                {% if report.marks is not None %}Weekly Report Mark{% else %}Guide Feedback{% endif %}
+                                {% if report.status == "REVIEWED" and report.marks is not None %}Weekly Report Mark{% else %}Guide Feedback{% endif %}
                             </strong>
-                            {% if report.marks is not None %}
+                            {% if report.status == "REVIEWED" and report.marks is not None %}
                             <strong style="margin: 0; color: #4f5bd5;">
                                 Score: {{ report.marks }} / 20
                             </strong>
@@ -390,7 +388,7 @@ Weekly Reports - SPMS
                         </p>
                         {% endif %}
 
-                        {% if report.detailed_marks %}
+                        {% if report.status == "REVIEWED" and report.detailed_marks %}
                             <div style="margin-top: 12px; border-top: 1px solid #e8edf4; padding-top: 10px;">
                                 {% for category, mark in report.detailed_marks.items %}
                                     <div style="display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; color: #64748b; font-size: 13px;">

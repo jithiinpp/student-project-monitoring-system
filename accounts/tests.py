@@ -462,6 +462,50 @@ class PanelFinalReportTests(TestCase):
             )
             self.assertContains(response, f"{mark} / 100")
 
+    def test_student_final_mark_page_shows_guide_panel_and_report_marks_together(self):
+        guide = User.objects.create_user(
+            username="combined_mark_guide",
+            is_guide=True,
+        )
+        GuideEvaluation.objects.create(
+            project=self.project,
+            guide=guide,
+            marks=88,
+            detailed_marks={"Project quality": "88"},
+        )
+        for review_number, mark in ((1, 65), (2, 78), (3, 91)):
+            PanelEvaluation.objects.create(
+                project=self.project,
+                panel_member=self.panel_member,
+                review_number=review_number,
+                marks=mark,
+                detailed_marks={"Review score": str(mark)},
+            )
+        ProjectProgress.objects.create(
+            project=self.project,
+            student=self.student,
+            report_type="PROGRESS_1",
+            week_number=1,
+            title="Week 1 progress",
+            description="First weekly update.",
+            status="REVIEWED",
+            marks=17,
+            detailed_marks={"Weekly score": "17"},
+        )
+        self.client.force_login(self.student)
+
+        response = self.client.get(reverse("accounts:student_final_mark"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Guide Final Mark")
+        self.assertContains(response, "88.00 / 100")
+        for review_number, mark in ((1, "65.00"), (2, "78.00"), (3, "91.00")):
+            self.assertContains(response, f"Panel Review {review_number} Mark")
+            self.assertContains(response, f"{mark} / 100")
+        self.assertContains(response, "Week 1 progress")
+        self.assertContains(response, "17.00 / 20")
+        self.assertContains(response, "Weekly score")
+
     def test_student_final_mark_page_shows_pending_panel_review_slots(self):
         PanelEvaluation.objects.create(
             project=self.project,
@@ -511,6 +555,17 @@ class PanelFinalReportTests(TestCase):
             marks=80,
             detailed_marks={"Implementation": "80"},
         )
+        ProjectProgress.objects.create(
+            project=self.project,
+            student=self.student,
+            report_type="PROGRESS_3",
+            week_number=4,
+            title="Week 4 progress",
+            description="Fourth progress update.",
+            status="REVIEWED",
+            marks=75,
+            detailed_marks={"Testing": "75"},
+        )
         self.client.force_login(self.student)
 
         response = self.client.get(reverse("accounts:student_final_mark"))
@@ -522,10 +577,13 @@ class PanelFinalReportTests(TestCase):
         self.assertContains(response, "Week 2")
         self.assertContains(response, "Week 2 progress")
         self.assertContains(response, "80.00 / 20")
+        self.assertContains(response, "Week 4 progress")
+        self.assertContains(response, "75.00 / 20")
         self.assertContains(response, "Final Report")
         self.assertContains(response, "72.00 / 100")
         self.assertContains(response, "Weekly Progress")
         self.assertContains(response, "Implementation")
+        self.assertContains(response, "Testing")
         self.assertContains(response, "Final Report Quality")
 
     def test_student_report_pages_display_guide_suggestions(self):
@@ -538,6 +596,7 @@ class PanelFinalReportTests(TestCase):
             week_number=1,
             title="Week 1 progress",
             description="Progress update.",
+            status="REVIEWED",
             guide_feedback="Weekly report guide suggestion.",
             marks=65,
             detailed_marks={"Weekly Progress": "65"},

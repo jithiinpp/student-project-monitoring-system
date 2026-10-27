@@ -301,7 +301,7 @@
             <div class="recent-card report-detail-card">
                 <div class="report-detail-header">
                     <div>
-                        <p class="report-detail-type">{{ report.get_report_type_display }}</p>
+                        <p class="report-detail-type">{{ report.week_label|default:report.get_report_type_display }}</p>
                         <h2>{{ report.title }}</h2>
                         {% if report.week_label %}
                             <p class="report-detail-date">{{ report.week_label }}</p>
@@ -330,14 +330,14 @@
                         </a>
                     {% endif %}
 
-                    {% if report.detailed_marks %}
+                    {% if report.status == "REVIEWED" and report.detailed_marks %}
                         <div class="report-detail-feedback">
                             <h3>Marks ({{ report.marks }} / {% if report.report_type == "FINAL_REPORT" %}100{% else %}20{% endif %})</h3>
                             {% for category, mark in report.detailed_marks.items %}
                                 <div>{{ category }}: {{ mark }}</div>
                             {% endfor %}
                         </div>
-                    {% elif report.marks is not None %}
+                    {% elif report.status == "REVIEWED" and report.marks is not None %}
                         <div class="report-detail-feedback">
                             <h3>Marks</h3>
                             <div>{{ report.marks }} / {% if report.report_type == "FINAL_REPORT" %}100{% else %}20{% endif %}</div>
@@ -362,7 +362,7 @@
                             >{{ report.guide_feedback }}</textarea>
 
                             <div style="margin-top: 20px;">
-                                <label style="display:block; margin-bottom: 8px; font-weight:700; color: var(--text-main);">Mark categories</label>
+                                <label style="display:block; margin-bottom: 8px; font-weight:700; color: var(--text-main);">Mark categories (required to approve)</label>
                                 <div class="mark-form-fields" data-mark-fields>
                                     {% if report.detailed_marks %}
                                         {% for category, mark in report.detailed_marks.items %}

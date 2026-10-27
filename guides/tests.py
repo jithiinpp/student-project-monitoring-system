@@ -70,6 +70,8 @@ class ReportDetailTests(TestCase):
             {
                 "status": "REVIEWED",
                 "feedback": "Please add more detail.",
+                "criteria_title[]": ["Report quality"],
+                "criteria_mark[]": ["12"],
             },
         )
 
@@ -80,6 +82,7 @@ class ReportDetailTests(TestCase):
         self.report.refresh_from_db()
         self.assertEqual(self.report.status, "REVIEWED")
         self.assertEqual(self.report.guide_feedback, "Please add more detail.")
+        self.assertEqual(self.report.marks, 12)
 
     def test_guide_can_save_and_update_dynamic_final_mark_categories(self):
         self.report.status = "REVIEWED"
@@ -172,6 +175,37 @@ class ReportDetailTests(TestCase):
             {"Participation": "12", "Documentation": "8"},
         )
 
+    def test_guide_marks_are_saved_separately_for_each_weekly_report(self):
+        later_report = ProjectProgress.objects.create(
+            project=self.project,
+            student=self.student,
+            report_type="PROGRESS_3",
+            week_number=4,
+            title="Week 4 report",
+            description="Another week's work.",
+        )
+
+        for report, mark in ((self.report, "14"), (later_report, "18")):
+            response = self.client.post(
+                reverse("guides:review_progress", args=[report.id]),
+                {
+                    "status": "REVIEWED",
+                    "criteria_title[]": ["Weekly score"],
+                    "criteria_mark[]": [mark],
+                },
+            )
+            self.assertRedirects(
+                response,
+                reverse("guides:report_detail", args=[report.id]),
+            )
+
+        self.report.refresh_from_db()
+        later_report.refresh_from_db()
+        self.assertEqual(self.report.marks, 14)
+        self.assertEqual(later_report.marks, 18)
+        self.assertEqual(self.report.week_label, "Week 1")
+        self.assertEqual(later_report.week_label, "Week 4")
+
     def test_weekly_report_marks_cannot_exceed_20_but_final_report_allows_100(self):
         response = self.client.post(
             reverse("guides:review_progress", args=[self.report.id]),
@@ -211,7 +245,7 @@ class ReportDetailTests(TestCase):
         final_report.refresh_from_db()
         self.assertEqual(final_report.marks, 100)
 
-    def test_guide_can_review_report_without_entering_marks(self):
+    def test_guide_cannot_approve_report_without_entering_marks(self):
         response = self.client.post(
             reverse("guides:review_progress", args=[self.report.id]),
             {
@@ -227,8 +261,33 @@ class ReportDetailTests(TestCase):
             reverse("guides:report_detail", args=[self.report.id]),
         )
         self.report.refresh_from_db()
-        self.assertEqual(self.report.status, "REVIEWED")
+        self.assertEqual(self.report.status, "SUBMITTED")
         self.assertIsNone(self.report.marks)
+
+    def test_requesting_changes_clears_previous_report_marks(self):
+        self.report.status = "REVIEWED"
+        self.report.marks = 15
+        self.report.detailed_marks = {"Quality": "15"}
+        self.report.save(
+            update_fields=["status", "marks", "detailed_marks"]
+        )
+
+        response = self.client.post(
+            reverse("guides:review_progress", args=[self.report.id]),
+            {
+                "status": "CHANGES_REQUIRED",
+                "feedback": "Please revise this report.",
+            },
+        )
+
+        self.assertRedirects(
+            response,
+            reverse("guides:report_detail", args=[self.report.id]),
+        )
+        self.report.refresh_from_db()
+        self.assertEqual(self.report.status, "CHANGES_REQUIRED")
+        self.assertIsNone(self.report.marks)
+        self.assertEqual(self.report.detailed_marks, {})
 
     def test_guide_cannot_save_invalid_or_over_limit_mark_categories(self):
         self.report.status = "REVIEWED"
@@ -314,6 +373,19 @@ class ProjectProgressFormTests(TestCase):
         self.assertFalse(form.is_valid())
         self.assertIn("week_number", form.errors)
 
+    def test_accepts_week_numbers_after_week_three(self):
+        form = ProjectProgressForm(
+            data={
+                "week_number": "4",
+                "title": "Week 4 report",
+                "description": "Work completed this week.",
+            },
+            require_week_number=True,
+            expected_week_number=4,
+        )
+
+        self.assertTrue(form.is_valid(), form.errors)
+
 
 class StudentProgressFormPageTests(TestCase):
     def setUp(self):
@@ -342,6 +414,45 @@ class StudentProgressFormPageTests(TestCase):
         self.assertContains(response, "Week Number")
         self.assertContains(response, 'accept=".pdf,application/pdf"')
         self.assertContains(response, "Optional: PDF only.")
+
+    def test_student_can_upload_week_four_after_week_three_is_reviewed(self):
+        for week_number, report_type in (
+            (1, "PROGRESS_1"),
+            (2, "PROGRESS_2"),
+            (3, "PROGRESS_3"),
+        ):
+            ProjectProgress.objects.create(
+                project=self.project,
+                student=self.student,
+                report_type=report_type,
+                week_number=week_number,
+                title=f"Week {week_number} report",
+                description=f"Work from week {week_number}.",
+                status="REVIEWED",
+                marks=15,
+                detailed_marks={"Weekly score": "15"},
+            )
+
+        response = self.client.get(reverse("accounts:add_progress"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["next_week_number"], 4)
+        self.assertEqual(response.context["report_type"], "PROGRESS_3")
+        self.assertIsNone(response.context["form"].fields["week_number"].max_value)
+
+        response = self.client.post(
+            reverse("accounts:add_progress"),
+            {
+                "week_number": "4",
+                "title": "Week 4 report",
+                "description": "Work completed during week four.",
+            },
+        )
+
+        self.assertRedirects(response, reverse("accounts:student_progress"))
+        week_four_report = ProjectProgress.objects.get(week_number=4)
+        self.assertEqual(week_four_report.report_type, "PROGRESS_3")
+        self.assertEqual(week_four_report.status, "SUBMITTED")
 
     def test_final_report_form_hides_week_number_but_allows_pdf(self):
         response = self.client.get(reverse("accounts:add_final_report"))

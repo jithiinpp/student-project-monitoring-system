@@ -377,15 +377,13 @@ Project Progress - SPMS
 
         {% if project and project.status == "IN_PROGRESS" %}
 
-            {% if progress_reports|length < 4 %}
-
+            {% if can_upload %}
                 <a
                     href="{% url 'accounts:add_progress' %}"
                     class="add-btn"
                 >
-                    Upload Next Report
+                    Upload Week {{ next_week_number }} Report
                 </a>
-
             {% endif %}
 
         {% endif %}
@@ -456,9 +454,7 @@ Project Progress - SPMS
 
                 <div class="report-title">
 
-                    <h3>
-                        {{ report.get_report_type_display }}
-                    </h3>
+                    <h3>{{ report.week_label|default:report.get_report_type_display }}</h3>
 
 
                     {% if report.status == "SUBMITTED" %}

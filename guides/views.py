@@ -591,6 +591,16 @@ def review_progress(request, progress_id):
             progress_id=progress.id
         )
 
+    if status == "REVIEWED" and not detailed_marks:
+        messages.error(
+            request,
+            "Add at least one mark category before approving this report."
+        )
+        return redirect(
+            "guides:report_detail",
+            progress_id=progress.id
+        )
+
     # -----------------------------------------------------
     # SAVE REVIEW
     # -----------------------------------------------------
@@ -600,14 +610,16 @@ def review_progress(request, progress_id):
     progress.guide_feedback = feedback
 
     progress.reviewed_at = timezone.now()
+    if status == "CHANGES_REQUIRED":
+        progress.marks = None
+        progress.detailed_marks = {}
 
     update_fields = [
         "status",
         "guide_feedback",
         "reviewed_at",
     ]
-    if detailed_marks:
-        update_fields.extend(["marks", "detailed_marks"])
+    update_fields.extend(["marks", "detailed_marks"])
 
     progress.save(
         update_fields=update_fields

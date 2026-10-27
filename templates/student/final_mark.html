@@ -237,7 +237,7 @@ Final Mark | SPMS
 
     <div class="page-header">
         <h1>Final Mark</h1>
-        <p>View your final project evaluation and mark.</p>
+        <p>View your guide, panel review, and weekly report marks.</p>
     </div>
 
 
@@ -256,7 +256,7 @@ Final Mark | SPMS
 
                 <div>
                     <h2>{{ mark_project.title }}</h2>
-                    <span>Project and report marks</span>
+                    <span>Guide, panel, and report marks</span>
                 </div>
 
             </div>
@@ -416,14 +416,14 @@ Final Mark | SPMS
                       {% endif %}
                     </span>
                     <strong>
-                      {% if report.marks is not None %}
+                      {% if report.status == "REVIEWED" and report.marks is not None %}
                         {{ report.marks }} / {% if report.report_type == "FINAL_REPORT" %}100{% else %}20{% endif %}
                       {% else %}
                         Not marked yet
                       {% endif %}
                     </strong>
                   </div>
-                  {% if report.detailed_marks %}
+                  {% if report.status == "REVIEWED" and report.detailed_marks %}
                     {% for category, mark in report.detailed_marks.items %}
                       <div class="mark-row" style="padding-left: 16px; font-size: 13px;">
                         <span>{{ category }}</span>

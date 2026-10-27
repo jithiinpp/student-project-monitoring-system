@@ -29,11 +29,66 @@ from guides.models import GuideEvaluation
 # REPORT SEQUENCE
 # ============================================================
 
-REPORT_ORDER = [
-    "PROGRESS_1",
-    "PROGRESS_2",
-    "PROGRESS_3",
-]
+WEEKLY_REPORT_TYPES = ("PROGRESS_1", "PROGRESS_2", "PROGRESS_3")
+WEEKLY_REPORT_TYPE_BY_NUMBER = {
+    1: "PROGRESS_1",
+    2: "PROGRESS_2",
+}
+
+
+def _weekly_report_number(report):
+    if report.week_number is not None:
+        return report.week_number
+    return {
+        "PROGRESS_1": 1,
+        "PROGRESS_2": 2,
+        "PROGRESS_3": 3,
+    }.get(report.report_type, 0)
+
+
+def _next_weekly_report(reports):
+    weekly_reports = [
+        report
+        for report in reports
+        if report.report_type in WEEKLY_REPORT_TYPES
+    ]
+
+    changes_report = next(
+        (
+            report
+            for report in sorted(weekly_reports, key=_weekly_report_number)
+            if report.status == "CHANGES_REQUIRED"
+        ),
+        None,
+    )
+    if changes_report:
+        return (
+            changes_report.report_type,
+            _weekly_report_number(changes_report),
+            changes_report,
+            True,
+        )
+
+    if not weekly_reports:
+        return "PROGRESS_1", 1, None, True
+
+    latest_report = max(
+        weekly_reports,
+        key=lambda report: (
+            _weekly_report_number(report),
+            report.submitted_at,
+        ),
+    )
+    latest_week_number = _weekly_report_number(latest_report)
+    if latest_report.status != "REVIEWED":
+        return None, latest_week_number, None, False
+
+    next_week_number = latest_week_number + 1
+    next_report_type = WEEKLY_REPORT_TYPE_BY_NUMBER.get(
+        next_week_number,
+        "PROGRESS_3",
+    )
+    return next_report_type, next_week_number, None, True
 
 
 def _panel_projects_with_final_reports():
@@ -1122,85 +1177,9 @@ def student_progress(request):
         None
     )
 
-    # --------------------------------------------------------
-    # REPORT MAP
-    # --------------------------------------------------------
-
-    report_map = {
-        report.report_type: report
-        for report in progress_reports
-    }
-
-    # --------------------------------------------------------
-    # DETERMINE NEXT REPORT
-    # --------------------------------------------------------
-
-    next_report = None
-
-    can_upload = False
-
-    # --------------------------------------------------------
-    # CHANGES REQUIRED HAS FIRST PRIORITY
-    # --------------------------------------------------------
-
-    for report_type in REPORT_ORDER:
-
-        report = report_map.get(
-            report_type
-        )
-
-        if report and report.status == "CHANGES_REQUIRED":
-
-            next_report = report_type
-
-            can_upload = True
-
-            break
-
-    # --------------------------------------------------------
-    # NORMAL REPORT SEQUENCE
-    # --------------------------------------------------------
-
-    if next_report is None:
-
-        for index, report_type in enumerate(
-            REPORT_ORDER
-        ):
-
-            # ------------------------------------------------
-            # REPORT DOES NOT EXIST
-            # ------------------------------------------------
-
-            if report_type not in report_map:
-
-                # First report
-                if index == 0:
-
-                    next_report = report_type
-
-                    can_upload = True
-
-                else:
-
-                    previous_type = REPORT_ORDER[
-                        index - 1
-                    ]
-
-                    previous_report = report_map.get(
-                        previous_type
-                    )
-
-                    # Previous report must be reviewed
-                    if (
-                        previous_report
-                        and previous_report.status == "REVIEWED"
-                    ):
-
-                        next_report = report_type
-
-                        can_upload = True
-
-                break
+    next_report, next_week_number, _, can_upload = (
+        _next_weekly_report(list(progress_reports))
+    )
 
     # --------------------------------------------------------
     # MESSAGES
@@ -1223,6 +1202,8 @@ def student_progress(request):
         "evaluation": evaluation,
 
         "next_report": next_report,
+
+        "next_week_number": next_week_number,
 
         "can_upload": can_upload,
     }
@@ -1251,15 +1232,18 @@ def student_weekly_reports(request):
     if not project:
         return render(request, "student/weekly_reports.html", {"project": None, "reports": []})
         
-    reports = ProjectProgress.objects.filter(
+    reports = list(ProjectProgress.objects.filter(
         project=project,
         student=request.user,
-        report_type__in=["PROGRESS_1", "PROGRESS_2", "PROGRESS_3"]
-    ).order_by("submitted_at")
+        report_type__in=WEEKLY_REPORT_TYPES
+    ).order_by("submitted_at"))
+    _, next_week_number, _, can_upload = _next_weekly_report(reports)
     
     return render(request, "student/weekly_reports.html", {
         "project": project,
-        "reports": reports
+        "reports": reports,
+        "next_week_number": next_week_number,
+        "can_upload": can_upload,
     })
 
 # ============================================================
@@ -1439,114 +1423,20 @@ def add_progress(request):
         .order_by("submitted_at")
     )
 
-    report_map = {
-        report.report_type: report
-        for report in reports
-    }
+    target_report_type, expected_week_number, target_instance, can_upload = (
+        _next_weekly_report(reports)
+    )
 
-    # --------------------------------------------------------
-    # TARGET REPORT
-    # --------------------------------------------------------
-
-    target_report_type = None
-
-    target_instance = None
-
-    # --------------------------------------------------------
-    # CHANGES REQUIRED FIRST
-    # --------------------------------------------------------
-
-    for report_type in REPORT_ORDER:
-
-        report = report_map.get(
-            report_type
-        )
-
-        if report and report.status == "CHANGES_REQUIRED":
-
-            target_report_type = report_type
-
-            target_instance = report
-
-            break
-
-    # --------------------------------------------------------
-    # NORMAL SEQUENCE
-    # --------------------------------------------------------
-
-    if target_report_type is None:
-
-        for index, report_type in enumerate(
-            REPORT_ORDER
-        ):
-
-            # ------------------------------------------------
-            # FIRST MISSING REPORT
-            # ------------------------------------------------
-
-            if report_type not in report_map:
-
-                # First report
-                if index == 0:
-
-                    target_report_type = report_type
-
-                else:
-
-                    previous_type = REPORT_ORDER[
-                        index - 1
-                    ]
-
-                    previous_report = report_map.get(
-                        previous_type
-                    )
-
-                    # Previous report must be reviewed
-                    if (
-                        previous_report
-                        and previous_report.status == "REVIEWED"
-                    ):
-
-                        target_report_type = report_type
-
-                    else:
-
-                        messages.warning(
-                            request,
-                            "You must wait until the previous report "
-                            "is reviewed by the Guide."
-                        )
-
-                        return redirect(
-                            "accounts:student_progress"
-                        )
-
-                break
-
-    # --------------------------------------------------------
-    # ALL REPORTS COMPLETED
-    # --------------------------------------------------------
-
-    if target_report_type is None:
-
-        messages.info(
+    if not can_upload:
+        messages.warning(
             request,
-            "All four project reports have already been submitted."
+            "You must wait until the previous report is reviewed by the Guide."
         )
-
-        return redirect(
-            "accounts:student_progress"
-        )
+        return redirect("accounts:student_progress")
 
     # --------------------------------------------------------
     # POST
     # --------------------------------------------------------
-
-    expected_week_number = {
-        "PROGRESS_1": 1,
-        "PROGRESS_2": 2,
-        "PROGRESS_3": 3,
-    }[target_report_type]
 
     if request.method == "POST":
 
@@ -1578,14 +1468,13 @@ def add_progress(request):
 
             # Clear old review timestamp
             progress.reviewed_at = None
+            progress.marks = None
+            progress.detailed_marks = {}
 
             progress.save()
 
-            report_name = dict(
-                ProjectProgress.REPORT_CHOICES
-            ).get(
-                target_report_type,
-                target_report_type
+            report_name = (
+                f"Weekly Progress Report - Week {expected_week_number}"
             )
 
             if target_instance:
@@ -1624,12 +1513,7 @@ def add_progress(request):
     # REPORT NAME
     # --------------------------------------------------------
 
-    report_name = dict(
-        ProjectProgress.REPORT_CHOICES
-    ).get(
-        target_report_type,
-        target_report_type
-    )
+    report_name = f"Weekly Progress Report - Week {expected_week_number}"
 
     return render(
         request,
@@ -1642,6 +1526,8 @@ def add_progress(request):
             "report_type": target_report_type,
 
             "report_name": report_name,
+
+            "next_week_number": expected_week_number,
 
             "is_resubmission": (
                 target_instance is not None
@@ -1706,6 +1592,8 @@ def add_final_report(request):
             progress.week_number = None
             progress.status = "SUBMITTED"
             progress.reviewed_at = None
+            progress.marks = None
+            progress.detailed_marks = {}
             progress.save()
 
             if target_instance:

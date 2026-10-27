@@ -234,7 +234,7 @@ class ProjectProgress(models.Model):
         choices=REPORT_CHOICES
     )
 
-    week_number = models.PositiveSmallIntegerField(
+    week_number = models.PositiveIntegerField(
         blank=True,
         null=True
     )

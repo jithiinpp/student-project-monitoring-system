@@ -86,12 +86,10 @@ class ProjectProgressForm(forms.ModelForm):
     week_number = forms.IntegerField(
         required=False,
         min_value=1,
-        max_value=3,
         widget=forms.NumberInput(
             attrs={
                 "class": "form-control",
                 "min": 1,
-                "max": 3,
                 "placeholder": "Enter week number",
             }
         ),

@@ -34,7 +34,7 @@
                         <a href="{% url 'guides:report_detail' report.id %}" class="recent-item">
                             <div class="recent-user-info" style="flex: 1;">
                                 <span class="recent-name" style="font-size: 15px; {% if report.status == 'SUBMITTED' %}font-weight: 700; color: #0f172a;{% endif %}">
-                                    {{ report.get_report_type_display }}
+                                    {{ report.week_label|default:report.get_report_type_display }}
                                 </span>
                                 <span class="recent-project" style="font-size: 13px;">Submitted on {{ report.submitted_at|date:"M d, Y h:i A" }}</span>
                             </div>
