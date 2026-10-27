@@ -629,6 +629,44 @@ Proposal Details | Coordinator
 
 
     <!-- =====================================================
+         ASSIGN PANEL MEMBERS
+         ================================================= -->
+
+    <div class="recent-card">
+        <h3>Assign Panel Members</h3>
+        <p class="action-description">
+            Select every panel member who should independently submit marks for this project.
+            Each review's student-facing panel score is the average of submitted panel marks.
+        </p>
+        <form method="POST" action="{% url 'coordinator:assign_panels' proposal.id %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label class="form-label" for="panel-members">Panel Members</label>
+                <select id="panel-members" name="panel_members" class="form-select" multiple size="6">
+                    {% for panel_member in panel_members %}
+                        <option value="{{ panel_member.id }}" {% if panel_member.id in assigned_panel_ids %}selected{% endif %}>
+                            {{ panel_member.get_full_name|default:panel_member.username }}
+                        </option>
+                    {% empty %}
+                        <option value="" disabled>No active panel members available</option>
+                    {% endfor %}
+                </select>
+                <small class="form-help">Use Ctrl (Windows) or Command (Mac) to select multiple members.</small>
+            </div>
+            <button type="submit" class="btn btn-primary">Save Panel Assignments</button>
+        </form>
+        {% if proposal.panel_members.exists %}
+            <div class="success-box" style="margin-top: 16px;">
+                Currently assigned:
+                {% for panel_member in proposal.panel_members.all %}
+                    {{ panel_member.get_full_name|default:panel_member.username }}{% if not forloop.last %}, {% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+
+    <!-- =================================================
          ASSIGN GUIDE
          ===================================================== -->
 

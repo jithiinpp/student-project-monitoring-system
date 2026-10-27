@@ -1,3 +1,5 @@
+from decimal import Decimal, InvalidOperation
+
 from django.db.models import Q
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -15,6 +17,7 @@ from accounts.models import User
 from projects.models import (
     ProjectProposal,
     ProposalChangeRequest,
+    PanelMarkCriterion,
 )
 
 
@@ -332,6 +335,101 @@ def dashboard(request):
     )
 
 
+@coordinator_required
+def panel_mark_criteria(request):
+    criteria = list(PanelMarkCriterion.objects.all())
+
+    if request.method == "POST":
+        names = request.POST.getlist("criterion_name[]")
+        max_marks_values = request.POST.getlist("criterion_max_marks[]")
+
+        if len(names) != len(max_marks_values):
+            messages.error(request, "Each mark field needs a maximum mark.")
+        else:
+            criteria_data = []
+            seen_names = set()
+            total_max_marks = Decimal("0")
+            error = None
+
+            for position, (name_value, max_value_text) in enumerate(
+                zip(names, max_marks_values)
+            ):
+                name = name_value.strip()
+                max_value_text = max_value_text.strip()
+                if not name and not max_value_text:
+                    continue
+                if not name or not max_value_text:
+                    error = "Enter both a field name and maximum mark."
+                    break
+                if len(name) > 100:
+                    error = "Mark field names must be 100 characters or fewer."
+                    break
+
+                normalized_name = name.casefold()
+                if normalized_name in seen_names:
+                    error = "Mark field names must be unique."
+                    break
+                seen_names.add(normalized_name)
+
+                try:
+                    max_marks = Decimal(max_value_text)
+                except InvalidOperation:
+                    error = "Enter a valid maximum mark for every field."
+                    break
+
+                if (
+                    not max_marks.is_finite()
+                    or max_marks <= 0
+                    or max_marks > 100
+                    or max_marks.as_tuple().exponent < -2
+                    or len(max_marks.normalize().as_tuple().digits) > 5
+                ):
+                    error = "Each maximum mark must be greater than 0 and no more than 100, with at most two decimal places."
+                    break
+
+                total_max_marks += max_marks
+                criteria_data.append(
+                    {
+                        "name": name,
+                        "max_marks": max_marks,
+                        "position": position,
+                    }
+                )
+
+            if not error and not criteria_data:
+                error = "Add at least one mark field."
+            if not error and total_max_marks > 100:
+                error = "The maximum marks across all fields cannot exceed 100."
+
+            if error:
+                messages.error(request, error)
+                criteria = [
+                    {
+                        "name": name.strip(),
+                        "max_marks": max_marks.strip(),
+                    }
+                    for name, max_marks in zip(names, max_marks_values)
+                    if name.strip() or max_marks.strip()
+                ]
+            else:
+                with transaction.atomic():
+                    PanelMarkCriterion.objects.all().delete()
+                    PanelMarkCriterion.objects.bulk_create(
+                        [
+                            PanelMarkCriterion(**criterion)
+                            for criterion in criteria_data
+                        ]
+                    )
+                messages.success(request, "Panel mark fields saved successfully.")
+                return redirect("coordinator:panel_mark_criteria")
+
+    return render(
+        request,
+        "coordinator/panel_mark_criteria.html",
+        {"criteria": criteria},
+    )
+
+
 # =========================================================
 # FINAL APPROVED STUDENTS
 # =========================================================
@@ -472,6 +570,16 @@ def proposal_detail(request, proposal_id):
         "username"
     )
 
+    panel_members = User.objects.filter(
+        is_panel=True,
+        is_active=True,
+        is_superuser=False
+    ).order_by(
+        "first_name",
+        "last_name",
+        "username"
+    )
+
     # -----------------------------------------------------
     # CHANGE REQUESTS
     # -----------------------------------------------------
@@ -499,10 +607,39 @@ def proposal_detail(request, proposal_id):
             "proposal": proposal,
             "experts": experts,
             "guides": guides,
+            "panel_members": panel_members,
+            "assigned_panel_ids": set(
+                proposal.panel_members.values_list("id", flat=True)
+            ),
             "change_requests": change_requests,
             "project_messages": project_messages,
         }
     )
+
+
+@coordinator_required
+def assign_panels(request, proposal_id):
+    if request.method != "POST":
+        return redirect("coordinator:proposal_detail", proposal_id=proposal_id)
+
+    proposal = get_object_or_404(ProjectProposal, id=proposal_id)
+    selected_ids = request.POST.getlist("panel_members")
+    eligible_panels = User.objects.filter(
+        id__in=selected_ids,
+        is_panel=True,
+        is_active=True,
+        is_superuser=False,
+    )
+    if eligible_panels.count() != len(set(selected_ids)):
+        messages.error(request, "Select only active panel members.")
+        return redirect("coordinator:proposal_detail", proposal_id=proposal.id)
+
+    proposal.panel_members.set(eligible_panels)
+    messages.success(
+        request,
+        f"{eligible_panels.count()} panel member(s) assigned to this project.",
+    )
+    return redirect("coordinator:proposal_detail", proposal_id=proposal.id)
 
 # =========================================================
 # COORDINATOR SEND MESSAGE

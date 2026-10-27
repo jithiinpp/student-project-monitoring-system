@@ -356,11 +356,11 @@ Final Mark | SPMS
             {% for panel_review in panel_reviews %}
             <div class="mark-section panel-mark-section">
                 <div>
-                    <div class="mark-label">Panel Review {{ panel_review.number }} Mark</div>
+                    <div class="mark-label">Panel Review {{ panel_review.number }} Mark Average</div>
                     <div class="mark-number">
-                        {% if panel_review.evaluation %}
-                            {{ panel_review.evaluation.marks }}
-                            <span class="mark-total">/ 100</span>
+                        {% if panel_review.average_mark is not None %}
+                            {{ panel_review.average_mark }}
+                            <span class="mark-total">/ {{ panel_max_mark }}</span>
                         {% else %}
                             Not marked yet
                         {% endif %}
@@ -376,8 +376,9 @@ Final Mark | SPMS
             {% if panel_review.evaluation %}
             <div class="evaluation-breakdown">
                 <h3>Panel Mark Breakdown (Review {{ panel_review.number }})</h3>
-                {% if panel_review.evaluation.detailed_marks %}
-                    {% for category, mark in panel_review.evaluation.detailed_marks.items %}
+                <p>Average of {{ panel_review.panel_count }} panel mark{{ panel_review.panel_count|pluralize }} received.</p>
+                {% if panel_review.average_detailed_marks %}
+                    {% for category, mark in panel_review.average_detailed_marks.items %}
                         <div class="mark-row">
                             <span>{{ category }}</span>
                             <strong>{{ mark }}</strong>
@@ -385,21 +386,29 @@ Final Mark | SPMS
                     {% endfor %}
                 {% else %}
                     <div class="mark-row">
-                        <span>Final Mark</span>
-                        <strong>{{ panel_review.evaluation.marks }}</strong>
+                        <span>Average panel score</span>
+                        <strong>{{ panel_review.average_mark }}</strong>
                     </div>
                 {% endif %}
                 <div class="mark-row mark-row-total">
-                    <span>Panel Total (Review {{ panel_review.number }})</span>
-                    <strong>{{ panel_review.evaluation.marks }} / 100</strong>
+                    <span>Average Panel Total (Review {{ panel_review.number }})</span>
+                    <strong>{{ panel_review.average_mark }} / {{ panel_max_mark }}</strong>
                 </div>
+                {% for panel_evaluation in panel_review.evaluations %}
+                    <div class="mark-row" style="font-size: 13px;">
+                        <span>{{ panel_evaluation.panel_member.get_full_name|default:panel_evaluation.panel_member.username }}</span>
+                    <strong>{{ panel_evaluation.marks }} / {{ panel_max_mark }}</strong>
+                    </div>
+                {% endfor %}
             </div>
-            {% if panel_review.evaluation.feedback %}
+            {% for panel_evaluation in panel_review.evaluations %}
+            {% if panel_evaluation.feedback %}
             <div class="feedback">
-                <h3>Panel Review {{ panel_review.number }} Feedback</h3>
-                <p>{{ panel_review.evaluation.feedback }}</p>
+                <h3>Panel Review {{ panel_review.number }} Feedback &mdash; {{ panel_evaluation.panel_member.get_full_name|default:panel_evaluation.panel_member.username }}</h3>
+                <p>{{ panel_evaluation.feedback }}</p>
             </div>
             {% endif %}
+            {% endfor %}
             {% endif %}
             {% endfor %}
 

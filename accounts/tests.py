@@ -3,7 +3,12 @@ from django.urls import reverse
 
 from accounts.models import User
 from guides.models import GuideEvaluation
-from projects.models import PanelEvaluation, ProjectProgress, ProjectProposal
+from projects.models import (
+    PanelEvaluation,
+    PanelMarkCriterion,
+    ProjectProgress,
+    ProjectProposal,
+)
 
 
 class AuthenticationPageThemeAndNotificationTests(TestCase):
@@ -344,6 +349,137 @@ class PanelFinalReportTests(TestCase):
         self.assertContains(response, 'aria-current="page"')
         self.assertContains(response, "Review 1")
         self.assertContains(response, "Review 3")
+
+    def test_assigned_panel_members_save_independent_marks_and_student_sees_average(self):
+        other_panels = [
+            User.objects.create_user(
+                username=f"average_panel_{index}",
+                is_panel=True,
+            )
+            for index in (2, 3)
+        ]
+        self.project.panel_members.add(self.panel_member, *other_panels)
+        panel_scores = (
+            (self.panel_member, "60"),
+            (other_panels[0], "80"),
+            (other_panels[1], "100"),
+        )
+
+        for panel_member, score in panel_scores:
+            self.client.force_login(panel_member)
+            response = self.client.post(
+                reverse(
+                    "accounts:panel_evaluate_review",
+                    args=[self.project.id, 1],
+                ),
+                {
+                    "criteria_title[]": ["Quality"],
+                    "criteria_mark[]": [score],
+                    "feedback": f"Panel score {score}.",
+                },
+            )
+            self.assertRedirects(response, reverse("accounts:panel_dashboard"))
+
+        self.assertEqual(
+            PanelEvaluation.objects.filter(
+                project=self.project,
+                review_number=1,
+            ).count(),
+            3,
+        )
+
+        self.client.force_login(self.student)
+        response = self.client.get(reverse("accounts:student_final_mark"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Panel Review 1 Mark Average")
+        self.assertContains(response, "80.00 / 100")
+        self.assertContains(response, "Average of 3 panel marks received.")
+        self.assertContains(response, "60.00 / 100")
+        self.assertContains(response, "80.00 / 100")
+        self.assertContains(response, "100.00 / 100")
+
+    def test_unassigned_panel_member_cannot_open_assigned_project(self):
+        assigned_panel = User.objects.create_user(
+            username="only_assigned_panel",
+            is_panel=True,
+        )
+        self.project.panel_members.add(assigned_panel)
+
+        response = self.client.get(
+            reverse("accounts:panel_evaluate", args=[self.project.id])
+        )
+
+        self.assertEqual(response.status_code, 404)
+
+    def test_panel_review_uses_coordinator_mark_fields_and_limits_each_mark(self):
+        PanelMarkCriterion.objects.create(
+            name="Presentation",
+            max_marks=40,
+            position=0,
+        )
+        PanelMarkCriterion.objects.create(
+            name="Technical quality",
+            max_marks=60,
+            position=1,
+        )
+        review_url = reverse(
+            "accounts:panel_evaluate_review",
+            args=[self.project.id, 2],
+        )
+
+        response = self.client.get(review_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Presentation")
+        self.assertContains(response, "Technical quality")
+        self.assertContains(response, 'max="40.00"')
+        self.assertContains(response, 'max="60.00"')
+        self.assertNotContains(response, "+ Add Mark Category")
+
+        response = self.client.post(
+            review_url,
+            {
+                "criteria_title[]": ["Presentation", "Technical quality"],
+                "criteria_mark[]": ["35", "54"],
+                "feedback": "Good work.",
+            },
+        )
+        self.assertRedirects(response, reverse("accounts:panel_dashboard"))
+        evaluation = PanelEvaluation.objects.get(
+            project=self.project,
+            review_number=2,
+        )
+        self.assertEqual(evaluation.marks, 89)
+        self.assertEqual(
+            evaluation.detailed_marks,
+            {"Presentation": "35", "Technical quality": "54"},
+        )
+
+        response = self.client.post(
+            reverse(
+                "accounts:panel_evaluate_review",
+                args=[self.project.id, 3],
+            ),
+            {
+                "criteria_title[]": ["Presentation", "Technical quality"],
+                "criteria_mark[]": ["41", "40"],
+                "feedback": "",
+            },
+        )
+        self.assertRedirects(
+            response,
+            reverse(
+                "accounts:panel_evaluate_review",
+                args=[self.project.id, 3],
+            ),
+        )
+        self.assertFalse(
+            PanelEvaluation.objects.filter(
+                project=self.project,
+                review_number=3,
+            ).exists()
+        )
 
     def test_panel_cannot_submit_marks_over_100(self):
         response = self.client.post(

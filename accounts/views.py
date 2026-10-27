@@ -3,7 +3,7 @@ from decimal import Decimal, InvalidOperation
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Q
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
@@ -19,6 +19,7 @@ from projects.models import (
     ProjectProposal,
     ProjectProgress,
     PanelEvaluation,
+    PanelMarkCriterion,
     ProjectMessage,
 )
 
@@ -91,7 +92,7 @@ def _next_weekly_report(reports):
     return next_report_type, next_week_number, None, True
 
 
-def _panel_projects_with_final_reports():
+def _panel_projects_with_final_reports(panel_member):
     final_reports = (
         ProjectProgress.objects
         .filter(report_type="FINAL_REPORT")
@@ -100,11 +101,17 @@ def _panel_projects_with_final_reports():
     return (
         ProjectProposal.objects
         .filter(progress_reports__report_type="FINAL_REPORT")
+        .filter(
+            Q(panel_members=panel_member)
+            | Q(panel_members__isnull=True)
+        )
         .select_related("student", "guide")
         .prefetch_related(
             Prefetch(
                 "panel_reviews",
-                queryset=PanelEvaluation.objects.order_by("review_number"),
+                queryset=PanelEvaluation.objects.filter(
+                    panel_member=panel_member
+                ).order_by("review_number"),
                 to_attr="panel_review_list",
             )
         )
@@ -680,7 +687,7 @@ def student_final_mark(request):
             "project",
             "panel_member"
         )
-        .order_by("review_number")
+        .order_by("review_number", "panel_member_id")
     )
 
     if evaluation:
@@ -730,23 +737,73 @@ def student_final_mark(request):
         if mark_project
         else []
     )
-    panel_evaluations_by_number = {
-        panel_evaluation.review_number: panel_evaluation
-        for panel_evaluation in panel_evaluation_list
-    }
+    panel_evaluations_by_number = {}
+    for panel_evaluation in panel_evaluation_list:
+        panel_evaluations_by_number.setdefault(
+            panel_evaluation.review_number,
+            [],
+        ).append(panel_evaluation)
+
+    panel_reviews = []
+    for review_number in (1, 2, 3):
+        evaluations_for_review = panel_evaluations_by_number.get(
+            review_number,
+            [],
+        )
+        average_mark = None
+        average_detailed_marks = {}
+
+        if evaluations_for_review:
+            average_mark = (
+                sum(
+                    (item.marks for item in evaluations_for_review),
+                    Decimal("0"),
+                )
+                / len(evaluations_for_review)
+            ).quantize(Decimal("0.01"))
+
+            category_values = {}
+            for item in evaluations_for_review:
+                for category, mark in item.detailed_marks.items():
+                    category_values.setdefault(category, []).append(
+                        Decimal(str(mark))
+                    )
+
+            average_detailed_marks = {
+                category: (
+                    sum(values, Decimal("0")) / len(values)
+                ).quantize(Decimal("0.01"))
+                for category, values in category_values.items()
+            }
+
+        panel_reviews.append(
+            {
+                "number": review_number,
+                "evaluation": (
+                    evaluations_for_review[0]
+                    if evaluations_for_review
+                    else None
+                ),
+                "evaluations": evaluations_for_review,
+                "average_mark": average_mark,
+                "average_detailed_marks": average_detailed_marks,
+                "panel_count": len(evaluations_for_review),
+            }
+        )
 
     context = {
         "evaluation": evaluation,
         "panel_evaluations": panel_evaluation_list,
-        "panel_reviews": [
-            {
-                "number": review_number,
-                "evaluation": panel_evaluations_by_number.get(review_number),
-            }
-            for review_number in (1, 2, 3)
-        ],
+        "panel_reviews": panel_reviews,
         "mark_project": mark_project,
         "report_marks": report_marks,
+        "panel_max_mark": (
+            sum(
+                PanelMarkCriterion.objects.values_list("max_marks", flat=True),
+                Decimal("0"),
+            )
+            or Decimal("100")
+        ),
     }
 
     return render(
@@ -1956,14 +2013,18 @@ def panel_dashboard(request):
             "accounts:dashboard"
         )
 
-    projects = _panel_projects_with_final_reports()
+    projects = _panel_projects_with_final_reports(request.user)
     student_count = User.objects.filter(
         is_student=True,
         is_superuser=False,
     ).count()
     
-    pending_count = projects.filter(panel_reviews__isnull=True).distinct().count()
-    completed_count = projects.filter(panel_reviews__isnull=False).distinct().count()
+    pending_count = projects.exclude(
+        panel_reviews__panel_member=request.user
+    ).distinct().count()
+    completed_count = projects.filter(
+        panel_reviews__panel_member=request.user
+    ).distinct().count()
 
     context = {
         "projects": projects,
@@ -2014,7 +2075,7 @@ def panel_evaluations(request):
         return redirect("accounts:dashboard")
 
     context = {
-        "projects": _panel_projects_with_final_reports(),
+        "projects": _panel_projects_with_final_reports(request.user),
     }
 
     return render(
@@ -2034,11 +2095,17 @@ def panel_students(request):
     student_projects = (
         ProjectProposal.objects
         .exclude(status="REJECTED")
+        .filter(
+            Q(panel_members=request.user)
+            | Q(panel_members__isnull=True)
+        )
         .select_related("guide")
         .prefetch_related(
             Prefetch(
                 "panel_reviews",
-                queryset=PanelEvaluation.objects.order_by("review_number"),
+                queryset=PanelEvaluation.objects.filter(
+                    panel_member=request.user
+                ).order_by("review_number"),
                 to_attr="panel_review_list",
             )
         )
@@ -2085,7 +2152,10 @@ def panel_evaluate(request, project_id, review_number=1):
         ProjectProposal.objects.select_related(
             "student",
             "guide",
-        ),
+        ).filter(
+            Q(panel_members=request.user)
+            | Q(panel_members__isnull=True)
+        ).distinct(),
         id=project_id,
         progress_reports__report_type="FINAL_REPORT",
     )
@@ -2100,7 +2170,9 @@ def panel_evaluate(request, project_id, review_number=1):
     evaluation = PanelEvaluation.objects.filter(
         project=project,
         review_number=review_number,
+        panel_member=request.user,
     ).first()
+    rubric_criteria = list(PanelMarkCriterion.objects.all())
 
     def review_redirect():
         if review_number == 1:
@@ -2116,12 +2188,29 @@ def panel_evaluate(request, project_id, review_number=1):
         titles = request.POST.getlist("criteria_title[]")
         marks = request.POST.getlist("criteria_mark[]")
 
+        if rubric_criteria and titles != [
+            criterion.name for criterion in rubric_criteria
+        ]:
+            messages.error(
+                request,
+                "The coordinator's mark fields have changed. Reload the page and enter the marks again.",
+            )
+            return review_redirect()
+
         if len(titles) != len(marks):
             messages.error(request, "Each mark category must have a matching mark.")
             return review_redirect()
 
+        if rubric_criteria and any(not mark.strip() for mark in marks):
+            messages.error(request, "Enter a mark for every coordinator-defined field.")
+            return review_redirect()
+
         detailed_marks = {}
         total_marks = Decimal("0")
+        rubric_max_marks = {
+            criterion.name: criterion.max_marks
+            for criterion in rubric_criteria
+        }
 
         for title_text, mark_text in zip(titles, marks):
             title = title_text.strip()
@@ -2145,15 +2234,16 @@ def panel_evaluate(request, project_id, review_number=1):
                 messages.error(request, "Enter a valid number for each mark.")
                 return review_redirect()
 
+            max_mark = rubric_max_marks.get(title, Decimal("100"))
             if (
                 not mark_value.is_finite()
                 or mark_value < 0
-                or mark_value > 100
+                or mark_value > max_mark
                 or mark_value.as_tuple().exponent < -2
             ):
                 messages.error(
                     request,
-                    "Each mark must be between 0 and 100 with at most two decimal places.",
+                    f"{title} must be between 0 and {max_mark} with at most two decimal places.",
                 )
                 return review_redirect()
 
@@ -2164,8 +2254,16 @@ def panel_evaluate(request, project_id, review_number=1):
             messages.error(request, "Add at least one mark category.")
             return review_redirect()
 
-        if total_marks > 100:
-            messages.error(request, "Total marks cannot exceed 100.")
+        total_max_marks = (
+            sum(rubric_max_marks.values(), Decimal("0"))
+            if rubric_criteria
+            else Decimal("100")
+        )
+        if total_marks > total_max_marks:
+            messages.error(
+                request,
+                f"Total marks cannot exceed {total_max_marks}.",
+            )
             return review_redirect()
 
         if not evaluation:
@@ -2192,6 +2290,23 @@ def panel_evaluate(request, project_id, review_number=1):
         "evaluation": evaluation,
         "review_number": review_number,
         "review_numbers": (1, 2, 3),
+        "rubric_criteria": [
+            {
+                "name": criterion.name,
+                "max_marks": criterion.max_marks,
+                "value": (
+                    evaluation.detailed_marks.get(criterion.name, "")
+                    if evaluation
+                    else ""
+                ),
+            }
+            for criterion in rubric_criteria
+        ],
+        "rubric_total": sum(
+            (criterion.max_marks for criterion in rubric_criteria),
+            Decimal("0"),
+        ),
+        "has_rubric": bool(rubric_criteria),
     })
 
 @login_required

@@ -2,7 +2,11 @@ from django.test import TestCase
 from django.urls import reverse
 
 from accounts.models import User
-from projects.models import ProjectProgress, ProjectProposal
+from projects.models import (
+    PanelMarkCriterion,
+    ProjectProgress,
+    ProjectProposal,
+)
 
 
 class CoordinatorFacultyListTests(TestCase):
@@ -292,5 +296,140 @@ class CoordinatorGuideSuggestionVisibilityTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, "Guide suggestion only for the student.")
+
+
+class CoordinatorPanelMarkCriteriaTests(TestCase):
+
+    def setUp(self):
+        coordinator = User.objects.create_user(
+            username="rubric_coordinator",
+            is_coordinator=True,
+        )
+        self.client.force_login(coordinator)
+
+    def test_coordinator_can_create_ordered_panel_mark_fields(self):
+        response = self.client.get(
+            reverse("coordinator:panel_mark_criteria")
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "+ Add Mark Field")
+
+        response = self.client.post(
+            reverse("coordinator:panel_mark_criteria"),
+            {
+                "criterion_name[]": ["Presentation", "Technical quality"],
+                "criterion_max_marks[]": ["40", "60"],
+            },
+        )
+
+        self.assertRedirects(
+            response,
+            reverse("coordinator:panel_mark_criteria"),
+        )
+        self.assertEqual(
+            list(
+                PanelMarkCriterion.objects.values_list(
+                    "name",
+                    "max_marks",
+                    "position",
+                )
+            ),
+            [
+                ("Presentation", 40, 0),
+                ("Technical quality", 60, 1),
+            ],
+        )
+
+    def test_invalid_coordinator_rubric_does_not_replace_saved_fields(self):
+        PanelMarkCriterion.objects.create(
+            name="Existing field",
+            max_marks=100,
+            position=0,
+        )
+
+        for names, maximums in (
+            (["A", "A"], ["40", "60"]),
+            (["A", "B"], ["70", "40"]),
+            (["A"], ["0"]),
+        ):
+            with self.subTest(names=names, maximums=maximums):
+                response = self.client.post(
+                    reverse("coordinator:panel_mark_criteria"),
+                    {
+                        "criterion_name[]": names,
+                        "criterion_max_marks[]": maximums,
+                    },
+                )
+                self.assertEqual(response.status_code, 200)
+                self.assertContains(response, "notification error")
+                self.assertEqual(
+                    list(PanelMarkCriterion.objects.values_list("name", flat=True)),
+                    ["Existing field"],
+                )
+
+
+class CoordinatorPanelAssignmentTests(TestCase):
+
+    def setUp(self):
+        coordinator = User.objects.create_user(
+            username="panel_assignment_coordinator",
+            is_coordinator=True,
+        )
+        self.student = User.objects.create_user(
+            username="panel_assignment_student",
+            is_student=True,
+        )
+        self.project = ProjectProposal.objects.create(
+            student=self.student,
+            title="Multi-panel assignment project",
+            status="COMPLETED",
+        )
+        self.panels = [
+            User.objects.create_user(
+                username=f"assigned_panel_{index}",
+                is_panel=True,
+            )
+            for index in range(1, 4)
+        ]
+        self.client.force_login(coordinator)
+
+    def test_coordinator_can_assign_multiple_panel_members_to_project(self):
+        detail_url = reverse(
+            "coordinator:proposal_detail",
+            args=[self.project.id],
+        )
+        response = self.client.get(detail_url)
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Assign Panel Members")
+
+        response = self.client.post(
+            reverse("coordinator:assign_panels", args=[self.project.id]),
+            {"panel_members": [str(panel.pk) for panel in self.panels]},
+        )
+
+        self.assertRedirects(response, detail_url)
+        self.assertQuerySetEqual(
+            self.project.panel_members.order_by("username"),
+            sorted(self.panels, key=lambda panel: panel.username),
+            transform=lambda panel: panel,
+        )
+
+    def test_coordinator_cannot_assign_non_panel_account(self):
+        student = User.objects.create_user(
+            username="not_a_panel",
+            is_student=True,
+        )
+
+        response = self.client.post(
+            reverse("coordinator:assign_panels", args=[self.project.id]),
+            {"panel_members": [str(student.pk)]},
+        )
+
+        self.assertRedirects(
+            response,
+            reverse("coordinator:proposal_detail", args=[self.project.id]),
+        )
+        self.assertFalse(self.project.panel_members.exists())
+
 
 # Create your tests here.

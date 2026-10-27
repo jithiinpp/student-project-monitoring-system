@@ -38,6 +38,10 @@
                 <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" style="vertical-align: text-bottom; margin-right: 6px;" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg></span>
                 <span class="nav-text">Panels</span>
             </a>
+            <a href="{% url 'coordinator:panel_mark_criteria' %}" class="nav-item {% if request.resolver_match.url_name == 'panel_mark_criteria' %}active{% endif %}">
+                <span class="nav-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg></span>
+                <span class="nav-text">Panel Mark Fields</span>
+            </a>
             
             <div class="nav-section">Projects</div>
             <a href="{% url 'coordinator:proposals' %}" class="nav-item {% if request.resolver_match.url_name == 'proposals' %}active{% endif %}">

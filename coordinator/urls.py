@@ -52,6 +52,12 @@ urlpatterns = [
     ),
 
     path(
+        "panel-mark-criteria/",
+        views.panel_mark_criteria,
+        name="panel_mark_criteria"
+    ),
+
+    path(
         "proposals/<int:proposal_id>/assign-expert/",
         views.assign_expert,
         name="assign_expert"
@@ -67,6 +73,12 @@ urlpatterns = [
         "proposals/<int:proposal_id>/assign-guide/",
         views.assign_guide,
         name="assign_guide"
+    ),
+
+    path(
+        "proposals/<int:proposal_id>/assign-panels/",
+        views.assign_panels,
+        name="assign_panels"
     ),
 
     # Change requests

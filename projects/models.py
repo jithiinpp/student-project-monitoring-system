@@ -92,6 +92,13 @@ class ProjectProposal(models.Model):
         limit_choices_to={"is_guide": True}
     )
 
+    panel_members = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        blank=True,
+        related_name="assigned_panel_projects",
+        limit_choices_to={"is_panel": True},
+    )
+
     guide_rejection_reason = models.TextField(
         blank=True,
         null=True
@@ -364,13 +371,25 @@ class PanelEvaluation(models.Model):
         ordering = ["review_number"]
         constraints = [
             models.UniqueConstraint(
-                fields=["project", "review_number"],
-                name="unique_panel_review_per_project",
+                fields=["project", "review_number", "panel_member"],
+                name="unique_panel_member_review_per_project",
             )
         ]
 
     def __str__(self):
         return f"Panel Review {self.review_number} for {self.project.title}"
+
+
+class PanelMarkCriterion(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    max_marks = models.DecimalField(max_digits=5, decimal_places=2)
+    position = models.PositiveSmallIntegerField(default=0)
+
+    class Meta:
+        ordering = ["position", "id"]
+
+    def __str__(self):
+        return f"{self.name} ({self.max_marks})"
 
 
 # =========================================================

@@ -204,11 +204,25 @@
                     <form method="post" action="{% url 'accounts:panel_evaluate_review' project.id review_number %}">
                         {% csrf_token %}
                         <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 16px;">
-                            Add mark categories. Their combined total must not exceed 100.
+                            {% if rubric_criteria %}
+                                Enter a mark for each field defined by the coordinator. The maximums total {{ rubric_total }}.
+                            {% else %}
+                                The coordinator has not set mark fields yet. Add categories for this review; their combined total must not exceed 100.
+                            {% endif %}
                         </p>
 
                         <div id="dynamic-fields-container" style="display: flex; flex-direction: column; gap: 9px; margin-bottom: 12px;">
-                            {% if evaluation.detailed_marks %}
+                            {% if rubric_criteria %}
+                                {% for criterion in rubric_criteria %}
+                                    <div class="panel-mark-row">
+                                        <input type="hidden" name="criteria_title[]" value="{{ criterion.name }}">
+                                        <label style="font-size: 13px; font-weight: 600;">
+                                            {{ criterion.name }} <span style="color: var(--text-muted); font-weight: 400;">(out of {{ criterion.max_marks }})</span>
+                                        </label>
+                                        <input type="number" name="criteria_mark[]" value="{{ criterion.value }}" min="0" max="{{ criterion.max_marks }}" step="0.01" placeholder="Mark" aria-label="{{ criterion.name }} mark" required>
+                                    </div>
+                                {% endfor %}
+                            {% elif evaluation.detailed_marks %}
                                 {% for category, mark in evaluation.detailed_marks.items %}
                                     <div class="panel-mark-row">
                                         <input type="text" name="criteria_title[]" value="{{ category }}" placeholder="Category" aria-label="Mark category" required>
@@ -233,12 +247,14 @@
 
                         <div id="panel-mark-total" class="panel-mark-total" role="status" aria-live="polite">
                             <span>Total mark</span>
-                            <span><span id="panel-mark-total-value">0</span> / 100</span>
+                            <span><span id="panel-mark-total-value">0</span> / {% if has_rubric %}{{ rubric_total }}{% else %}100{% endif %}</span>
                         </div>
 
-                        <button type="button" id="add-field-btn" class="btn-secondary" style="display: flex; width: 100%; justify-content: center; margin-bottom: 16px; padding: 10px; border: 1px dashed var(--primary-main); color: var(--primary-main); background: rgba(99, 102, 241, 0.05);">
-                            + Add Mark Category
-                        </button>
+                        {% if not has_rubric %}
+                            <button type="button" id="add-field-btn" class="btn-secondary" style="display: flex; width: 100%; justify-content: center; margin-bottom: 16px; padding: 10px; border: 1px dashed var(--primary-main); color: var(--primary-main); background: rgba(99, 102, 241, 0.05);">
+                                + Add Mark Category
+                            </button>
+                        {% endif %}
 
                         <div class="form-group" style="margin-bottom: 16px;">
                             <label for="panel-feedback" style="display: block; font-size: 11px; font-weight: 600; margin-bottom: 4px;">Overall Remarks</label>
@@ -254,6 +270,8 @@
                         const markFields = document.getElementById("dynamic-fields-container");
                         const totalValue = document.getElementById("panel-mark-total-value");
                         const totalDisplay = document.getElementById("panel-mark-total");
+                        const addFieldButton = document.getElementById("add-field-btn");
+                        const maxPanelMark = Number("{% if has_rubric %}{{ rubric_total }}{% else %}100{% endif %}");
 
                         function updatePanelMarkTotal() {
                             let total = 0;
@@ -264,10 +282,10 @@
                                 }
                             });
                             totalValue.textContent = total.toFixed(2).replace(/\.00$/, "");
-                            totalDisplay.classList.toggle("is-over-limit", total > 100);
+                            totalDisplay.classList.toggle("is-over-limit", total > maxPanelMark);
                         }
 
-                        document.getElementById("add-field-btn").addEventListener("click", function () {
+                        if (addFieldButton) addFieldButton.addEventListener("click", function () {
                             const row = document.createElement("div");
                             row.className = "panel-mark-row";
                             row.innerHTML = `

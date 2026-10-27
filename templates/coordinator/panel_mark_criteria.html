@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Panel Mark Fields | SPMS{% endblock %}
+
+{% block content %}
+<div class="dashboard-layout">
+    {% include "coordinator/sidebar.html" %}
+
+    <main class="dashboard-main">
+        <header class="dashboard-header">
+            <div class="header-content">
+                <h1>Panel Mark Fields</h1>
+                <p>Define the categories and maximum marks panel members use for each review.</p>
+            </div>
+            <div class="header-actions">
+                <a href="{% url 'coordinator:dashboard' %}" class="btn-secondary">Back to Dashboard</a>
+            </div>
+        </header>
+
+        <section class="recent-section">
+            <div class="recent-card" style="padding: 24px;">
+                <p style="color: var(--text-muted); margin: 0 0 18px;">
+                    These fields are shared by all three panel reviews. The total maximum must not exceed 100.
+                    Updating the fields will not change marks already saved.
+                </p>
+
+                <form method="post" id="criteria-form">
+                    {% csrf_token %}
+                    <div id="criteria-fields" style="display: grid; gap: 12px;">
+                        {% for criterion in criteria %}
+                            <div class="criteria-row" style="display: grid; grid-template-columns: minmax(0, 1fr) 150px 40px; gap: 10px; align-items: center;">
+                                <input type="text" name="criterion_name[]" value="{{ criterion.name }}" maxlength="100" placeholder="Field name (e.g. Presentation)" required class="form-input" aria-label="Mark field name">
+                                <input type="number" name="criterion_max_marks[]" value="{{ criterion.max_marks }}" min="0.01" max="100" step="0.01" placeholder="Max mark" required class="form-input" aria-label="Maximum mark">
+                                <button type="button" class="remove-criterion" aria-label="Remove mark field" style="height: 40px; border: 1px solid #fecaca; border-radius: 7px; color: #b91c1c; background: #fff; font-size: 20px; cursor: pointer;">&times;</button>
+                            </div>
+                        {% empty %}
+                            <div class="criteria-row" style="display: grid; grid-template-columns: minmax(0, 1fr) 150px 40px; gap: 10px; align-items: center;">
+                                <input type="text" name="criterion_name[]" maxlength="100" placeholder="Field name (e.g. Presentation)" required class="form-input" aria-label="Mark field name">
+                                <input type="number" name="criterion_max_marks[]" min="0.01" max="100" step="0.01" placeholder="Max mark" required class="form-input" aria-label="Maximum mark">
+                                <button type="button" class="remove-criterion" aria-label="Remove mark field" style="height: 40px; border: 1px solid #fecaca; border-radius: 7px; color: #b91c1c; background: #fff; font-size: 20px; cursor: pointer;">&times;</button>
+                            </div>
+                        {% endfor %}
+                    </div>
+
+                    <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 18px;">
+                        <button type="button" id="add-criterion" class="btn-secondary">+ Add Mark Field</button>
+                        <button type="submit" class="btn-primary">Save Panel Mark Fields</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+    </main>
+</div>
+
+<script>
+    const criterionFields = document.getElementById("criteria-fields");
+
+    document.getElementById("add-criterion").addEventListener("click", function () {
+        const row = document.createElement("div");
+        row.className = "criteria-row";
+        row.style.cssText = "display: grid; grid-template-columns: minmax(0, 1fr) 150px 40px; gap: 10px; align-items: center;";
+        row.innerHTML = '<input type="text" name="criterion_name[]" maxlength="100" placeholder="Field name (e.g. Presentation)" required class="form-input" aria-label="Mark field name"> <input type="number" name="criterion_max_marks[]" min="0.01" max="100" step="0.01" placeholder="Max mark" required class="form-input" aria-label="Maximum mark"> <button type="button" class="remove-criterion" aria-label="Remove mark field" style="height: 40px; border: 1px solid #fecaca; border-radius: 7px; color: #b91c1c; background: #fff; font-size: 20px; cursor: pointer;">&times;</button>';
+        criterionFields.appendChild(row);
+        row.querySelector('input[name="criterion_name[]"]').focus();
+    });
+
+    criterionFields.addEventListener("click", function (event) {
+        const button = event.target.closest(".remove-criterion");
+        if (button) button.closest(".criteria-row").remove();
+    });
+</script>
+{% endblock %}
